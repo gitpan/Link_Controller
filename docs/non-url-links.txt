@@ -1,3 +1,6 @@
+This document contains some random thoughts about links.  More
+thoughts could always be nice.
+
 What is a link really?  It's a reference from any place to another.  A
 place, in this situation, means somewhere/somedata that a human could
 access and a connection from that data to some other piece of data.

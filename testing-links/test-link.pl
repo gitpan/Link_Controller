@@ -256,7 +256,7 @@ EOF
 sub version() {
   print <<'EOF';
 test-link version
-$Id: test-link.pl,v 1.16 2001/12/25 06:28:56 mikedlr Exp $
+$Id: test-link.pl,v 1.18 2002/01/06 10:50:14 mikedlr Exp $
 EOF
 }
 
@@ -300,7 +300,7 @@ my $ua;
 if ($::robot) {
   print STDERR "a robot ua\n" unless $::silent;
   my $rules = new WWW::RobotRules::AnyDBM_File 'my-robot/1.0', '.robot.cache';
-  $ua = new LWP::NoStopRobot 'LinkController/'
+  $ua = new LWP::NoStopRobot 'LinkControllerBot/'
     . $WWW::Link_Controller::Version::VERSION, $::user_address;
   $ua->delay(1);
   unless ($::no_waitre eq "") {
@@ -309,7 +309,7 @@ if ($::robot) {
   }
 } else {
   print STDERR "a normal ua\n" unless $::silent;
-  $ua = new LWP::Auth_UA 'LinkControllerTest/'
+  $ua = new LWP::Auth_UA 'No_Robot_Link_Controller/'
     . $WWW::Link_Controller::Version::VERSION, $::user_address;
 }
 
@@ -491,12 +491,18 @@ sub get_next_link(;$) {
       print STDERR "find first link from the schedule\n" if $::verbose;
       ($link, $time)=first_link();
       $first=0;
-      $::last_queue_time = $time;
     } else {
       print STDERR "find another link from the schedule\n" if $::verbose;
       ($link, $time)=next_link();
-      $::last_queue_time = $time;
     }
+
+    defined $time and do {
+      if ( $time < $::last_queue_time) {
+	warn "Queue gave out of order link";
+      } else {
+	$::last_queue_time = $time;
+      }
+    };
 
     ( defined ( $link ) ) or do {
       print STDERR "no more links in the schedule\n" if $::verbose;
@@ -540,7 +546,7 @@ sub skip_for_time () {
   $::robot or return 0;
   my $link=shift;
   my $url;
-  $url = new URI::URL $link->url;
+  $url = URI->new($link->url);
   #sometimes this accesses the robots.txt so slow and difficult
   check_sigs();
   print STDERR "about to check for robots access\n" if $::verbose;
@@ -588,7 +594,7 @@ sub first_link {
       ($link, $time)=next_link();
       last CASE;
     };
-    $::untested && $link->never_checked() and do {
+     $::untested && $link->is_not_checked() and do {
       ($link, $time)=next_link();
       last CASE;
     }
@@ -613,7 +619,7 @@ sub next_link {
     ($time, $name)=$::sched->next_item();
     return undef unless defined $time; # out of items
     $link=$::links{$name};
-    $::untested && (! $link->never_checked() ) and do {
+    $::untested && (! $link->is_not_checked() ) and do {
       print STDERR "link " . $link->url() . " already tested.. skipping\n"
 	if $::verbose;
       next;
@@ -680,7 +686,7 @@ sub auto_schedule_link {
     warn "time logic wrong; just tested ($time) but wants tested at $sched_time"
       if $sched_time < $time;
     print STDERR "Link wants test between $sched_time and "
-	. ( $sched_time + $vary ) . "\n";
+	. ( $sched_time + $vary ) . "\n" if $::verbose;
 
     my $earliest=time() + $::min_delay;
     if ( $sched_time < $earliest ) {
@@ -693,7 +699,7 @@ sub auto_schedule_link {
       $sched_time=$::last_queue_time+1 ;
       print STDERR "forcing link after end of queue at $::last_queue_time\n";
     }
-    print STDERR " will schedule at $sched_time\n";
+    print STDERR " will schedule at $sched_time\n" if $::verbose;
   }
   $::sched->schedule(int($sched_time) , $link->url() );
 }
@@ -710,7 +716,7 @@ sub status_change ($) {
   my $link=shift;
   defined $::link_stat_log or return undef;
   open STAT, ">$::link_stat_log" or die "couldn't open status log";
-  print STAT $link->url();
+  print STAT $link->url(), "\n";
   close STAT or die "couldn't open status log";
 }
 

@@ -30,7 +30,7 @@ $ENV{HOME}=cwd() . "/t/homedir";
 $config=$ENV{HOME} . "/.link-control.pl";
 die "LinkController test config file, $config missing." unless -e $config;
 
-BEGIN {print "1..14\n"}
+BEGIN {print "1..15\n"}
 
 @start = qw(perl -Iblib/lib);
 
@@ -143,6 +143,16 @@ nogo if system @start, ( 'blib/script/test-link', '--test-now', '--never-stop',
 
 ok(13);
 
+#push @start, '-d';
+
+#check that --untested works (should do nothing)
+nogo if system @start, ( 'blib/script/test-link', '--test-now', '--never-stop',
+			 '--max-links=10',
+			 ($::verbose ? '--verbose' : ('--silent', '--no-warn')),
+			 '--no-waitre=127.0.0.1', "--config-file=$conf", '--untested' );
+
+ok(14);
+
 use WWW::Link_Controller::Lock;
 $WWW::Link_Controller::Lock::silent = 1;
 WWW::Link_Controller::Lock::lock($linkdb);
@@ -152,5 +162,5 @@ $command= join (" ", @start, 'blib/script/test-link', "--config-file=$conf",
 #FIXME: check the database modtime isn't altered
 nogo unless system "$command 2> /dev/null";
 
-ok(14);
+ok(15);
 

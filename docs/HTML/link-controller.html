@@ -1,6 +1,6 @@
 <HTML>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Created on December, 30  2001 by texi2html 1.64 -->
+<!-- Created on January, 6  2002 by texi2html 1.64 -->
 <!-- 
 Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
             Karl Berry  <karl@freefriends.org>
@@ -36,7 +36,7 @@ This document describes LinkController a system for checking and
 maintaining links in infostructures
 </P><P>
 
-This document applies to version 0.030 of LinkController
+This document applies to version 0.033 of LinkController
 </P><P>
 
 <BLOCKQUOTE><TABLE BORDER=0 CELLSPACING=0> 
@@ -56,13 +56,15 @@ This document applies to version 0.030 of LinkController
 <TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_14.html#SEC23">13. Setting up LinkController</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
 <TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_15.html#SEC24">14. Administration</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
 <TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_16.html#SEC28">15. Robots and Sensible Behaviour</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">General statements about robots.</TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_17.html#SEC29">16. Bugs and bug reporting</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">What to do if you find a bug.</TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_18.html#SEC30">17. Acknowledgements</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">People who helped with this package.</TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_19.html#SEC35">A. Invoking the LinkController Programs</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">How to run the programs in LinkController.</TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_20.html#SEC36">B. Packages Which Can Be Useful with LinkController</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Packages used by or useful with LinkController.</TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_21.html#SEC39">C. Terms</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Glossary of terms used in this documentation.</TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_22.html#SEC44">Program and Variable Name Index</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Index of Program and Variable names</TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_23.html#SEC45">Concept Index</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Index of Concepts.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_17.html#SEC29">16. Link Database Maintenance</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_18.html#SEC31">17. Bugs and bug reporting</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">What to do if you find a bug.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_19.html#SEC32">18. History</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_20.html#SEC33">19. Acknowledgements</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">People who helped with this package.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_21.html#SEC38">A. Invoking the LinkController Programs</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">How to run the programs in LinkController.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_22.html#SEC39">B. Packages Which Can Be Useful with LinkController</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Packages used by or useful with LinkController.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_23.html#SEC42">C. Terms</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Glossary of terms used in this documentation.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_24.html#SEC47">Program and Variable Name Index</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Index of Program and Variable names</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_25.html#SEC48">Concept Index</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Index of Concepts.</TD></TR>
 </TABLE>
 
 <br>
@@ -106,7 +108,7 @@ The&nbsp;Emacs&nbsp;Interface
 
 <br>
 <TABLE BORDER=0 CELLSPACING=0>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_13.html#SEC21">12.1 Finding Files with Broken Links</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">An emacs program to display broken links.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_13.html#SEC21">12.1 Finding Files with Broken Links</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">An Emacs program to display broken links.</TD></TR>
 <TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_13.html#SEC22">12.2 Finding Broken Links in Files Within Emacs</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Finding broken links in a file.</TD></TR>
 </TABLE>
 
@@ -131,15 +133,24 @@ Administration
 </TABLE>
 
 <br>
+Link&nbsp;Database&nbsp;Maintenance
+<br>
+
+<br>
+<TABLE BORDER=0 CELLSPACING=0>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_17.html#SEC30">16.1 Link Ageing</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+</TABLE>
+
+<br>
 Acknowledgements
 <br>
 
 <br>
 <TABLE BORDER=0 CELLSPACING=0>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_18.html#SEC31">Esoterica Internet Portugal</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_18.html#SEC32">IPPT PAN Poland</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_18.html#SEC33">The Tardis Project</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_18.html#SEC34">Other Free Software Authors</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_20.html#SEC34">Esoterica Internet Portugal</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_20.html#SEC35">IPPT PAN Poland</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_20.html#SEC36">The Tardis Project</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_20.html#SEC37">Other Free Software Authors</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
 </TABLE>
 
 <br>
@@ -148,8 +159,8 @@ Packages&nbsp;Which&nbsp;Can&nbsp;Be&nbsp;Useful&nbsp;with&nbsp;LinkController
 
 <br>
 <TABLE BORDER=0 CELLSPACING=0>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_20.html#SEC37">B.1 The CDB utilities</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Utilities for the LinkController indexes.</TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_20.html#SEC38">B.2 The Tie-Transact-Hash Perl Module and Programmes</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Berkley DB editing tools.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_22.html#SEC40">B.1 The CDB utilities</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Utilities for the LinkController indexes.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_22.html#SEC41">B.2 The Tie-Transact-Hash Perl Module and Programmes</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Berkeley DB editing tools.</TD></TR>
 </TABLE>
 
 <br>
@@ -158,10 +169,10 @@ Terms
 
 <br>
 <TABLE BORDER=0 CELLSPACING=0>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_21.html#SEC40">C.1 Resource</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">The information on the World Wide Web.</TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_21.html#SEC41">C.2 URLs</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">The connections in the World Wide Web.</TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_21.html#SEC42">C.3 Infostructure</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Groups of resources.</TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_21.html#SEC43">C.4 Link</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">A connection between two resources.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_23.html#SEC43">C.1 Resource</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">The information on the World Wide Web.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_23.html#SEC44">C.2 URLs</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">The connections in the World Wide Web.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_23.html#SEC45">C.3 Infostructure</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Groups of resources.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_23.html#SEC46">C.4 Link</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">A connection between two resources.</TD></TR>
 </TABLE>
 
 <br>
@@ -172,7 +183,7 @@ Terms
 <BR>  
 <FONT SIZE="-1">
 This document was generated
-by <I>Michael De La Rue</I> on <I>December, 30  2001</I>
+by <I>Michael De La Rue</I> on <I>January, 6  2002</I>
 using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
 "><I>texi2html</I></A>
 

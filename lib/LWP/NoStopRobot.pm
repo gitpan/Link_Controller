@@ -42,7 +42,7 @@ LWP::Auth_UA) rather than as a subclass of LWP::RobotUA.
 =cut
 
 package LWP::NoStopRobot;
-$REVISION=q$Revision: 1.7 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
+$REVISION=q$Revision: 1.9 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
 
 use strict;
 use warnings;
@@ -52,7 +52,7 @@ use LWP::Auth_UA;
 use vars qw(@ISA $VERSION);
 
 @ISA=qw(LWP::Auth_UA);
-$VERSION = sprintf("%d.%02d", q$Revision: 1.7 $ =~ /(\d+)\.(\d+)/);
+$VERSION = sprintf("%d.%02d", q$Revision: 1.9 $ =~ /(\d+)\.(\d+)/);
 
 require WWW::RobotRules;
 require HTTP::Request;
@@ -215,7 +215,6 @@ sub simple_request
 					   . $res->status_line() );
     }
 
-
     $res;
 }
 
@@ -331,13 +330,13 @@ sub no_wait {
 
 
 
-#  # $Id: NoStopRobot.pm,v 1.7 2001/12/25 06:31:17 mikedlr Exp $
+#  # $Id: NoStopRobot.pm,v 1.9 2002/01/06 10:41:42 mikedlr Exp $
 
 #  package LWP::RobotUA;
 
 #  require LWP::UserAgent;
 #  @ISA = qw(LWP::UserAgent);
-#  $VERSION = sprintf("%d.%02d", q$Revision: 1.7 $ =~ /(\d+)\.(\d+)/);
+#  $VERSION = sprintf("%d.%02d", q$Revision: 1.9 $ =~ /(\d+)\.(\d+)/);
 
 #  require WWW::RobotRules;
 #  require HTTP::Request;

@@ -1,6 +1,6 @@
 <HTML>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Created on December, 30  2001 by texi2html 1.64 -->
+<!-- Created on January, 6  2002 by texi2html 1.64 -->
 <!-- 
 Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
             Karl Berry  <karl@freefriends.org>
@@ -75,7 +75,7 @@ different things, but the summary is
 
 <UL>
 <LI>
-Create a linkcont userid and group which will be used for running programs
+Create a linkcont user-id and group which will be used for running programs
 <LI>
 Create a working directory where LinkController will keep it's data
 <LI>
@@ -86,9 +86,9 @@ Create cron scripts which will run LinkController automatically.
 <P>
 
 Using this command it is also possible to activate users and groups
-e.g. <CODE>default-install -user username</CODE> or  
-<CODE>default-install -group groupname</CODE> in which case the specified
-users will become a member of the lcntusr group.  
+e.g. <CODE>default-install -user <VAR>username</VAR></CODE> or  
+<CODE>default-install -group <VAR>groupname</VAR></CODE> in which case the specified
+users will become a member of the <CODE>linkcont</CODE> group.  
 </P><P>
 
 <A NAME="User Administration"></A>
@@ -118,12 +118,12 @@ site) then you will only have to check that link once.
 In this case, the important question is which links are copied into the
 checking database.  This is controlled by the program
 <CODE>copy-links-from-users</CODE> and decides copies data from users which
-are in the <CODE>lnkusr</CODE> group.  
+are in the <CODE>lnctusr</CODE> group.  
 </P><P>
 
 The command <CODE>default-install</CODE> can be used to manipulate which
-users are in the group e.g. <CODE>default-install -user username</CODE> or  
-<CODE>default-install -group groupname</CODE> in which case the specified
+users are in the group e.g. <CODE>default-install --user <VAR>username</VAR></CODE> or  
+<CODE>default-install -group <VAR>groupname</VAR></CODE> in which case the specified
 users will become a member of the lcntusr group.
 </P><P>
 
@@ -189,7 +189,7 @@ The program <CODE>default-install</CODE> can create these scripts.
 <BR>  
 <FONT SIZE="-1">
 This document was generated
-by <I>Michael De La Rue</I> on <I>December, 30  2001</I>
+by <I>Michael De La Rue</I> on <I>January, 6  2002</I>
 using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
 "><I>texi2html</I></A>
 

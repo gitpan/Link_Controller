@@ -1,3 +1,22 @@
+	WIERD URLS
+
+I've tried to get rid of the URI::URL class in LinkController and the
+classes it uses and use URI only instead.  I am not sure if this will
+cause problems with some old data.  It shouldn't though since we store
+URIs in text strings and so should access them fine and other places
+should be insulated by subclasses?  
+
+	TIME TRANSPORTED OBJECTS
+
+I'm not sure what happens in general if I take a frozen object
+belonging to someone else's class and then transport it in time.  Do I
+have to provide it with the same version of the library to interpret
+it?  Can I do that if perl doesn't support library versioning?
+Probably we should discuss with the other developers how to get a
+forward compatible version format + backwards protecting version
+labelling?
+
+
 	UNTESTED OPTIONS
 
 Many different options have not yet been tested.  Certainly there is
@@ -16,7 +35,9 @@ resource its self will always be retrieved / activated in one go..
 
 There were some losses from the database.  These should now be fixed.
 Of course it's still possible to lose information if a crash occurs
-during a database write.  Keep backups as usual.
+during a database write.  Keep backups as usual.  We make no attempt
+to protect the Link data which isn't considered that valuable since
+it's "easy" to regenerate with in a few days.
 
 	LOCATION OF PERL
 
@@ -32,7 +53,7 @@ the error
 
   Unrecognized switch: - .
 
-Strangely this only happens with some of the programs The only
+Strangely this only happens with some of the programs. The only
 solution is to fix the programs by hand.  Just add ten or so spaces
 after between perl and the option.  Or better yet upgrade to a more
 modern operating system.

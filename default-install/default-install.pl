@@ -245,7 +245,7 @@ EOF
 sub version() {
   print <<'EOF';
 default-install version
-$Id: default-install.pl,v 1.8 2001/12/14 21:32:44 mikedlr Exp $
+$Id: default-install.pl,v 1.9 2002/01/06 10:38:31 mikedlr Exp $
 EOF
 }
 
@@ -292,30 +292,18 @@ $::CONFIG_SCRIPT = <<'EOF';
 
 use vars qw($schedule $links $page_index $link_index $fixlink_cgi);
 
-
-#it would be a seriously good idea to change this mail address.  When
-#you start to put this out into people's server logs, you are bound to
-#eventually start getting junkmail.. However we have to make sure that
-#any compaints about the behaviour of your robot get back to you to an
-#account you read and root seems to be the best hope..
-
 #we don't put the user address here since one of your users might run this
+#you shouldn't really run link-controller as root anyway..
 #$::user_address="root@" . $hostname;
 
 $::schedule="/var/lib/linkcontroller/schedule.bdbm";
 $::links="/var/lib/linkcontroller/links.bdbm";
 $::page_index="/var/lib/linkcontroller/page_has_link.cdb";
 $::link_index="/var/lib/linkcontroller/link_on_page.cdb" ;
-
-#my $realhostname="www.example.com"
-#my $realusername="me"
-#$WWW::Link::Repair::filebase="/home/$realusername/public_html";
+$::infostrucs="/var/lib/linkcontroller/infostrucs" ;
 
 #$::fixlink_cgi=
 #   "http://$realhostname/cgi-bin/users/$realusername/fix-link.cgi";
-
-#$WWW::Link::Repair::infostrucbase=
-#   "http://$realhostname/~$realusername/climbing/";
 
 1;
 EOF

@@ -1,6 +1,6 @@
 <HTML>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Created on December, 30  2001 by texi2html 1.64 -->
+<!-- Created on January, 6  2002 by texi2html 1.64 -->
 <!-- 
 Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
             Karl Berry  <karl@freefriends.org>
@@ -11,10 +11,10 @@ Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
  
 -->
 <HEAD>
-<TITLE>Using LinkController: Names Index</TITLE>
+<TITLE>Using LinkController: Related Packages</TITLE>
 
-<META NAME="description" CONTENT="Using LinkController: Names Index">
-<META NAME="keywords" CONTENT="Using LinkController: Names Index">
+<META NAME="description" CONTENT="Using LinkController: Related Packages">
+<META NAME="keywords" CONTENT="Using LinkController: Related Packages">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
 <META NAME="Generator" CONTENT="texi2html 1.64">
@@ -23,102 +23,96 @@ Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
 
 <BODY LANG="" BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
 
-<A NAME="SEC44"></A>
+<A NAME="SEC39"></A>
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
-<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_21.html#SEC43"> &lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_23.html#SEC45"> &gt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_21.html#SEC39"> &lt;&lt; </A>]</TD>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_21.html#SEC38"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_22.html#SEC40"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_21.html#SEC38"> &lt;&lt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top"> Up </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_23.html#SEC45"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_23.html#SEC42"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
 </TR></TABLE>
-<H1> Program and Variable Name Index </H1>
-<!--docid::SEC44::-->
+<H1> B. Packages Which Can Be Useful with LinkController </H1>
+<!--docid::SEC39::-->
 <P>
 
-Perl variables, which use :: to separate the different parts, are
-separated here using / instead to make it easier to work in info with
-this file.  
+<BLOCKQUOTE><TABLE BORDER=0 CELLSPACING=0> 
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_22.html#SEC40">B.1 The CDB utilities</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Utilities for the LinkController indexes.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_22.html#SEC41">B.2 The Tie-Transact-Hash Perl Module and Programmes</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Berkeley DB editing tools.</TD></TR>
+</TABLE></BLOCKQUOTE>
+<P>
+
+<A NAME="cdb"></A>
+<HR SIZE="6">
+<A NAME="SEC40"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_22.html#SEC39"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_22.html#SEC41"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_22.html#SEC39"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_22.html#SEC39"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_23.html#SEC42"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> B.1 The CDB utilities </H2>
+<!--docid::SEC40::-->
+<P>
+
+In order to have LinkController working you must have installed these.
+It is worth looking at the utilities that are provided, especially
+<CODE>cdbdump</CODE> which will let you look at the contents of the file.  You
+should be aware that <CODE>cdbget</CODE> program which is provided
+<EM>won't</EM> be able to get at the full contents of the index files
+since they contain repeated keys.
 </P><P>
 
-<table><tr><th valign=top>Jump to: &nbsp; </th><td><A HREF="link-controller_22.html#vr_$" style="text-decoration:none"><b>$</b></A>
- &nbsp; 
-<BR>
-<A HREF="link-controller_22.html#vr_C" style="text-decoration:none"><b>C</b></A>
- &nbsp; 
-<A HREF="link-controller_22.html#vr_E" style="text-decoration:none"><b>E</b></A>
- &nbsp; 
-<A HREF="link-controller_22.html#vr_F" style="text-decoration:none"><b>F</b></A>
- &nbsp; 
-<A HREF="link-controller_22.html#vr_L" style="text-decoration:none"><b>L</b></A>
- &nbsp; 
-<A HREF="link-controller_22.html#vr_S" style="text-decoration:none"><b>S</b></A>
- &nbsp; 
-<A HREF="link-controller_22.html#vr_T" style="text-decoration:none"><b>T</b></A>
- &nbsp; 
-</td></tr></table><br><P></P>
-<TABLE border=0>
-<TR><TD></TD><TH ALIGN=LEFT>Index Entry</TH><TH ALIGN=LEFT> Section</TH></TR>
-<TR><TD COLSPAN=3> <HR></TD></TR>
-<TR><TH><A NAME="vr_$"></A>$</TH><TD></TD><TD></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_3.html#IDX10"><CODE>$base_dir</CODE></A></TD><TD valign=top><A HREF="link-controller_3.html#SEC6">2.3 Link Control Configuration Variables</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_3.html#IDX15"><CODE>$infostrucs</CODE></A></TD><TD valign=top><A HREF="link-controller_3.html#SEC6">2.3 Link Control Configuration Variables</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_3.html#IDX16"><CODE>$infostrucs</CODE></A></TD><TD valign=top><A HREF="link-controller_3.html#SEC6">2.3 Link Control Configuration Variables</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_5.html#IDX19"><CODE>$Link/Repair/filebase</CODE></A></TD><TD valign=top><A HREF="link-controller_5.html#SEC11">4. Configuring CGI Programs</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_5.html#IDX18"><CODE>$Link/Repair/infostrucbase</CODE></A></TD><TD valign=top><A HREF="link-controller_5.html#SEC11">4. Configuring CGI Programs</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_3.html#IDX14"><CODE>$link_index</CODE></A></TD><TD valign=top><A HREF="link-controller_3.html#SEC6">2.3 Link Control Configuration Variables</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_3.html#IDX11"><CODE>$links</CODE></A></TD><TD valign=top><A HREF="link-controller_3.html#SEC6">2.3 Link Control Configuration Variables</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_3.html#IDX13"><CODE>$page_index</CODE></A></TD><TD valign=top><A HREF="link-controller_3.html#SEC6">2.3 Link Control Configuration Variables</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_3.html#IDX12"><CODE>$schedule</CODE></A></TD><TD valign=top><A HREF="link-controller_3.html#SEC6">2.3 Link Control Configuration Variables</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_3.html#IDX9"><CODE>$user_address</CODE></A></TD><TD valign=top><A HREF="link-controller_3.html#SEC6">2.3 Link Control Configuration Variables</A></TD></TR>
-<TR><TD COLSPAN=3> <HR></TD></TR>
-<TR><TH><A NAME="vr_C"></A>C</TH><TD></TD><TD></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_13.html#SEC22"><CODE>check-page, in emacs</CODE></A></TD><TD valign=top><A HREF="link-controller_13.html#SEC22">12.2 Finding Broken Links in Files Within Emacs</A></TD></TR>
-<TR><TD COLSPAN=3> <HR></TD></TR>
-<TR><TH><A NAME="vr_E"></A>E</TH><TD></TD><TD></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_6.html#IDX20"><CODE>extract-links</CODE></A></TD><TD valign=top><A HREF="link-controller_6.html#SEC12">5. Extracting Links</A></TD></TR>
-<TR><TD COLSPAN=3> <HR></TD></TR>
-<TR><TH><A NAME="vr_F"></A>F</TH><TD></TD><TD></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_10.html#IDX25"><CODE>fix-link</CODE></A></TD><TD valign=top><A HREF="link-controller_10.html#SEC17">9. Repairing Links</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_12.html#SEC19"><CODE>fix-link.cgi</CODE></A></TD><TD valign=top><A HREF="link-controller_12.html#SEC19">11. CGI Interface</A></TD></TR>
-<TR><TD COLSPAN=3> <HR></TD></TR>
-<TR><TH><A NAME="vr_L"></A>L</TH><TD></TD><TD></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_8.html#SEC14"><CODE>link-report</CODE></A></TD><TD valign=top><A HREF="link-controller_8.html#SEC14">7. Reporting Problems</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_8.html#SEC15"><CODE>link-report-dired</CODE></A></TD><TD valign=top><A HREF="link-controller_8.html#SEC15">7.1 Email Reporting of Newly Broken Links</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_13.html#SEC21"><CODE>link-report-dired</CODE></A></TD><TD valign=top><A HREF="link-controller_13.html#SEC21">12.1 Finding Files with Broken Links</A></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_12.html#SEC19"><CODE>link-report.cgi</CODE></A></TD><TD valign=top><A HREF="link-controller_12.html#SEC19">11. CGI Interface</A></TD></TR>
-<TR><TD COLSPAN=3> <HR></TD></TR>
-<TR><TH><A NAME="vr_S"></A>S</TH><TD></TD><TD></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_11.html#IDX26"><CODE>suggest</CODE></A></TD><TD valign=top><A HREF="link-controller_11.html#SEC18">10. Making Suggestions</A></TD></TR>
-<TR><TD COLSPAN=3> <HR></TD></TR>
-<TR><TH><A NAME="vr_T"></A>T</TH><TD></TD><TD></TD></TR>
-<TR><TD></TD><TD valign=top><A HREF="link-controller_7.html#IDX23"><CODE>test-link, using</CODE></A></TD><TD valign=top><A HREF="link-controller_7.html#SEC13">6. Testing Links</A></TD></TR>
-<TR><TD COLSPAN=3> <HR></TD></TR>
-</TABLE><P></P><table><tr><th valign=top>Jump to: &nbsp; </th><td><A HREF="link-controller_22.html#vr_$" style="text-decoration:none"><b>$</b></A>
- &nbsp; 
-<BR>
-<A HREF="link-controller_22.html#vr_C" style="text-decoration:none"><b>C</b></A>
- &nbsp; 
-<A HREF="link-controller_22.html#vr_E" style="text-decoration:none"><b>E</b></A>
- &nbsp; 
-<A HREF="link-controller_22.html#vr_F" style="text-decoration:none"><b>F</b></A>
- &nbsp; 
-<A HREF="link-controller_22.html#vr_L" style="text-decoration:none"><b>L</b></A>
- &nbsp; 
-<A HREF="link-controller_22.html#vr_S" style="text-decoration:none"><b>S</b></A>
- &nbsp; 
-<A HREF="link-controller_22.html#vr_T" style="text-decoration:none"><b>T</b></A>
- &nbsp; 
-</td></tr></table><br></P><P>
+More information on cdb and new releases can be got from the www page.
+</P><P>
 
-<A NAME="Concept Index"></A>
+<A HREF="http://pobox.com/~djb/cdb.html">http://pobox.com/~djb/cdb.html</A>
+</P><P>
+
+<A NAME="Tie-Transact-Hash"></A>
+<HR SIZE="6">
+<A NAME="SEC41"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_22.html#SEC40"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_23.html#SEC42"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_22.html#SEC39"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_22.html#SEC39"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_23.html#SEC42"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> B.2 The Tie-Transact-Hash Perl Module and Programmes </H2>
+<!--docid::SEC41::-->
+<P>
+
+This is a Perl module written by myself which includes a program which
+allows direct examination and editing of Berkeley databases.  It can be
+useful for debugging and correcting problems in the LinkController Link
+database or schedule file.
+</P><P>
+
+Tie::TransactHash can be downloaded from CPAN, the Comprehensive Perl
+Archive Network get there via:
+</P><P>
+
+<A HREF="http://www.perl.com/perl/info/software.html">http://www.perl.com/perl/info/software.html</A>
+</P><P>
+
+<A NAME="Terms"></A>
 <HR SIZE="6">
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
-<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_21.html#SEC39"> &lt;&lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_23.html#SEC45"> &gt;&gt; </A>]</TD>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_22.html#SEC39"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_23.html#SEC42"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
@@ -127,7 +121,7 @@ this file.
 <BR>  
 <FONT SIZE="-1">
 This document was generated
-by <I>Michael De La Rue</I> on <I>December, 30  2001</I>
+by <I>Michael De La Rue</I> on <I>January, 6  2002</I>
 using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
 "><I>texi2html</I></A>
 

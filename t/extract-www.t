@@ -117,7 +117,13 @@ if ($D eq 'daemon') {
   require HTTP::Daemon;
 
   $V eq "verbose" and $::verbose=1;
-  my $d = HTTP::Daemon->new(Timeout => 10, LocalAddr => '127.0.0.1');
+
+#if this timeout is too short it seems to be cause problems with
+#testing in high load situations.  It shouldn't be too long since that
+#will leave a port open for longer.  However, we bind to the
+#`localhost' IP aaddress and so should be reasonably safe.
+
+  my $d = HTTP::Daemon->new(Timeout => 100, LocalAddr => '127.0.0.1');
 
   my $base=$d->url;
 

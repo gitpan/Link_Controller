@@ -1,6 +1,6 @@
                 Usage
 
-                original files
+                original WWW files (html etc.)
                    |
 extract-links      |
                    |
@@ -22,3 +22,4 @@ fix-link(.cgi)             |
                      updated files
 
            
+Figure: Files, programs and their relationships

@@ -1,5 +1,5 @@
 package Bundle::Link_Controller;
-$REVISION=q$Revision: 1.9 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
+$REVISION=q$Revision: 1.10 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
 
 =head1 NAME
 
@@ -71,7 +71,7 @@ HTTP::Response 0
 HTTP::Status 0
 LWP::Debug 0
 LWP::MediaTypes 0
-LWP::RobotUA 0 
+LWP::RobotUA 0
 LWP::UserAgent 0
 
 =item perl-MLDBM
@@ -80,7 +80,7 @@ MLDBM 1.22           - earlier versions are database incompatible
 
 =item perl-URI
 
-URI::URL 0
+URI 0
 
 =back
 
@@ -91,7 +91,8 @@ MD5 0                - required by libwww-perl
 Net::FTP 0           - required by libwww-perl
 
 CDB_File 0.86         - earlier versions than 0.6 don't have multiget inbuilt
-                      - earlier versions than 0.86 have important bugs
+#                      - earlier versions than 0.86 have important bugs
+
 CGI::Carp 0
 CGI::Form 0
 CGI::Request 0
@@ -109,10 +110,10 @@ Net::Telnet 0         - used by adaptive tester to try really hard on broken lin
 MIME::Base64          - for authentication in LWP
 LWP::Debug 0
 LWP::MediaTypes 0
-LWP::RobotUA 0 
+LWP::RobotUA 0
 LWP::UserAgent 0
 MLDBM 1.22           - earlier versions are database incompatible
-URI::URL 0
+URI 0
 Search::Binary 0
 
 =head1 INCLUDED MODULES

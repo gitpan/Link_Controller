@@ -1,6 +1,6 @@
 <HTML>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Created on December, 30  2001 by texi2html 1.64 -->
+<!-- Created on January, 6  2002 by texi2html 1.64 -->
 <!-- 
 Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
             Karl Berry  <karl@freefriends.org>
@@ -11,10 +11,10 @@ Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
  
 -->
 <HEAD>
-<TITLE>Using LinkController: Bugs</TITLE>
+<TITLE>Using LinkController: Link Database Maintenance</TITLE>
 
-<META NAME="description" CONTENT="Using LinkController: Bugs">
-<META NAME="keywords" CONTENT="Using LinkController: Bugs">
+<META NAME="description" CONTENT="Using LinkController: Link Database Maintenance">
+<META NAME="keywords" CONTENT="Using LinkController: Link Database Maintenance">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
 <META NAME="Generator" CONTENT="texi2html 1.64">
@@ -26,89 +26,98 @@ Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
 <A NAME="SEC29"></A>
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
 <TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC28"> &lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_18.html#SEC30"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_17.html#SEC30"> &gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC28"> &lt;&lt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top"> Up </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_18.html#SEC30"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_18.html#SEC31"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
 </TR></TABLE>
-<H1> 16. Bugs and bug reporting </H1>
+<H1> 16. Link Database Maintenance </H1>
 <!--docid::SEC29::-->
 <P>
 
-This version of LinkController is still in early development.  There are
-many changes to come.  Undoubtedly there are many bugs in the software
-already and will soon be more.
+For the most part the link database shouldn't need much maintenance.
+There are a number of cases where it might, however.  If it becomes
+corrupt, you may try the db_recover command.  Probably, however, it's
+just better to recover the database and link checking schedule from a
+recent backup.  Time is not really critical since the work is normally
+easy to regenerate.  You should make sure that link checking doesn't run
+in at the time you do backups, however.
 </P><P>
 
-A bug is when 
+The other thing is that occasionally you may want to recover space in
+the link database by dumping and un-dumping it.  See the Berkeley database
+documentation for more details.
 </P><P>
 
-<UL>
-<LI>
-the software doesn't do something the documentation says it should
-<LI>
-the software does something the documentation says it shouldn't
-<LI>
-the software does something surprising and that isn't documented
-<LI>
-the software does something strange but the documentation doesn't
-explain why
-<LI>
-it is difficult or impossible to understand what the documentation is
-trying to say
-</UL>
+<BLOCKQUOTE><TABLE BORDER=0 CELLSPACING=0> 
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_17.html#SEC30">16.1 Link Ageing</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+</TABLE></BLOCKQUOTE>
 <P>
 
-some of these mean fixing the documentation and some the software.  All
-of them are bugs and should be reported and fixed.  
+<A NAME="Link Ageing"></A>
+<HR SIZE="6">
+<A NAME="SEC30"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_17.html#SEC29"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_18.html#SEC31"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_17.html#SEC29"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_17.html#SEC29"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_18.html#SEC31"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 16.1 Link Ageing </H2>
+<!--docid::SEC30::-->
+<P>
+
+Sometimes we have a link which is no longer in use within our
+infostructure.  However, it's not a good idea to throw away
+information about it immediately.  It could be that certain files have
+been temporarily deleted and will come back.  Alternatively, a link
+could have been found broken and been corrected, but someone has a
+copy of the old page.  When they re-install the copy, we will have to
+deal with that link again.  
 </P><P>
 
-If you find a bug, I will be grateful to hear about it.  Even if you
-don't know how to fix it or anything, it is useful to know what is wrong
-so that other people don't get caught out but <EM>read the BUGS file
-first</EM> please.  If the bug is listed there then the only useful thing
-that you can do is fix it.  If you do this and contribute it to me then
-that is very useful.
+If we had not kept that link around and they immediately do a link
+check on their document they may see nothing wrong, and, because of
+the nature of link-controller, we won't start reporting the link as
+broken until we have confirmed that it really is, some days later.
 </P><P>
 
-When you report a bug, please tell me what release of link controller
-you were using.  This is the number which was in the name of the file
-that LinkController came in.  If your problem was with a specific
-program, please also run <SAMP>`program --version'</SAMP> and send the output.
-This tells me exactly which version of that program you were running.
+If, on the other hand, we keep checking all of the links which are
+aged, we will cause ourselves considerable extra work.  
 </P><P>
 
-Since this is a developers release, I'd hope most users would be able to
-make some level of fixes.  If you do this, send me context differences
-(use <SAMP>`diff -u'</SAMP> if it works or try <SAMP>`diff -c'</SAMP> otherwise).  I use
-CVS, so as long as I know which version you have I will be able to find
-the original file and see your changes.  However it's also important to
-explain them because I won't be able to use them unless I (relatively
-stupid computer type) understand them.
+To handle this, links are aged.  Once a link has reached greater than
+a certain age, the link will not be checked any more.   Once the link
+has reached a much larger age, it will be completely deleted from the
+link database.  The age is reset each time the link is extracted from
+the infostructure, so links which are still in use will continue to be
+checked.  
 </P><P>
 
-Send bug reports to the address you get by changing words into
-punctuation in the following.
+In the meantime, the link will still be repeatedly scheduled based to
+it's normal checking time.  This causes us to examine it quite
+regularly, but that is okay, since we will do almost no work when we
+look at it.
 </P><P>
 
-<TABLE><tr><td>&nbsp;</td><td class=example><pre>link minus controller at scotclimb dot org dot uk
-</pre></td></tr></table></P><P>
-
-This mailing address is sent only to me right now, but may become a list
-in future.  Use my (Michael De La Rue) personal address to contact me
-please.  N.B. I am <STRONG>extremely</STRONG> inefficient about answering email.
-Don't worry if you don't get a reply.
+By default links which have not been refreshed will be ignored after
+one week and will be deleted from the database after two months.  
 </P><P>
 
-<A NAME="Acknowledgements"></A>
+<A NAME="Bugs"></A>
 <HR SIZE="6">
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
-<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC28"> &lt;&lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_18.html#SEC30"> &gt;&gt; </A>]</TD>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_17.html#SEC29"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_18.html#SEC31"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
@@ -117,7 +126,7 @@ Don't worry if you don't get a reply.
 <BR>  
 <FONT SIZE="-1">
 This document was generated
-by <I>Michael De La Rue</I> on <I>December, 30  2001</I>
+by <I>Michael De La Rue</I> on <I>January, 6  2002</I>
 using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
 "><I>texi2html</I></A>
 

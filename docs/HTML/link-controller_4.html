@@ -1,6 +1,6 @@
 <HTML>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Created on December, 30  2001 by texi2html 1.64 -->
+<!-- Created on January, 6  2002 by texi2html 1.64 -->
 <!-- 
 Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
             Karl Berry  <karl@freefriends.org>
@@ -76,8 +76,8 @@ to it only when you find that there are links or pages being checked
 that you would rather avoid.
 </P><P>
 
-For this section, we assume that you already know how to make basic perl
-code.  If not, then please read through the perl manual pages
+For this section, we assume that you already know how to make basic Perl
+code.  If not, then please read through the Perl manual pages
 <SAMP>`perl'</SAMP>, <SAMP>`perlsyn'</SAMP> and <SAMP>`perldata'</SAMP>.  You may find that the
 examples given below are sufficient to get you started.
 </P><P>
@@ -96,8 +96,8 @@ hash.  These look like the following
 <TABLE><tr><td>&nbsp;</td><td class=example><pre>$::infostrucs{http://www.mypages.org/} = {
    mode =&#62; "directory";
    file_base =&#62; "/home/myself/www",
-   prune_re =&#62; "^(/home/myself/www/statistics)" #ignore referals
-              . "|(cgi-bin)", #do cgis separately
+   prune_re =&#62; "^(/home/myself/www/statistics)" #ignore referrals
+              . "|(cgi-bin)", #do CGIs separately
    exclude_re =&#62; "\.secret$", #secrets shouldn't get into link database
 };
 
@@ -132,7 +132,7 @@ found before it will be extracted and saved.
 <EM>URL</EM> found before it will be extracted and saved.
 <DT><SAMP>`prune_re'</SAMP>
 <DD>Used only in directory mode, this will completely exclude all files and
-subdirectories of directories matched by the regular expression.
+sub-directories of directories matched by the regular expression.
 </DL>
 <P>
 
@@ -151,7 +151,7 @@ the definition in the $::infostrucs hash.
 advanced   http://www.mypages.org/cgi-bin/
 </pre></td></tr></table></P><P>
 
-The url used here must match <EM>exactly</EM> the one used in the hash.
+The URL used here must match <EM>exactly</EM> the one used in the hash.
 It is important to note that <SAMP>`directory'</SAMP> and <SAMP>`www'</SAMP> definitions
 in the <TT>`infostrucs'</TT> file will override any advanced configuration
 given.
@@ -233,7 +233,7 @@ mechanism.
 <BR>  
 <FONT SIZE="-1">
 This document was generated
-by <I>Michael De La Rue</I> on <I>December, 30  2001</I>
+by <I>Michael De La Rue</I> on <I>January, 6  2002</I>
 using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
 "><I>texi2html</I></A>
 

@@ -17,12 +17,12 @@ $home_config=$ENV{HOME} . "/.link-control.pl";
 die "LinkController test config file, $home_config missing."
   unless -e $home_config;
 
-BEGIN {print "1..10\n"}
+BEGIN {print "1..9\n"}
 
-@start = qw(perl -Iblib/lib);
+@start = qw(perl -Iblib/lib -I../Link.pm/lib);
 
 #$verbose=255;
-$verbose=0;
+$verbose=0 unless defined $verbose;
 $fail=0;
 sub nogo {print "not "; $fail=1;}
 sub ok {my $t=shift; print "ok $t\n"; $fail=0}
@@ -37,30 +37,17 @@ unlink ($lonp, $phasl, $urls, $linkdb);
 # create a "urllist" file from the directories
 nogo if system @start, qw(blib/script/extract-links http://www.test.nowhere/
                           test-data/sample-infostruc/),
-                          "--config-file=$conf", ($verbose ? undef : "--silent");
+                          "--config-file=$conf", ($verbose ? () : "--silent");
 
 ok(1);
 
-#FIXME:delete this test
-
-#nogo unless ( -e $lonp and -e $phasl and -e $urls);
+nogo unless ( -e $lonp and -e $phasl and -e $linkdb );
 
 ok(2);
 
-#FIXME:delete this test
-
-#nogo if system @start, 'blib/script/links-from-listfile', 'test-links.bdbm',
-#		'urllist';
-
-ok(3);
-
-nogo unless ( -e $lonp and -e $phasl and -e $linkdb );
-
-ok(4);
-
 nogo if system @start, 'blib/script/link-report', "--config-file=$conf";
 
-ok(5);
+ok(3);
 
 #put some broken links into the database
 use Fcntl;
@@ -96,7 +83,7 @@ $output = `$command`;
 
 $output =~ m,broken.*http://www.rum.com/, or nogo ;
 
-ok(6);
+ok(4);
 
 $command= (join (" ", @start) )
   . " blib/script/link-report --config-file=$conf " . '--html';
@@ -111,7 +98,7 @@ $output =~ m(BROKEN.*
              \<\/A\> 
             )sx or nogo ;
 
-ok(7);
+ok(5);
 
 $command= (join (" ", @start) )
   . " blib/script/link-report --config-file=$conf " . '--okay';
@@ -120,7 +107,27 @@ $output = `$command`;
 
 $output =~ m(http://www\.ix\.com)sx or nogo ;
 
-ok(8);
+ok(6);
+
+#test reporting on a specified url
+
+open URL,">report-urls.test-tmp~";
+print URL "http://www.ix.com\n";
+close URL;
+
+$command= (join (" ", @start) )
+  . " blib/script/link-report --url-file=report-urls.test-tmp~ "
+    .  "--config-file=$conf " . ($verbose ? "--verbose=2047" : "");
+
+print STDERR "running $command" if $::verbose;
+
+$output = `$command`;
+
+print STDERR "output is:\n$output\n" if $::verbose;
+
+$output =~ m(http://www\.ix\.com)sx or nogo ;
+
+ok(7);
 
 $::driver='cgi-driver.test-tmp.pl';
 my $rep_cgi="blib/script/link-report.cgi";
@@ -162,7 +169,7 @@ $output =~ m(\<HEAD\>.*\<TITLE\>.*\</TITLE\>.*\</HEAD\>.*\<BODY\>.*
              \</A\> .*
             \</BODY\>)isx or nogo ;
 
-ok(9);
+ok(8);
 
 print STDERR "#going to run: echo infostructure=1 | $command" if $::verbose;
 $output = `echo infostructure=1 | $command`;
@@ -184,7 +191,7 @@ $output =~ m(\<HEAD\>.*\<TITLE\>.*\</TITLE\>.*\</HEAD\>.*\<BODY\>.*
              \</A\> .*
             \</BODY\>)isx or nogo ;
 
-ok(10);
+ok(9);
 
 #FIXME write tests for url reporting tests for include or exclude features.
 

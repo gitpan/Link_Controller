@@ -39,7 +39,7 @@ This is the alpha version of this manual and is very incomplete.
 This document describes LinkController a system for checking and
 maintaining links in infostructures
 
-This document applies to version 0.030 of LinkController
+This document applies to version 0.033 of LinkController
 @end ifnottex
 
 @menu
@@ -59,7 +59,9 @@ This document applies to version 0.030 of LinkController
 * Setting up LinkController::   
 * Administration::              
 * Robots::                      General statements about robots.
+* Link Database Maintenance::   
 * Bugs::                        What to do if you find a bug.
+* History ::                    
 * Acknowledgements ::           People who helped with this package.
 * Invoking the Programs::       How to run the programs in LinkController.
 * Related Packages::            Packages used by or useful with LinkController.
@@ -88,7 +90,7 @@ Reporting Problems
 
 The Emacs Interface
 
-* link-report-dired::           An emacs program to display broken links.
+* link-report-dired::           An Emacs program to display broken links.
 * check-page in Emacs::         Finding broken links in a file.
 
 Setting up LinkController
@@ -101,6 +103,10 @@ Administration
 * User Administration::         
 * Cron Scripts::                
 
+Link Database Maintenance
+
+* Link Ageing::                 
+
 Acknowledgements
 
 * Esoterica Internet Portugal::  
@@ -111,7 +117,7 @@ Acknowledgements
 Packages Which Can Be Useful with LinkController
 
 * cdb::                         Utilities for the LinkController indexes.
-* Tie-Transact-Hash::           Berkley DB editing tools.
+* Tie-Transact-Hash::           Berkeley DB editing tools.
 
 Terms
 
@@ -153,7 +159,7 @@ Public License which should have been included as the file
 This section of the manual assumes that the programs that make up LinkController are already
 installed and working on your computer.  If not, then @xref{URLs}.  We
 assume the standard setup where your system administrator runs the link
-checking for you.  Other setups will need slightly different behavior.
+checking for you.  Other setups will need slightly different behaviour.
 Speak to the person who set up link controller.
 
 The first thing to do is to run @w{@code{configure-link-control}} to
@@ -208,7 +214,7 @@ reporting and fixing links.  For other configuration see
 
 All of the variable information is stored in the file
 @file{.link-control.pl} in your home directory or
-@file{/etc/link-control.pl} for systemwide configuration.  The
+@file{/etc/link-control.pl} for system wide configuration.  The
 configuration files are written directly in Perl (the programming
 language LinkController is written in).  You can set the configuration
 variables by putting lines like this.
@@ -311,7 +317,7 @@ directive is present on each line with the full path to the base
 directory of the infostructure.
 
 More advanced configuration is possible by defining the information
-directly in perl.  
+directly in Perl.  
 
 @node Advanced Configuration, Configuring CGI Programs, Configuration, Top
 @chapter Advanced Configuration
@@ -339,8 +345,8 @@ links.  You may want to skip over this section initially and come back
 to it only when you find that there are links or pages being checked
 that you would rather avoid.
 
-For this section, we assume that you already know how to make basic perl
-code.  If not, then please read through the perl manual pages
+For this section, we assume that you already know how to make basic Perl
+code.  If not, then please read through the Perl manual pages
 @samp{perl}, @samp{perlsyn} and @samp{perldata}.  You may find that the
 examples given below are sufficient to get you started.
 
@@ -357,8 +363,8 @@ hash.  These look like the following
 $::infostrucs@{http://www.mypages.org/@} = @{
    mode => "directory";
    file_base => "/home/myself/www",
-   prune_re => "^(/home/myself/www/statistics)" #ignore referals
-              . "|(cgi-bin)", #do cgis separately
+   prune_re => "^(/home/myself/www/statistics)" #ignore referrals
+              . "|(cgi-bin)", #do CGIs separately
    exclude_re => "\.secret$", #secrets shouldn't get into link database
 @};
 
@@ -392,7 +398,7 @@ If defined, this regular expression must @emph{not} be matched by every
 @emph{URL} found before it will be extracted and saved.
 @item prune_re
 Used only in directory mode, this will completely exclude all files and
-subdirectories of directories matched by the regular expression.
+sub-directories of directories matched by the regular expression.
 @end table
 
 N.B. the exclude and include regular expression can be used together.
@@ -409,7 +415,7 @@ advanced   http://www.mypages.org/
 advanced   http://www.mypages.org/cgi-bin/
 @end example
 
-The url used here must match @emph{exactly} the one used in the hash.
+The URL used here must match @emph{exactly} the one used in the hash.
 It is important to note that @samp{directory} and @samp{www} definitions
 in the @file{infostrucs} file will override any advanced configuration
 given.
@@ -467,7 +473,7 @@ mechanism.
 
 @node Configuring CGI Programs, Extracting Links, Advanced Configuration, Top
 @chapter Configuring CGI Programs
-@cindex cgi, configuration
+@cindex CGI, configuration
 
 The CGI programs have separate configuration variables and configuration.  
 
@@ -477,7 +483,7 @@ The CGI programs have separate configuration variables and configuration.
 The URL that gets to the base directory of the infostructure.
 @item $WWW::Link::Repair::filebase
 @vindex $Link/Repair/filebase
-The filename of the directory which is equivalent to the URL
+The file-name of the directory which is equivalent to the URL
 @end table
 
 @strong{FIXME:} this section needs to be rewritten.
@@ -524,7 +530,7 @@ so it can find them.
 located wherever you have configured them to by default they are called
 @file{link_on_page.cdb}, @file{page_has_link.cdb}.  The third file is
 the database file @file{links.db}.  @w{@code{extract-links}} can also
-optionally create a text file which lists all of the urls in the
+optionally create a text file which lists all of the URLs in the
 infostructure, one per line.
 
 @node Testing, Reporting, Extracting Links, Top
@@ -538,7 +544,7 @@ take about ten days.  This is a deliberate feature of LinkController.
 It is designed this way firstly to give people at the other end of links
 a chance to repair their resources and secondly to reduce the amount of
 network bandwidth LinkController uses at a given time and so its impact
-on other people's internet usage.
+on other people's Internet usage.
 
 @pindex test-link, using
 The key program which you want to use is @w{@code{test-link}}.  I run
@@ -634,7 +640,7 @@ link-report -h
 @end example
 
 For more advanced reporting and editing of documents with broken links
-you may want to use the emacs interface (@pxref{Emacs, The Emacs
+you may want to use the Emacs interface (@pxref{Emacs, The Emacs
 Interface}).
 
 @menu
@@ -643,8 +649,8 @@ Interface}).
 
 @node Email Reporting,  , Reporting, Reporting
 @section Email Reporting of Newly Broken Links
-@cindex links, examining, in emacs
-@cindex broken links, finding in emacs
+@cindex links, examining, in Emacs
+@cindex broken links, finding in Emacs
 @pindex link-report-dired
 
 It's possible to arrange automatic reporting by email of links which
@@ -671,7 +677,7 @@ fi
 @end example
 
 Every time that this script is run, it will rename the status change
-logfile and then mail a report with all of the new broken links
+log file and then mail a report with all of the new broken links
 to the specified email address.  
 
 In future this feature may be folded into @w{@code{link-report}}
@@ -693,7 +699,7 @@ check-page filename.html
 
 And it will list all of the links that it is unsure about along with the
 line number the problem occurred on.  This program works particularly
-well when you editing with emacs (@pxref{check-page in Emacs, The Emacs Interface}).
+well when you editing with Emacs (@pxref{check-page in Emacs, The Emacs Interface}).
 
 @node Repair, Suggestions, Files, Top
 @chapter Repairing Links
@@ -777,8 +783,8 @@ This will have to be set up using the features of the web server.
 
 @node Emacs, Setting up LinkController, CGI, Top
 @chapter The Emacs Interface
-@cindex emacs interface
-@cindex interface, emacs
+@cindex Emacs interface
+@cindex interface, Emacs
 
 LinkController's reporting system is designed to be independent of the
 interface to it, and often the shell interface will be all that is
@@ -786,22 +792,22 @@ needed.  However another convenient interface is through
 @w{@code{emacs}}.  There are two parts to this integration.
 
 @menu
-* link-report-dired::           An emacs program to display broken links.
+* link-report-dired::           An Emacs program to display broken links.
 * check-page in Emacs::         Finding broken links in a file.
 @end menu
 
 @node link-report-dired, check-page in Emacs, Emacs, Emacs
 @section Finding Files with Broken Links
-@cindex links, examining, in emacs
-@cindex broken links, finding in emacs
+@cindex links, examining, in Emacs
+@cindex broken links, finding in Emacs
 @pindex link-report-dired
 
-There is a special emacs mode called @w{@code{link-report-dired}}
+There is a special Emacs mode called @w{@code{link-report-dired}}
 written for locating files with broken links.  The mode is based on
 @w{@code{find-dired}} and works very similarly.  It runs the program
 @w{@code{link-report}} with an option which makes it list file names in
 the same way as the @code{ls} program does.  The user can then move
-around the buffer as normal in emacs and enter files using a single key
+around the buffer as normal in Emacs and enter files using a single key
 press (normally @kbd{f}).
 
 @node check-page in Emacs,  , link-report-dired, Emacs
@@ -809,8 +815,8 @@ press (normally @kbd{f}).
 @pindex check-page@r{, in emacs}
 
 The program @w{@code{check-page}} was specially designed so that it outputs
-in a format which can be read by emacs' @w{@code{compile}} mode.  You can
-use it within emacs and then step from error to error correcting them.
+in a format which can be read by Emacs' @w{@code{compile}} mode.  You can
+use it within Emacs and then step from error to error correcting them.
 
 To do this, after you have set up your system and completed link
 checking use the command @kbd{M-x} @kbd{compile} @kbd{check-page
@@ -858,7 +864,7 @@ different things, but the summary is
 
 @itemize @bullet
 @item
-Create a linkcont userid and group which will be used for running programs
+Create a linkcont user-id and group which will be used for running programs
 @item
 Create a working directory where LinkController will keep it's data
 @item
@@ -868,9 +874,9 @@ Create cron scripts which will run LinkController automatically.
 @end itemize
 
 Using this command it is also possible to activate users and groups
-e.g. @code{default-install -user username} or  
-@code{default-install -group groupname} in which case the specified
-users will become a member of the lcntusr group.  
+e.g. @code{default-install -user @var{username}} or  
+@code{default-install -group @var{groupname}} in which case the specified
+users will become a member of the @code{linkcont} group.  
 
 
 @node User Administration, Cron Scripts, Default Installation, Administration
@@ -884,11 +890,11 @@ site) then you will only have to check that link once.
 In this case, the important question is which links are copied into the
 checking database.  This is controlled by the program
 @w{@code{copy-links-from-users}} and decides copies data from users which
-are in the @code{lnkusr} group.  
+are in the @code{lnctusr} group.  
 
 The command @w{@code{default-install}} can be used to manipulate which
-users are in the group e.g. @code{default-install -user username} or  
-@code{default-install -group groupname} in which case the specified
+users are in the group e.g. @code{default-install --user @var{username}} or  
+@code{default-install -group @var{groupname}} in which case the specified
 users will become a member of the lcntusr group.
 
 Another form of user administration is limitation on which users have
@@ -920,7 +926,7 @@ This only needs to be done weekly.
 
 The program @w{@code{default-install}} can create these scripts.
 
-@node Robots, Bugs, Administration, Top
+@node Robots, Link Database Maintenance, Administration, Top
 @chapter Robots and Sensible Behaviour
 @cindex robots
 @cindex dangers
@@ -958,7 +964,7 @@ as a link.  These are all related to the design and limitations on
 
 @itemize @bullet
 @item 
-@w{@code{test-link}} does @emph{not} recurse.  It only tests links that
+@w{@code{test-link}} does @emph{not} recurs.  It only tests links that
 are specifically listed in the schedule database.
 @item 
 There is a limit to the number of links that will be tested in one run.
@@ -973,11 +979,64 @@ certain rate.
 
 The last limitation is inherited from the @code{LWP::RobotUA} module and
 the documentation for that covers the details of how it works.
-@w{@code{test-link}} trys to re-order testing of links as needed so that
+@w{@code{test-link}} tries to re-order testing of links as needed so that
 a limit on the rate of visits to one site does not cause a limit on
 overall testing speed.
 
-@node Bugs, Acknowledgements , Robots, Top
+@node Link Database Maintenance, Bugs, Robots, Top
+@chapter Link Database Maintenance
+
+For the most part the link database shouldn't need much maintenance.
+There are a number of cases where it might, however.  If it becomes
+corrupt, you may try the db_recover command.  Probably, however, it's
+just better to recover the database and link checking schedule from a
+recent backup.  Time is not really critical since the work is normally
+easy to regenerate.  You should make sure that link checking doesn't run
+in at the time you do backups, however.
+
+The other thing is that occasionally you may want to recover space in
+the link database by dumping and un-dumping it.  See the Berkeley database
+documentation for more details.
+
+@menu
+* Link Ageing::                 
+@end menu
+
+@node Link Ageing,  , Link Database Maintenance, Link Database Maintenance
+@section Link Ageing
+
+Sometimes we have a link which is no longer in use within our
+infostructure.  However, it's not a good idea to throw away
+information about it immediately.  It could be that certain files have
+been temporarily deleted and will come back.  Alternatively, a link
+could have been found broken and been corrected, but someone has a
+copy of the old page.  When they re-install the copy, we will have to
+deal with that link again.  
+
+If we had not kept that link around and they immediately do a link
+check on their document they may see nothing wrong, and, because of
+the nature of link-controller, we won't start reporting the link as
+broken until we have confirmed that it really is, some days later.
+
+If, on the other hand, we keep checking all of the links which are
+aged, we will cause ourselves considerable extra work.  
+
+To handle this, links are aged.  Once a link has reached greater than
+a certain age, the link will not be checked any more.   Once the link
+has reached a much larger age, it will be completely deleted from the
+link database.  The age is reset each time the link is extracted from
+the infostructure, so links which are still in use will continue to be
+checked.  
+
+In the meantime, the link will still be repeatedly scheduled based to
+it's normal checking time.  This causes us to examine it quite
+regularly, but that is okay, since we will do almost no work when we
+look at it.
+
+By default links which have not been refreshed will be ignored after
+one week and will be deleted from the database after two months.  
+
+@node Bugs, History , Link Database Maintenance, Top
 @chapter Bugs and bug reporting
 
 This version of LinkController is still in early development.  There are
@@ -1037,7 +1096,44 @@ in future.  Use my (Michael De La Rue) personal address to contact me
 please.  N.B. I am @strong{extremely} inefficient about answering email.
 Don't worry if you don't get a reply.
 
-@node Acknowledgements , Invoking the Programs, Bugs, Top
+	The ideas, and history
+
+@node History , Acknowledgements , Bugs, Top
+@chapter History
+@cindex history MOMspider
+
+LinkController was originally inspired by MOMspider and having the
+MOMspider code available was very useful when starting the creation of
+this kit, but, it shares almost no code with MOMspider, other than what
+has comes to it from the LibWWW-Perl library.
+
+Philosophically, the MOMspider heritage is obvious in the wish to handle
+big jobs efficiently.  In the working practice there are far more
+differences than similarities, partly caused by Perl language changes.
+
+I decided to completely separate the exploration of the local
+infostructure, looking for links to be checked, from the actual checking
+process.  This means that checking can be spread over a large number of
+days and still run efficiently. 
+
+The basic aim of this link checking kit is to be able to efficiently
+handle any size of link checking job.  At the bottom end we have
+checking new pages as they are written.  Here we want to use
+information from previous checks to avoid having to check all of each
+page every time.  At the other end we have massive info structures
+(sites) which deal in many thousands of links and could not possibly
+all be checked in one day.  For this latter case the aim is to be able
+to efficiently spread the link checking load into all available low
+usage periods.
+
+My primary aim in writing this was not to write very efficient code for
+the small scale case (takes minimum time to do everything), but rather
+code which would scale well.  If your system can check 1000 links in two
+days, it will hopefully be able to check almost 7000 links in two weeks.
+I'm trying to make sure all data structures which grow with the number
+of links are kept on disk.
+
+@node Acknowledgements , Invoking the Programs, History , Top
 @chapter Acknowledgements
 @cindex acknowledgements
 
@@ -1058,7 +1154,7 @@ the help of the following people and organisations.
 @c I'd like to have these people's names correct but I'm not sure how to
 @c do that in texinfo.. oh well.
 
-Esoterica provided me with full access to the internet in Portugal and
+Esoterica provided me with full access to the Internet in Portugal and
 use of their computers for free which allowed me to keep up on both this
 software and the Linux Access HOWTO.  In particular I'd like to thank
 all of the members of staff who helped me very much.  These people include
@@ -1098,7 +1194,7 @@ incorporated into the software.
 Supported by the Computing Science department of the University of
 Edinburgh, the Tardis project provides an experimental framework in
 which students, former students and other related people to do their own
-work on fully internet connected Unix and Linux hosts.
+work on fully Internet connected Unix and Linux hosts.
 
 The use of the facilities of the Tardis Project has made it much easier
 for me to develop software like this.  In particular, the large amount
@@ -1108,7 +1204,7 @@ of disk space the administrators have allow me to use is very useful.
 @unnumberedsec Other Free Software Authors
 
 It is through the software provided by the Free Software Foundation
-(such as the @w{@code{gcc}} C compiler, emacs, the file utilities), the
+(such as the @w{@code{gcc}} C compiler, Emacs, the file utilities), the
 authors of the various packages which make up a working Linux System
 (Linux by Linus Torvalds, Alan Cox, etc.... filesystems and support by
 Theodore Tytso, Stefan Tweedie etc.. Linux-Libc by HJ Lu, based on GNU
@@ -1184,7 +1280,7 @@ want.
 
 @menu
 * cdb::                         Utilities for the LinkController indexes.
-* Tie-Transact-Hash::           Berkley DB editing tools.
+* Tie-Transact-Hash::           Berkeley DB editing tools.
 @end menu
 
 @node cdb, Tie-Transact-Hash, Related Packages, Related Packages
@@ -1205,7 +1301,7 @@ More information on cdb and new releases can be got from the www page.
 @section The Tie-Transact-Hash Perl Module and Programmes
 
 This is a Perl module written by myself which includes a program which
-allows direct examination and editing of berkley databases.  It can be
+allows direct examination and editing of Berkeley databases.  It can be
 useful for debugging and correcting problems in the LinkController Link
 database or schedule file.
 
@@ -1260,13 +1356,13 @@ the MOMspider package.  It is a collection of related resources.
 @section Link
 
 The term link in LinkController is used for a connection between two
-resources.  It's existance really comes from the `class' or piece of
+resources.  It's existence really comes from the `class' or piece of
 type of computer data which is used to store information about `links'.
 Properties of a link include:
 
 @itemize @bullet
 @item 
-Knowing what the url of the target resource of the connection is.
+Knowing what the URL of the target resource of the connection is.
 @item
 Knowing whether the connection to the target resource has been working
 recently.

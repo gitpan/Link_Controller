@@ -4,9 +4,6 @@ link-authorisation - how to handle authorisation in LinkController
 
 =head1 DESCRIPTION
 
-  ***********not implemented yet********* 
-  please do so if you have time
-
 Using link-controller in an environment with high controlled
 authentication is inherently a security issue.  This risk may,
 however, not be much higher than the one that you are currently

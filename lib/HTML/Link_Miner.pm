@@ -1,5 +1,5 @@
 package HTML::Link_Miner;
-$REVISION=q$Revision: 1.3 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
+$REVISION=q$Revision: 1.4 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
 
 =head1 NAME
 
@@ -45,7 +45,7 @@ call backs for each link type??
 
 require HTML::Parser;
 @ISA = qw(HTML::Parser);
-$VERSION = sprintf("%d.%02d", q$Revision: 1.3 $ =~ /(\d+)\.(\d+)/);
+$VERSION = sprintf("%d.%02d", q$Revision: 1.4 $ =~ /(\d+)\.(\d+)/);
 
 use strict;
 use HTML::Tagset ();
@@ -152,7 +152,7 @@ received using LWP:
 
   use LWP::UserAgent;
   use HTML::LinkExtor;
-  use URI::URL;
+  use URI;
 
   $url = "http://www.sn.no/";  # for instance
   $ua = new LWP::UserAgent;
@@ -182,7 +182,7 @@ received using LWP:
 
 =head1 SEE ALSO
 
-L<HTML::Parser>, L<HTML::Tagset>, L<LWP>, L<URI::URL>
+L<HTML::Parser>, L<HTML::Tagset>, L<LWP>, L<URI>
 
 =head1 COPYRIGHT
 

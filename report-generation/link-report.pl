@@ -133,6 +133,7 @@ $::long_list=0;
 @::page_exc=();
 @::page_inc=();
 @::urls=();
+$::url_report=0;
 
 $::opthandler = new Getopt::Function
   [ "version V>version",
@@ -191,7 +192,7 @@ $::opthandler = new Getopt::Function
    "broken" => [ \&maketrue,
 	       "Report links which are considered broken." ],
    "not-perfect" => [ \&maketrue,
-		      "Report any url which wasn't okay at last test." ],
+		      "Report any URL which wasn't okay at last test." ],
    "okay" => [ \&maketrue,
 	       "Report links which have been tested okay." ],
    "redirected" => [ \&maketrue,
@@ -203,13 +204,16 @@ $::opthandler = new Getopt::Function
    "ignore-missing" => [ \&maketrue,
 			 "Don't complain about links which aren't in "
 			 . "the database." ],
-   "url-file" => [ sub { open URLS, ">$_"; my @urls=<URLS>;
-			 my @fixed = map { s/\s*$// } @urls;
-			 push @::urls, grep (!/^\s*#/, @fixed); },
+   "url-file" => [ sub { print "reading urlfile $::value" if $::verbose;
+                         open URLS, "<$::value"; my @urls=<URLS>;
+			 foreach (@urls) { s/\s*$//; s/\s*// }
+			 push @::urls, @urls;
+			 $::url_report=1;
+		       },
 		   "Read all URLs in a file (one URL per line).",
 		   "FILENAME"],
-   "url" => [ sub { push @::urls, split /\s+/, $::value; },
-	      "Give urls which are to be reported on.",
+   "url" => [ sub { push @::urls, split /\s+/, $::value; $::url_report=1; },
+	      "Give URLs which are to be reported on.",
 	      "URLs"],
    "infostructure" => [ \&maketrue,
 			"Check on links in the given infostructure (or "
@@ -263,7 +267,7 @@ EOF
 sub version() {
   print <<'EOF';
 link-report version
-$Id: link-report.pl,v 1.19 2001/12/25 06:31:18 mikedlr Exp $
+$Id: link-report.pl,v 1.21 2002/01/06 21:18:43 mikedlr Exp $
 EOF
 }
 
@@ -351,8 +355,8 @@ if ($::all_links || $::broken || $::not_perfect || $::okay || $::redirected
 }
 
 CASE: {
-  (@::urls ) && do {
-    print STDERR "Reporting on specific urls: @::urls\n"
+  ($::url_report ) && do {
+    print STDERR "Reporting on specific urls:", join (" ", @::urls), "\n"
       if $::verbose & 16;
     $::selectfunc =
       WWW::Link::Selector::generate_url_func (\%::links,$::reporter,@::urls );

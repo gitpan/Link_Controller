@@ -1,10 +1,12 @@
+check that all systems handle file overloads.
+	close should always be checked for return
+	
 handle relative link substitution in the CGIs.  Test relative link
 substitutions alot more.
 
 handle exclusion regular expressions in the infostructure definition.
 
 handle fragments with characters that would otherwise be illegal.
-
 
 add an option --ignore-system-config to all commands and implement it
 into ReadConf so that we are more safe from the system configurtion

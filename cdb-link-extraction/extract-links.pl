@@ -125,7 +125,7 @@ use File::Find;
 
 use LWP::MediaTypes;
 require HTML::LinkExtor;
-use URI::URL;
+#use URI;
 use LWP::Auth_UA;
 use CDB_File::BiIndex::Generator;
 
@@ -197,10 +197,10 @@ $::opthandler = new Getopt::Function
 			  "Database to create link records into.",
 			  "FILENAME" ],
      "out-url-list" => [ \&makevalue,
-			  "File to output the url of each link found to",
+			  "File to output the URL of each link found to",
 			  "FILENAME" ],
      "in-url-list" => [ \&makevalue,
-			  "File to input urls from to create links",
+			  "File to input URLs from to create links",
 			  "FILENAME" ],
      "config-file" => [ sub {
 			  print STDERR "loading extra config\n" if $::verbose;
@@ -236,7 +236,7 @@ EOF
 sub version() {
   print <<'EOF';
 extract-links version
-$Id: extract-links.pl,v 1.7 2001/12/25 06:31:16 mikedlr Exp $
+$Id: extract-links.pl,v 1.9 2002/01/06 21:17:43 mikedlr Exp $
 EOF
 }
 

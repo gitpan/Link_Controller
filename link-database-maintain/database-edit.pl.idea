@@ -51,7 +51,7 @@ use DB_File;
 use Data::Dumper;
 use MLDBM qw(DB_File); #chosen over GDBM for network byte order.
 #use MLDBM; 
-use URI::URL;
+use URI;
 
 use WWW::Link;
 
@@ -96,7 +96,7 @@ EOF
 sub version() {
   print <<'EOF';
 copy-list version 
-$Id: database-edit.pl.idea,v 1.2 2001/03/04 18:12:34 mikedlr Exp $
+$Id: database-edit.pl.idea,v 1.3 2002/01/02 22:53:15 mikedlr Exp $
 EOF
 }
 

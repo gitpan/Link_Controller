@@ -34,10 +34,11 @@ info: link-controller.info
 link-controller.info: link-controller.texinfo
 	makeinfo link-controller.texinfo
 
-readme: ../README 
+readme: ../README
 
 ../README: README.html
-	lynx -dump README.html > ../README
+	pod2text --loose README.pod > ../README
+
 
 README.html: README.pod
 	pod2html README.pod > README.html
@@ -47,7 +48,7 @@ README.html: README.pod
 inst: ../INSTALL
 
 ../INSTALL: INSTALL.html
-	lynx -dump INSTALL.html > ../INSTALL
+	pod2text --loose INSTALL.pod > ../INSTALL
 
 INSTALL.html: INSTALL.pod
 	pod2html INSTALL.pod > INSTALL.html

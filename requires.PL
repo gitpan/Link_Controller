@@ -17,6 +17,32 @@ it but should result in an empty output file anyway.
 =cut
 
 
+END {
+  $? && do {
+    print STDERR <<EOF;
+requires.PL tried to give non zero exit status: $?.  Exiting zero
+instead.  This allows build to proceed even if RPM isn't present.  You
+probably don't need to worry about this unless you were trying to
+build an RPM of this software
+EOF
+      $? = 0;
+  };
+}
+
+$found=0;
+DIRCHECK: foreach (split /:/, $ENV{"PATH"}) {
+  -x $_ . '/' . 'cdbmake' && do {
+    $found=1;
+    last DIRCHECK;
+  };
+}
+unless ($found) {
+  print STDERR <<EOF unless $found;
+No rpm program found so we won't try to generate dependency file
+EOF
+  exit 0;
+}
+
 #It would be nice to implement this using the functions from CPAN
 #which read the contents of a bundle but they don't seem to be
 #stable.
@@ -32,7 +58,7 @@ open($fh,$bfile) or die "Could not open '$bfile': $!";
 #straight from CPAN module
 while (<$fh>) {
     $inpod = m/^=(?!head1\s+CONTENTS)/ ? 0 :
-	m/^=head1\s+CONTENTS/ ? 1 : $inpod;
+    m/^=head1\s+CONTENTS/ ? 1 : $inpod;
     next unless $inpod;
     next if /^=/;
     next if /^\s+$/;
@@ -56,7 +82,11 @@ MOD: foreach my $mod (@result) {
 	-e $modf or next;
 	my $pkg = `rpm -qf $modf`;
 	chomp $pkg;
-	$pkg =~ m/\s/ and die "didn't expect a space from rpm";
+	$pkg =~ m/\s/ and do {
+	  warn "didn't expect a space from rpm";
+	  print "rpm gave $pkg\n" if $verbose & 2;
+	  next;
+	};
 	print "was in $pkg\n" if $verbose & 2;
 	$pkg =~ s/-[^-]+-[^-]+$//;
 	$pkg && ( push @foundrpm, $pkg ) or

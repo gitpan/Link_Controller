@@ -164,7 +164,7 @@ $::opthandler = new Getopt::Function
        "relative" => [ \&maketrue,
 		       "Fix relative links (expensive??)." ],
        "base" => [ \&makevalue,
-		   "Base uri of the document or directory to be fixed.",
+		   "Base URI of the document or directory to be fixed.",
 		   "FILENAME" ],
        "config-file" => [ sub {
 			    eval {require $::value};
@@ -195,7 +195,7 @@ EOF
 sub version() {
   print <<'EOF';
 fix-link version
-$Id: fix-link.pl,v 1.18 2001/12/29 07:45:20 mikedlr Exp $
+$Id: fix-link.pl,v 1.19 2002/01/06 21:18:34 mikedlr Exp $
 EOF
 }
 

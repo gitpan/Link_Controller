@@ -5,8 +5,8 @@ C<link_url> looks at a candidate.
 =cut
 
 package WWW::Link_Controller::URL;
-$REVISION=q$Revision: 1.7 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
-use URI::URL;
+$REVISION=q$Revision: 1.8 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
+use URI;
 use Carp;
 use strict;
 use warnings;
@@ -175,7 +175,7 @@ sub fixup_link_url ($$) {
     return undef;
   };
 
-  my $urlo=new URI::URL $url;
+  my $urlo=URI->new($url);
   my $aurlo=$urlo->abs($base);
   my $ret_url;
   if ( URI::eq($urlo,$aurlo) ) {

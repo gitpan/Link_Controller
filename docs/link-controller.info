@@ -16,7 +16,7 @@ File: link-controller.info,  Node: Top,  Next: Introduction,  Prev: (dir),  Up: 
    This document describes LinkController a system for checking and
 maintaining links in infostructures
 
-   This document applies to version 0.030 of LinkController
+   This document applies to version 0.033 of LinkController
 
 * Menu:
 
@@ -36,7 +36,9 @@ maintaining links in infostructures
 * Setting up LinkController::
 * Administration::
 * Robots::                      General statements about robots.
+* Link Database Maintenance::
 * Bugs::                        What to do if you find a bug.
+* History ::
 * Acknowledgements ::           People who helped with this package.
 * Invoking the Programs::       How to run the programs in LinkController.
 * Related Packages::            Packages used by or useful with LinkController.
@@ -64,7 +66,7 @@ Reporting Problems
 
 The Emacs Interface
 
-* link-report-dired::           An emacs program to display broken links.
+* link-report-dired::           An Emacs program to display broken links.
 * check-page in Emacs::         Finding broken links in a file.
 
 Setting up LinkController
@@ -77,6 +79,10 @@ Administration
 * User Administration::
 * Cron Scripts::
 
+Link Database Maintenance
+
+* Link Ageing::
+
 Acknowledgements
 
 * Esoterica Internet Portugal::
@@ -87,7 +93,7 @@ Acknowledgements
 Packages Which Can Be Useful with LinkController
 
 * cdb::                         Utilities for the LinkController indexes.
-* Tie-Transact-Hash::           Berkley DB editing tools.
+* Tie-Transact-Hash::           Berkeley DB editing tools.
 
 Terms
 
@@ -136,7 +142,7 @@ Getting Started
 LinkController are already installed and working on your computer.  If
 not, then *Note URLs::.  We assume the standard setup where your system
 administrator runs the link checking for you.  Other setups will need
-slightly different behavior.  Speak to the person who set up link
+slightly different behaviour.  Speak to the person who set up link
 controller.
 
    The first thing to do is to run `configure-link-control' to
@@ -192,9 +198,10 @@ Setting Configuration Variables
 
    All of the variable information is stored in the file
 `.link-control.pl' in your home directory or `/etc/link-control.pl' for
-systemwide configuration.  The configuration files are written directly
-in Perl (the programming language LinkController is written in).  You
-can set the configuration variables by putting lines like this.
+system wide configuration.  The configuration files are written
+directly in Perl (the programming language LinkController is written
+in).  You can set the configuration variables by putting lines like
+this.
 
      $::links='/var/lib/link_database.bdbm';
 
@@ -281,7 +288,7 @@ directive is present on each line with the full path to the base
 directory of the infostructure.
 
    More advanced configuration is possible by defining the information
-directly in perl.
+directly in Perl.
 
 
 File: link-controller.info,  Node: Advanced Configuration,  Next: Configuring CGI Programs,  Prev: Configuration,  Up: Top
@@ -312,7 +319,7 @@ to it only when you find that there are links or pages being checked
 that you would rather avoid.
 
    For this section, we assume that you already know how to make basic
-perl code.  If not, then please read through the perl manual pages
+Perl code.  If not, then please read through the Perl manual pages
 `perl', `perlsyn' and `perldata'.  You may find that the examples given
 below are sufficient to get you started.
 
@@ -328,8 +335,8 @@ like the following
      $::infostrucs{http://www.mypages.org/} = {
         mode => "directory";
         file_base => "/home/myself/www",
-        prune_re => "^(/home/myself/www/statistics)" #ignore referals
-                   . "|(cgi-bin)", #do cgis separately
+        prune_re => "^(/home/myself/www/statistics)" #ignore referrals
+                   . "|(cgi-bin)", #do CGIs separately
         exclude_re => "\.secret$", #secrets shouldn't get into link database
      };
      
@@ -367,7 +374,7 @@ like the following
 
 `prune_re'
      Used only in directory mode, this will completely exclude all
-     files and subdirectories of directories matched by the regular
+     files and sub-directories of directories matched by the regular
      expression.
 
    N.B. the exclude and include regular expression can be used together.
@@ -382,7 +389,7 @@ definition in the $::infostrucs hash.
      advanced   http://www.mypages.org/
      advanced   http://www.mypages.org/cgi-bin/
 
-   The url used here must match _exactly_ the one used in the hash.  It
+   The URL used here must match _exactly_ the one used in the hash.  It
 is important to note that `directory' and `www' definitions in the
 `infostrucs' file will override any advanced configuration given.
 
@@ -445,7 +452,7 @@ configuration.
      The URL that gets to the base directory of the infostructure.
 
 `$WWW::Link::Repair::filebase'
-     The filename of the directory which is equivalent to the URL
+     The file-name of the directory which is equivalent to the URL
 
    *FIXME:* this section needs to be rewritten.
 
@@ -482,7 +489,7 @@ are the index files for your infostructure and are located wherever you
 have configured them to by default they are called `link_on_page.cdb',
 `page_has_link.cdb'.  The third file is the database file `links.db'.
 `extract-links' can also optionally create a text file which lists all
-of the urls in the infostructure, one per line.
+of the URLs in the infostructure, one per line.
 
    ---------- Footnotes ----------
 
@@ -508,7 +515,7 @@ take about ten days.  This is a deliberate feature of LinkController.
 It is designed this way firstly to give people at the other end of links
 a chance to repair their resources and secondly to reduce the amount of
 network bandwidth LinkController uses at a given time and so its impact
-on other people's internet usage.
+on other people's Internet usage.
 
    The key program which you want to use is `test-link'.  I run this
 from a shell script which directs its output to a log file
@@ -592,7 +599,7 @@ other program which is part of LinkController) using
      link-report -h
 
    For more advanced reporting and editing of documents with broken
-links you may want to use the emacs interface (*note The Emacs
+links you may want to use the Emacs interface (*note The Emacs
 Interface: Emacs.).
 
 * Menu:
@@ -627,7 +634,7 @@ script like the following from your crontab.
      fi
 
    Every time that this script is run, it will rename the status change
-logfile and then mail a report with all of the new broken links to the
+log file and then mail a report with all of the new broken links to the
 specified email address.
 
    In future this feature may be folded into `link-report' directly.
@@ -646,7 +653,7 @@ before you put it up for use.  You can do this immediately using the
 
    And it will list all of the links that it is unsure about along with
 the line number the problem occurred on.  This program works
-particularly well when you editing with emacs (*note The Emacs
+particularly well when you editing with Emacs (*note The Emacs
 Interface: check-page in Emacs.).
 
 
@@ -732,7 +739,7 @@ There are two parts to this integration.
 
 * Menu:
 
-* link-report-dired::           An emacs program to display broken links.
+* link-report-dired::           An Emacs program to display broken links.
 * check-page in Emacs::         Finding broken links in a file.
 
 
@@ -741,12 +748,12 @@ File: link-controller.info,  Node: link-report-dired,  Next: check-page in Emacs
 Finding Files with Broken Links
 ===============================
 
-   There is a special emacs mode called `link-report-dired' written for
+   There is a special Emacs mode called `link-report-dired' written for
 locating files with broken links.  The mode is based on `find-dired'
 and works very similarly.  It runs the program `link-report' with an
 option which makes it list file names in the same way as the `ls'
 program does.  The user can then move around the buffer as normal in
-emacs and enter files using a single key press (normally `f').
+Emacs and enter files using a single key press (normally `f').
 
 
 File: link-controller.info,  Node: check-page in Emacs,  Prev: link-report-dired,  Up: Emacs
@@ -755,8 +762,8 @@ Finding Broken Links in Files Within Emacs
 ==========================================
 
    The program `check-page' was specially designed so that it outputs
-in a format which can be read by emacs' `compile' mode.  You can use it
-within emacs and then step from error to error correcting them.
+in a format which can be read by Emacs' `compile' mode.  You can use it
+within Emacs and then step from error to error correcting them.
 
    To do this, after you have set up your system and completed link
 checking use the command `M-x' `compile' `check-page filename'.  You
@@ -811,7 +818,7 @@ Default Installation
 There are various variations on this command which do different things,
 but the summary is
 
-   * Create a linkcont userid and group which will be used for running
+   * Create a linkcont user-id and group which will be used for running
      programs
 
    * Create a working directory where LinkController will keep it's data
@@ -821,9 +828,9 @@ but the summary is
    * Create cron scripts which will run LinkController automatically.
 
    Using this command it is also possible to activate users and groups
-e.g. `default-install -user username' or `default-install -group
-groupname' in which case the specified users will become a member of
-the lcntusr group.
+e.g. `default-install -user USERNAME' or `default-install -group
+GROUPNAME' in which case the specified users will become a member of
+the `linkcont' group.
 
 
 File: link-controller.info,  Node: User Administration,  Next: Cron Scripts,  Prev: Default Installation,  Up: Administration
@@ -839,11 +846,11 @@ site) then you will only have to check that link once.
    In this case, the important question is which links are copied into
 the checking database.  This is controlled by the program
 `copy-links-from-users' and decides copies data from users which are in
-the `lnkusr' group.
+the `lnctusr' group.
 
    The command `default-install' can be used to manipulate which users
-are in the group e.g. `default-install -user username' or
-`default-install -group groupname' in which case the specified users
+are in the group e.g. `default-install --user USERNAME' or
+`default-install -group GROUPNAME' in which case the specified users
 will become a member of the lcntusr group.
 
    Another form of user administration is limitation on which users have
@@ -876,7 +883,7 @@ database.  This only needs to be done weekly.
    The program `default-install' can create these scripts.
 
 
-File: link-controller.info,  Node: Robots,  Next: Bugs,  Prev: Administration,  Up: Top
+File: link-controller.info,  Node: Robots,  Next: Link Database Maintenance,  Prev: Administration,  Up: Top
 
 Robots and Sensible Behaviour
 *****************************
@@ -908,7 +915,7 @@ worth seeing the Robots World Wide Web page.
 safe as a link.  These are all related to the design and limitations on
 `test-link'.
 
-   * `test-link' does _not_ recurse.  It only tests links that are
+   * `test-link' does _not_ recurs.  It only tests links that are
      specifically listed in the schedule database.
 
    * There is a limit to the number of links that will be tested in one
@@ -922,12 +929,71 @@ safe as a link.  These are all related to the design and limitations on
 
    The last limitation is inherited from the `LWP::RobotUA' module and
 the documentation for that covers the details of how it works.
-`test-link' trys to re-order testing of links as needed so that a limit
-on the rate of visits to one site does not cause a limit on overall
-testing speed.
+`test-link' tries to re-order testing of links as needed so that a
+limit on the rate of visits to one site does not cause a limit on
+overall testing speed.
 
 
-File: link-controller.info,  Node: Bugs,  Next: Acknowledgements,  Prev: Robots,  Up: Top
+File: link-controller.info,  Node: Link Database Maintenance,  Next: Bugs,  Prev: Robots,  Up: Top
+
+Link Database Maintenance
+*************************
+
+   For the most part the link database shouldn't need much maintenance.
+There are a number of cases where it might, however.  If it becomes
+corrupt, you may try the db_recover command.  Probably, however, it's
+just better to recover the database and link checking schedule from a
+recent backup.  Time is not really critical since the work is normally
+easy to regenerate.  You should make sure that link checking doesn't run
+in at the time you do backups, however.
+
+   The other thing is that occasionally you may want to recover space in
+the link database by dumping and un-dumping it.  See the Berkeley
+database documentation for more details.
+
+* Menu:
+
+* Link Ageing::
+
+
+File: link-controller.info,  Node: Link Ageing,  Prev: Link Database Maintenance,  Up: Link Database Maintenance
+
+Link Ageing
+===========
+
+   Sometimes we have a link which is no longer in use within our
+infostructure.  However, it's not a good idea to throw away information
+about it immediately.  It could be that certain files have been
+temporarily deleted and will come back.  Alternatively, a link could
+have been found broken and been corrected, but someone has a copy of
+the old page.  When they re-install the copy, we will have to deal with
+that link again.
+
+   If we had not kept that link around and they immediately do a link
+check on their document they may see nothing wrong, and, because of the
+nature of link-controller, we won't start reporting the link as broken
+until we have confirmed that it really is, some days later.
+
+   If, on the other hand, we keep checking all of the links which are
+aged, we will cause ourselves considerable extra work.
+
+   To handle this, links are aged.  Once a link has reached greater than
+a certain age, the link will not be checked any more.   Once the link
+has reached a much larger age, it will be completely deleted from the
+link database.  The age is reset each time the link is extracted from
+the infostructure, so links which are still in use will continue to be
+checked.
+
+   In the meantime, the link will still be repeatedly scheduled based to
+it's normal checking time.  This causes us to examine it quite
+regularly, but that is okay, since we will do almost no work when we
+look at it.
+
+   By default links which have not been refreshed will be ignored after
+one week and will be deleted from the database after two months.
+
+
+File: link-controller.info,  Node: Bugs,  Next: History,  Prev: Link Database Maintenance,  Up: Top
 
 Bugs and bug reporting
 **********************
@@ -984,8 +1050,47 @@ list in future.  Use my (Michael De La Rue) personal address to contact
 me please.  N.B. I am *extremely* inefficient about answering email.
 Don't worry if you don't get a reply.
 
+   	The ideas, and history
+
 
-File: link-controller.info,  Node: Acknowledgements,  Next: Invoking the Programs,  Prev: Bugs,  Up: Top
+File: link-controller.info,  Node: History,  Next: Acknowledgements,  Prev: Bugs,  Up: Top
+
+History
+*******
+
+   LinkController was originally inspired by MOMspider and having the
+MOMspider code available was very useful when starting the creation of
+this kit, but, it shares almost no code with MOMspider, other than what
+has comes to it from the LibWWW-Perl library.
+
+   Philosophically, the MOMspider heritage is obvious in the wish to
+handle big jobs efficiently.  In the working practice there are far more
+differences than similarities, partly caused by Perl language changes.
+
+   I decided to completely separate the exploration of the local
+infostructure, looking for links to be checked, from the actual checking
+process.  This means that checking can be spread over a large number of
+days and still run efficiently.
+
+   The basic aim of this link checking kit is to be able to efficiently
+handle any size of link checking job.  At the bottom end we have
+checking new pages as they are written.  Here we want to use
+information from previous checks to avoid having to check all of each
+page every time.  At the other end we have massive info structures
+(sites) which deal in many thousands of links and could not possibly
+all be checked in one day.  For this latter case the aim is to be able
+to efficiently spread the link checking load into all available low
+usage periods.
+
+   My primary aim in writing this was not to write very efficient code
+for the small scale case (takes minimum time to do everything), but
+rather code which would scale well.  If your system can check 1000
+links in two days, it will hopefully be able to check almost 7000 links
+in two weeks.  I'm trying to make sure all data structures which grow
+with the number of links are kept on disk.
+
+
+File: link-controller.info,  Node: Acknowledgements,  Next: Invoking the Programs,  Prev: History,  Up: Top
 
 Acknowledgements
 ****************
@@ -1007,7 +1112,7 @@ File: link-controller.info,  Node: Esoterica Internet Portugal,  Next: IPPT PAN 
 Esoterica Internet Portugal
 ===========================
 
-   Esoterica provided me with full access to the internet in Portugal
+   Esoterica provided me with full access to the Internet in Portugal
 and use of their computers for free which allowed me to keep up on both
 this software and the Linux Access HOWTO.  In particular I'd like to
 thank all of the members of staff who helped me very much.  These
@@ -1051,7 +1156,7 @@ The Tardis Project
    Supported by the Computing Science department of the University of
 Edinburgh, the Tardis project provides an experimental framework in
 which students, former students and other related people to do their own
-work on fully internet connected Unix and Linux hosts.
+work on fully Internet connected Unix and Linux hosts.
 
    The use of the facilities of the Tardis Project has made it much
 easier for me to develop software like this.  In particular, the large
@@ -1065,7 +1170,7 @@ Other Free Software Authors
 ===========================
 
    It is through the software provided by the Free Software Foundation
-(such as the `gcc' C compiler, emacs, the file utilities), the authors
+(such as the `gcc' C compiler, Emacs, the file utilities), the authors
 of the various packages which make up a working Linux System (Linux by
 Linus Torvalds, Alan Cox, etc.... filesystems and support by Theodore
 Tytso, Stefan Tweedie etc.. Linux-Libc by HJ Lu, based on GNU `glibc'
@@ -1144,7 +1249,7 @@ Packages Which Can Be Useful with LinkController
 * Menu:
 
 * cdb::                         Utilities for the LinkController indexes.
-* Tie-Transact-Hash::           Berkley DB editing tools.
+* Tie-Transact-Hash::           Berkeley DB editing tools.
 
 
 File: link-controller.info,  Node: cdb,  Next: Tie-Transact-Hash,  Prev: Related Packages,  Up: Related Packages
@@ -1171,7 +1276,7 @@ The Tie-Transact-Hash Perl Module and Programmes
 ================================================
 
    This is a Perl module written by myself which includes a program
-which allows direct examination and editing of berkley databases.  It
+which allows direct examination and editing of Berkeley databases.  It
 can be useful for debugging and correcting problems in the
 LinkController Link database or schedule file.
 
@@ -1236,11 +1341,11 @@ Link
 ====
 
    The term link in LinkController is used for a connection between two
-resources.  It's existance really comes from the `class' or piece of
+resources.  It's existence really comes from the `class' or piece of
 type of computer data which is used to store information about `links'.
 Properties of a link include:
 
-   * Knowing what the url of the target resource of the connection is.
+   * Knowing what the URL of the target resource of the connection is.
 
    * Knowing whether the connection to the target resource has been
      working recently.
@@ -1299,10 +1404,10 @@ Concept Index
 * bandwidth:                             Robots.
 * basic authentication:                  Authorisation Configuration.
 * broken links, finding:                 Reporting.
-* broken links, finding in emacs <1>:    link-report-dired.
-* broken links, finding in emacs:        Email Reporting.
+* broken links, finding in Emacs <1>:    link-report-dired.
+* broken links, finding in Emacs:        Email Reporting.
 * CGI interface:                         CGI.
-* cgi, configuration:                    Configuring CGI Programs.
+* CGI, configuration:                    Configuring CGI Programs.
 * checking individual pages:             Files.
 * configuration <1>:                     Setting Configuration Variables.
 * configuration:                         Automatic Configuration.
@@ -1310,19 +1415,20 @@ Concept Index
 * configuration, infostructure:          Infostructure Configuration.
 * crontab, example:                      Testing.
 * dangers:                               Robots.
-* emacs interface:                       Emacs.
+* Emacs interface:                       Emacs.
 * extracting links:                      Extracting Links.
 * file, individual, checking:            Files.
 * filtering links:                       Advanced Infostructure Configuration.
+* history MOMspider:                     History.
 * HTML pages, groups of:                 Infostructure.
 * infostructure:                         Infostructure.
 * infostructure, configuration:          Advanced Infostructure Configuration.
 * interface, CGI:                        CGI.
-* interface, emacs:                      Emacs.
+* interface, Emacs:                      Emacs.
 * link index, creating:                  Extracting Links.
 * links, examining:                      Reporting.
-* links, examining, in emacs <1>:        link-report-dired.
-* links, examining, in emacs:            Email Reporting.
+* links, examining, in Emacs <1>:        link-report-dired.
+* links, examining, in Emacs:            Email Reporting.
 * links, extracting:                     Extracting Links.
 * links, repairing:                      Repair.
 * page index, creating:                  Extracting Links.
@@ -1347,53 +1453,56 @@ Concept Index
 
 Tag Table:
 Node: Top350
-Node: Introduction3125
-Ref: Introduction-Footnote-14237
-Node: Getting Started4346
-Node: Configuration5731
-Node: Automatic Configuration6048
-Node: Setting Configuration Variables6599
-Node: Link Variables7331
-Node: Infostructure Configuration9637
-Node: Advanced Configuration10908
-Node: Advanced Infostructure Configuration11401
-Node: Authorisation Configuration14916
-Node: Configuring CGI Programs17123
-Node: Extracting Links17632
-Ref: Extracting Links-Footnote-119136
-Node: Testing19493
-Node: Reporting21291
-Node: Email Reporting23731
-Node: Files24900
-Node: Repair25494
-Node: Suggestions26551
-Node: CGI27483
-Node: Emacs28154
-Node: link-report-dired28692
-Node: check-page in Emacs29276
-Node: Setting up LinkController29972
-Node: Administration30677
-Node: Default Installation30987
-Node: User Administration31845
-Node: Cron Scripts33001
-Node: Robots33759
-Node: Bugs35780
-Node: Acknowledgements38231
-Node: Esoterica Internet Portugal38684
-Ref: Esoterica Internet Portugal-Footnote-139736
-Node: IPPT PAN Poland39856
-Node: The Tardis Project40340
-Node: Other Free Software Authors41003
-Node: Invoking the Programs42011
-Node: Related Packages44205
-Node: cdb44555
-Node: Tie-Transact-Hash45184
-Node: Terms45774
-Node: Resource46159
-Node: URLs46617
-Node: Infostructure47159
-Node: Link47418
-Node: Names Index48183
-Node: Concept Index49574
+Node: Introduction3213
+Ref: Introduction-Footnote-14325
+Node: Getting Started4434
+Node: Configuration5820
+Node: Automatic Configuration6137
+Node: Setting Configuration Variables6688
+Node: Link Variables7421
+Node: Infostructure Configuration9727
+Node: Advanced Configuration10998
+Node: Advanced Infostructure Configuration11491
+Node: Authorisation Configuration15008
+Node: Configuring CGI Programs17215
+Node: Extracting Links17725
+Ref: Extracting Links-Footnote-119229
+Node: Testing19586
+Node: Reporting21384
+Node: Email Reporting23824
+Node: Files24994
+Node: Repair25588
+Node: Suggestions26645
+Node: CGI27577
+Node: Emacs28248
+Node: link-report-dired28786
+Node: check-page in Emacs29370
+Node: Setting up LinkController30066
+Node: Administration30771
+Node: Default Installation31081
+Node: User Administration31943
+Node: Cron Scripts33101
+Node: Robots33859
+Node: Link Database Maintenance35901
+Node: Link Ageing36728
+Node: Bugs38418
+Node: History40907
+Node: Acknowledgements42686
+Node: Esoterica Internet Portugal43142
+Ref: Esoterica Internet Portugal-Footnote-144194
+Node: IPPT PAN Poland44314
+Node: The Tardis Project44798
+Node: Other Free Software Authors45461
+Node: Invoking the Programs46469
+Node: Related Packages48663
+Node: cdb49014
+Node: Tie-Transact-Hash49643
+Node: Terms50234
+Node: Resource50619
+Node: URLs51077
+Node: Infostructure51619
+Node: Link51878
+Node: Names Index52643
+Node: Concept Index54034
 
 End Tag Table

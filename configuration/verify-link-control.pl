@@ -96,13 +96,13 @@ EOF
 sub version() {
   print <<'EOF';
 verify-link-control version 
-$Id: verify-link-control.pl,v 1.6 2001/11/27 16:44:06 mikedlr Exp $
+$Id: verify-link-control.pl,v 1.8 2002/01/06 07:40:37 mikedlr Exp $
 EOF
 }
 
 $::now=time;
 
-my $revision='$Revision: 1.6 $';
+my $revision='$Revision: 1.8 $';
 use WWW::Link_Controller::Version;
 my $version = $WWW::Link_Controller::Version::VERSION;
 

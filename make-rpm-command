@@ -8,11 +8,11 @@ then
 	echo FIXME wrong directory permission for /var/lib/linkcont >&2
 fi
 
-DISTFILE=Link_Controller-0.031.tar.gz
+DISTFILE=Link_Controller-0.033.tar.gz
 rm $DISTFILE
 make
 make dist
 cp $DISTFILE /usr/src/redhat/SOURCES
 /usr/src/redhat/SOURCES/makerpm.pl $MAKERPMOPTS --noname-prefix --specs --runtests --auto-desc --source=$DISTFILE
 cd /usr/src/redhat
-rpm -ba SPECS/Link_Controller-0.031.spec
+rpm -ba SPECS/Link_Controller-0.033.spec
