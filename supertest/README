@@ -1,0 +1,6 @@
+These are tests which aren't expected to be run everywhere and need
+more effort to run.
+
+These tests work with basically the same command line as the normal tests.
+
+

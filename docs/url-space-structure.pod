@@ -1,0 +1,24 @@
+In `general' there is no relationship between two similar urls
+
+	freddy://bounce/
+
+However in practice
+
+	when 
+
+	http://hostname/directory/
+
+	moves
+
+	http://hostname/directory/file
+
+	moves with it (directory and file are just arbitrary names
+for parts of the URL chosen for no reason whatsoever)
+
+To detect this kind of change, we should btree index the links, then 
+
+	if we find a broken link, we should check to see if any links
+	share a common root with it, then check those links also
+
+	if we have a `directory' link moving, then we should decide whether
+	to move other links related.

@@ -1,0 +1,5 @@
+Mon Apr 28 1997
+
+	I have now added some tests to prove that actual link
+reporting is working approximately correctly.  Also corrected various
+bugs.

@@ -1,0 +1,1079 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+@setfilename link-controller.info
+@settitle Using LinkController
+@setchapternewpage odd
+@c %**end of header
+
+@c not enough programs and variables to justify separate indexes.
+@syncodeindex pg vr
+
+@titlepage
+@title Using LinkController
+@author Michael De La Rue
+
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1997-2001 Michael De La Rue
+
+Published by ...
+
+Permission is granted to distribute and change this manual under the
+terms of the GNU public license.
+
+This is the alpha version of this manual and is very incomplete.
+@end titlepage
+
+@ifinfo
+This file documents LinkController
+
+Copyright 1997-2001 Michael De La Rue
+
+Permission is granted to distribute and change this manual under the
+terms of the GNU public license.
+
+This is the alpha version of this manual and is very incomplete.
+@node Top, Introduction, (dir), (dir)
+
+This document describes LinkController a system for checking and
+maintaining links in infostructures
+
+This document applies to version 0.023 of LinkController
+@end ifinfo
+
+@menu
+* Introduction::                What LinkController is about.
+* Getting Started::             Configuration.
+* Configuration::               
+* Configuring CGI Programs::    
+* Extracting Links::            Getting link information from WWW pages.
+* Testing::                     Testing Links.
+* Reporting::                   Getting information about broken links.
+* Files::                       Checking individual HTML files.
+* Repair::                      Replacing old URLs with new ones.
+* Suggestions::                 Making suggestions for other users.
+* CGI::                         The CGI interface (to be).
+* Emacs::                       The Emacs interface.
+* Setting up LinkController::   
+* Administration::              
+* Robots::                      General statements about robots.
+* Bugs::                        What to do if you find a bug.
+* Acknowledgements ::           People who helped with this package.
+* Invoking the Programs::       How to run the programs in LinkController.
+* Related Packages::            Packages used by or useful with LinkController.
+* Terms::                       Glossary of terms used in this documentation.
+* Names Index::                 Index of Program and Variable names
+* Concept Index::               Index of Concepts.
+
+@detailmenu
+ --- The Detailed Node Listing ---
+
+Configuration
+
+* Automatic Configuration::     
+* Setting Configuration Variables::  
+* Link Variables::              General configuration variables.
+* Infostructure Configuration::  
+
+The Emacs Interface
+
+* link-report-dired::           An emacs program to display broken links.
+* check-page in Emacs::         Finding broken links in a file.
+
+Setting up LinkController
+
+* Default Installation::        
+
+Administration
+
+* Default Installation::        
+* User Administration::         
+* Cron Scripts::                
+
+Packages Which Can Be Useful with LinkController
+
+* cdb::                         Utilities for the LinkController indexes.
+* Tie-Transact-Hash::           Berkley DB editing tools.
+
+Terms
+
+* Resource::                    The information on the World Wide Web.
+* URLs::                        The connections in the World Wide Web.
+* Infostructure::               Groups of resources.
+* Link::                        A connection between two resources.
+
+@end detailmenu
+@end menu
+
+@node Introduction, Getting Started, Top, Top
+@unnumbered Introduction
+
+LinkController is a system for checking links.
+
+Most HTML pages contain references to other HTML pages (links).  These
+allow the readers of those pages to locate other related resources (web
+pages etc.).  Unfortunately the location of `resources'
+@footnote{resource is a general term for HTML pages and all of the other
+things that can be referenced by URLs} can change, resources can
+disappear completely or the system providing the resource can break.
+When this happens, the link which used to find them will no longer work.
+The only reliable way to detect this problem is to periodically check
+over the resources and take corrective action for the ones that have
+gone missing.
+
+LinkController is designed to make that task much more efficient.  It
+automates the task of checking which links have been broken for a period
+of time and then of finding which documents they occur in.
+
+LinkController is copyrighted software and is distributed under the GNU
+Public License which should have been included as the file
+@file{COPYING} in the distribution.
+
+@node Getting Started, Configuration, Introduction, Top
+@chapter Getting Started 
+
+This section of the manual assumes that the programs that make up LinkController are already
+installed and working on your computer.  If not, then @xref{URLs}.  We
+assume the standard setup where your system administrator runs the link
+checking for you.  Other setups will need slightly different behavior.
+Speak to the person who set up link controller.
+
+The first thing to do is to run @w{@code{configure-link-control}} to
+configure the system.  This will ask a series of questions about your
+configuration and create a configuration file which will be used by the
+various programs which make up LinkController.
+
+Next you have to work out which links you are interested in.  Do this by
+extracting the links from your web pages (@pxref{Extracting Links}).
+The output file from this with the list of links found will be stored
+in the location you gave during configuration.  
+
+Assuming that you have the default install, your links will be
+automatically copied and checked over time following that.  
+
+After a short time (about a day) you will begin to get information about
+links which didn't work with @command{link-report --not-perfect}.  After
+some more time (a week or so) you can use @command{link-report} to find
+out which links are really broken.
+
+@node Configuration, Configuring CGI Programs, Getting Started, Top
+@chapter Configuration
+
+@menu
+* Automatic Configuration::     
+* Setting Configuration Variables::  
+* Link Variables::              General configuration variables.
+* Infostructure Configuration::  
+@end menu
+
+@node Automatic Configuration, Setting Configuration Variables, Configuration, Configuration
+@section Setting Configuration Variables
+
+@cindex configuration
+@cindex variables, setting
+@cindex setting variables
+
+The @w{@code{configure-link-control}} program can be used by users to
+configure link-contoller.  This will ask you a series of questions and
+then generate a configuration in your home directory.
+
+The configuration that is controlled by this program is related to
+reporting and fixing links.  For other configuration see
+@xref{Administration}.
+
+@node Setting Configuration Variables, Link Variables, Automatic Configuration, Configuration
+@section Setting Configuration Variables
+
+@cindex configuration
+@cindex variables, setting
+@cindex setting variables
+
+All of the variable information is stored in the file
+@file{.link-control.pl} in your home directory or
+@file{/etc/link-control.pl} for systemwide configuration.  The
+configuration files are written directly in Perl (the programming
+language LinkController is written in).  You can set the configuration
+variables by putting lines like this.
+
+@example
+$::links='/var/lib/link_database.bdbm';
+@end example
+
+Please note the semi colon at the end of the line and the use of single
+quotes so that Perl doesn't do anything strange to your values.
+
+@node Link Variables, Infostructure Configuration, Setting Configuration Variables, Configuration
+@section Link Control Configuration Variables
+
+@cindex variables, configuration
+@cindex configuration variables
+
+@table @code
+@item $::user_address
+@vindex $user_address
+is the email address which the robot declares to the world as it
+goes around checking links.  If you want to check links yourself, you
+must set this to a valid email address, because if something goes badly
+wrong, it is the only way for a user at another site to know how to
+contact you.
+
+@item $::base_dir
+@vindex $base_dir
+This is the base directory for all of the configuration files.  If this
+variable is defined then the other variables will default as given
+below and do not need to be set individually.
+
+@item $::links
+@vindex $links
+tells you what file is being used to store information
+about links.  This could easily be a shared database used by everyone on
+your system.  Defaults to @file{$::base_dir/links.bdbm}.
+
+@item $::schedule
+@vindex $schedule
+tells the system where to find the schedule file used to
+decide which links should be checked next and when that should be.  You
+will need to set this and create the file in order to do link checking. 
+Defaults to @file{$::base_dir/schedule.bdbm}.
+
+@item $::page_index
+@vindex $page_index
+tells the system where to find the schedule file used to
+decide which links should be checked next and when that should be.  You
+will need to set this and create the file in order to do link checking.
+Defaults to @file{$::base_dir/page_has_link.cdb}.
+
+@item $::link_index
+@vindex $link_index
+tells the system where to find the schedule file used to
+decide which links should be checked next and when that should be.  You
+will need to set this and create the file in order to do link checking.
+Defaults to @file{$::base_dir/link_on_page.cdb}.
+
+@item $::infostrucs
+@vindex $infostrucs
+This variable points to the configuration file where definitions of
+infostructures are should be put @xref{Infostructure Configuration}.
+Defaults to @file{$::base_dir/infostrucs}.
+@end table
+
+@node Infostructure Configuration,  , Link Variables, Configuration
+@section Configuring Infostructures
+
+@cindex configuration, infostructure
+
+The infostructure configuration is used to find links within the pages
+when we are building our databases.  It is kept in a separate file
+defined by the @code{$::infostrucs} configuration variable.
+
+The format of the file is one line for each infostructure with
+configuration directives separated by spaces.  For example
+
+@example
+directory http://example.com/manual /var/www/html/manual
+www http://example.com/strange_database
+@end example
+
+The first directive describes how @w{@code{extract-links}} program
+should extract the links.  It currently has two possible values.  The
+value @code{www} means to actually use the given URL to download the web
+pages.  The value @code{directory} means that @w{@code{extract-links}}
+should assume that all of the files are stored in a directory and that
+the directory structure matches the structure of the infostructure.
+
+In the case where we use the @code{directory} directive, a third
+directive is present on each line with the full path to the base
+directory of the infostructure.
+
+@node Configuring CGI Programs, Extracting Links, Configuration, Top
+@chapter Configuring CGI Programs
+@cindex cgi, configuration
+
+The CGI programs have separate configuration variables and configuration.  
+
+@table @samp
+@item $WWW::Link::Repair::infostrucbase
+@vindex $Link/Repair/infostrucbase
+The URL that gets to the base directory of the infostructure.
+@item $WWW::Link::Repair::filebase
+@vindex $Link/Repair/filebase
+The filename of the directory which is equivalent to the URL
+@end table
+
+@strong{FIXME:} this section needs to be rewritten.
+
+@node Extracting Links, Testing, Configuring CGI Programs, Top
+@chapter Extracting Links
+@cindex links, extracting
+@cindex extracting links
+
+This section is written assuming that you are using a standard HTML
+infostructure in a directory or on the World Wide Web
+
+The first part of using link controller is to extract the links.  When
+doing this, a pair of index files is built which list which URLs happen
+on which pages along with a file listing all of the URLs in the
+infostructure.  
+
+@strong{FIXME:} compare and contrast multi-user configuration with
+single user
+
+@pindex extract-links
+The first stage of the process is done by @w{@code{extract-links}}
+@footnote{the command names in link controller are quite long.. you
+might want to make your life easier by using command completion which
+will finish what you have started.. once you've typed a little of the
+command use @kbd{escape escape} or @kbd{tab} depending on your
+shell.. if this doesn't work then you may like to upgrade to a newer
+shell such as bash or zsh.}.
+
+There are two modes for extract links @code{directory} and @code{www}.
+The key difference between them is that the latter actually downloads
+from a server so it is less efficient but will work in more
+circumstances and is more likely to represent your site as seen by
+users.  This is assuming that all of your WWW pages are interconnected
+so it can find them.
+
+@strong{FIXME} : need to describe modes of operation of extract link
+
+@cindex link index, creating
+@cindex page index, creating
+
+@w{@code{extract-links}} creates three files.  The first two files
+(@file{*.cdb}) are the index files for your infostructure and are
+located wherever you have configured them to by default they are called
+@file{link_on_page.cdb}, @file{page_has_link.cdb}.  The third file is
+the database file @file{links.db}.  @w{@code{extract-links}} can also
+optionally create a text file which lists all of the urls in the
+infostructure, one per line.
+
+@node Testing, Reporting, Extracting Links, Top
+@chapter Testing Links
+
+If you are using someone else's link information then you may be able to
+skip this part and go straight on to the next one on generating reports.
+
+Testing links takes a long time.  To begin to detect broken ones will
+take about ten days.  This is a deliberate feature of LinkController.
+It is designed this way firstly to give people at the other end of links
+a chance to repair their resources and secondly to reduce the amount of
+network bandwidth LinkController uses at a given time and so its impact
+on other people's internet usage.
+
+@pindex test-link, using
+The key program which you want to use is @w{@code{test-link}}.  I run
+this from a shell script which directs its output to a log file
+
+@strong{FIXME} actually I now just use a cron job.
+
+@example
+#!/bin/sh
+#this is just a little sample script of how I run the program.
+
+LOGDIR=$HOME/log
+test-link >> \
+        $LOGDIR/runlog-`/bin/date +%Y-%m-%d`.log 2>&1 
+#assumes the use of a gnu style date command which can print 
+#out full dates.
+@end example
+
+And I run this shell script from my @file{crontab} with a command like
+this
+
+@cindex crontab, example
+@example
+42 02 * * *     /..directories./run-daily-test.sh
+@end example
+
+The string @w{@code{/..directories./}} should be replaced with the directory
+where you have the script.  Remember to make the script executable.  
+
+This will now run until completion each night.   However, you should
+make sure that it does actually finish.  If you have too many links to
+check in the given time, then you can end up with a backlog and the
+system will take a long time to stop.  To avoid this, either make
+testing less frequent or make checking run faster.  This will have to be
+done by editing the program itself at present.
+
+@node Reporting, Files, Testing, Top
+@chapter Reporting Problems
+@cindex reports
+@cindex broken links, finding
+@cindex links, examining
+@pindex link-report
+
+The easiest way to find out which links are broken is to use the command
+line interface.  The simplest report you can generate is just a list of
+all the known broken links.  Do this like so:
+
+@example
+link-report
+@end example
+
+On the system I'm testing on right now, this gives:
+
+@example 
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/cgi
+        http://www.ippt.gov.pl/docs-1.4/cgi/examples.html
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
+ent/httpd_1.4_irix5.2.Z
+        http://www.ippt.gov.pl/docs-1.4/setup/PreExec.html
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
+ent/httpd_1.4_linux.Z
+        http://www.ippt.gov.pl/docs-1.4/setup/PreExec.html
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
+ent/httpd_1.4_osf3.0.Z
+        http://www.ippt.gov.pl/docs-1.4/setup/PreExec.html
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
+ent/httpd_1.4_solaris2.4.Z
+        http://www.ippt.gov.pl/docs-1.4/setup/PreExec.html
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
+ent/httpd_1.4_solaris2.4.tar.Z
+        http://www.ippt.gov.pl/docs-1.4/setup/PreCompiled.html
+Sorry, couldn't find info for url file://ftp.ncsa.uiuc.edu/Web/httpd/U
+nix/ncsa_httpd/current/httpd_1.4_source.tar.Z
+please remember to check you have put it in full format
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/docu
+ments/usage.ps
+        http://www.ippt.gov.pl/docs-1.4/postscript-docs/Overview.html
+..etc...
+@end example
+
+Which just tells you which links are broken.  (In this chapter examples
+are folded at the 70th row, so that they fit well on narrow screens and
+in @TeX{}.  I wanted to use real text rather than making something up.)
+
+We also know which page they are broken on and can go and look at that
+on the World Wide Web or directly as a file on the server.
+
+You can get a complete list of options for @w{@code{link-report}} (or
+any other program which is part of LinkController) using
+
+@example
+link-report -h
+@end example
+
+For more advanced reporting and editing of documents with broken links
+you may want to use the emacs interface (@pxref{Emacs, The Emacs
+Interface}).
+
+@node Files, Repair, Reporting, Top
+@chapter Examining Individual Files
+@cindex page, checking
+@cindex file, individual, checking
+@cindex checking individual pages
+
+When you have just written an HTML page, you often want to check it
+before you put it up for use.  You can do this immediately using the
+@w{@code{check-page}} program.  Simply run something like
+
+@example
+check-page filename.html
+@end example
+
+And it will list all of the links that it is unsure about along with the
+line number the problem occurred on.  This program works particularly
+well when you editing with emacs (@pxref{check-page in Emacs, The Emacs Interface}).
+
+@node Repair, Suggestions, Files, Top
+@chapter Repairing Links
+@cindex links, repairing
+@cindex repairing links
+
+@pindex fix-link
+The program responsible for repairing links is @w{@code{fix-link}}.  It
+simply accepts two URLs and changes all of the occurrences of the first
+link in your documents into the second link.  It assumes that you have
+permission to edit all of the problem files and that there is a
+replacement link.  For example
+
+@example
+fix-link http://www.ed.ac.uk/~mikedlr/climbing/ \
+        http://www.tardis.ed.ac.uk/~mikedlr/climbing/
+@end example
+
+Typed at the shell prompt would have updated the location of my Climbing
+pages when they moved some while ago and 
+
+@example
+fix-link http://www.tardis.ed.ac.uk/~mikedlr/climbing/ \
+        http://www.tardis.ed.ac.uk/climb/
+@end example
+
+Will change them to the very latest location.  
+
+At present, there's no facility for automatically updating the databases
+when you do this.  Instead, you have to run extract-links regularly so
+that new links are noticed.  Maybe a later version of LinkController
+will change this.
+
+@node Suggestions, CGI, Repair, Top
+@chapter Making Suggestions
+@cindex suggestions
+
+A link in the database can have suggestions associated with it.  These
+are normally alternative URLs which somebody or something has decided
+would make a good replacement for the URL of the Link.  Humans can add
+to the database with the @code{suggest} program.  For example use:
+
+@pindex suggest
+@example
+suggest file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/current/htt
+pd_1.4_linux.Z \
+        http://delete.me.org/
+Link suggestion accepted.  Thank you
+@end example
+
+If you try the same thing again you get
+
+@example
+suggest file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/current/htt
+pd_1.4_linux.Z \
+        http://delete.me.org/ 
+Already knew about that suggestion.  Thanks though.
+@end example
+
+These suggestions will make it easier for others to repair links,
+especially if they are using the CGI interface.
+
+@node CGI, Emacs, Suggestions, Top
+@chapter CGI Interface
+@cindex interface, CGI
+@cindex CGI interface
+@pindex link-report.cgi
+@pindex fix-link.cgi
+
+The CGI interface is not fully developed and has a number of issues
+related to security to be considered.  I have however used it and shown
+that it can work, so if you want to you could try the same.  The two
+programs @w{@code{fix-link.cgi}} and @w{@code{link-report.cgi}} replace the
+normal ones @w{@code{fix-link}} and @w{@code{link-report}}.  They should be
+interfaced through an HTML page which feeds the needed information to
+@w{@code{link-report.cgi}}.
+
+@cindex authentication
+The main security question is how to do authentication of the user.
+This will have to be set up using the features of the web server.   
+
+@node Emacs, Setting up LinkController, CGI, Top
+@chapter The Emacs Interface
+@cindex emacs interface
+@cindex interface, emacs
+
+LinkController's reporting system is designed to be independent of the
+interface to it, and often the shell interface will be all that is
+needed.  However another convenient interface is through
+@w{@code{emacs}}.  There are two parts to this integration.
+
+@menu
+* link-report-dired::           An emacs program to display broken links.
+* check-page in Emacs::         Finding broken links in a file.
+@end menu
+
+@node link-report-dired, check-page in Emacs, Emacs, Emacs
+@section Finding Files with Broken Links
+@cindex links, examining, in emacs
+@cindex broken links, finding in emacs
+@pindex link-report-dired
+
+There is a special emacs mode called @w{@code{link-report-dired}} written
+for locating files with broken links.  The mode is based on
+@w{@code{find-dired}} and works very similarly.  It runs the program
+@w{@code{link-report}} with an option which makes it list file names in the
+same way as the @w{@code{ls}} program does.  The user can then move around
+the buffer as normal in emacs and enter files using a single key press
+(normally @kbd{f}).  
+
+@node check-page in Emacs,  , link-report-dired, Emacs
+@section Finding Broken Links in Files Within Emacs
+@pindex check-page@r{, in emacs}
+
+The program @w{@code{check-page}} was specially designed so that it outputs
+in a format which can be read by emacs' @w{@code{compile}} mode.  You can
+use it within emacs and then step from error to error correcting them.
+
+To do this, after you have set up your system and completed link
+checking use the command @kbd{M-x} @kbd{compile} @kbd{check-page
+filename}.  You will now see another buffer open up with all of the
+errors shown there.  You can use the key @kbd{M-`} (that's a real back
+quote, not an apostrophe) to step between errors.  
+
+@node Setting up LinkController, Administration, Emacs, Top
+@chapter Setting up LinkController
+
+This chapter is aimed at administrators setting up LinkController or who
+want to have a better understanding of the way that their installation
+is set up.  
+
+The first stage is to actually build and install the programs.  This is
+covered in the document @file{INSTALL} which is included with the
+distribution.
+
+Once you have installed the software, the next step is to configure
+LinkController so that it knows where you have all of your data.  The
+program @command{default-install} provides one model of this.  
+
+@menu
+* Default Installation::        
+@end menu
+
+@node Administration, Robots, Setting up LinkController, Top
+@chapter Administration
+
+There are various aspects of administration.  This is mostly related to
+testing links.  
+
+@menu
+* Default Installation::        
+* User Administration::         
+* Cron Scripts::                
+@end menu
+
+@node Default Installation, User Administration, Administration, Administration
+@section Default Installation
+
+Running @command{default-install -all} should set everything up
+correctly.  There are various variations on this command which do
+different things, but the summary is 
+
+@itemize @bullet
+@item
+Create a linkcont userid and group which will be used for running programs
+@item
+Create a working directory where LinkController will keep it's data
+@item
+Create configuration files, especially /etc/link-control.pl
+@item
+Create cron scripts which will run LinkController automatically.
+@end itemize
+
+Using this command it is also possible to activate users and groups
+e.g. @command{default-install -user username} or  
+@command{default-install -group groupname} in which case the specified
+users will become a member of the lcntusr group.  
+
+
+@node User Administration, Cron Scripts, Default Installation, Administration
+@section User Administration
+
+User administration is really only needed if you are running link
+testing centrally for your users.  This makes sense since it means that
+if several users have a link to the same place (likely in any given
+site) then you will only have to check that link once.  
+
+In this case, the important question is which links are copied into the
+checking database.  This is controlled by the program
+@command{copy-links-from-users} and decides copies data from users which
+are in the @code{lnkusr} group.  
+
+The command @command{default-install} can be used to manipulate which
+users are in the group e.g. @command{default-install -user username} or  
+@command{default-install -group groupname} in which case the specified
+users will become a member of the lcntusr group.   *** see ***
+
+Another form of user administration is limitation on which users have
+access to the database.  This can be done with normal file permissions.
+There isn't any specific control to stop users from seeing which links
+other users have put into the database.  
+
+@node Cron Scripts,  , User Administration, Administration
+@section Cron Scripts
+
+In order to be effective, link testing should be done every day.
+Furthermore, it is a good idea to do the testing at low usage times,
+which normally means at night.  For this reason normally a cron script
+will be used.  
+
+@itemize @bullet
+@item 
+copy the links from each user with @code{copy-links-from-users} 
+@item 
+add them to the database with @code{extract-links --in-url-list} 
+@item 
+build a schedule for testing the links with @code{build-schedule} 
+@item 
+test the links with @code{daily-test-link} 
+@end itemize
+
+The other thing which is done is to remove old links from the database.
+This only needs to be done weekly.  
+
+The program @command{default-install} can create these scripts.
+
+@node Robots, Bugs, Administration, Top
+@chapter Robots and Sensible Behaviour
+@cindex robots
+@cindex dangers
+@cindex bandwidth
+
+The most important thing about a program like this is to realise that if
+you set it up incorrectly and used it in the wrong way, you could upset
+a large number of people who have set up their web servers in the
+assumption that they would be used normally by human beings browsing
+through on Netscape.
+
+Probably it's true that the only way forward is for every WWW site to
+begin to set up robot defences and detect when someone starts to
+download from at an unreasonable rate and then cut off the person doing
+the downloading.  I suggest that you don't do this for at least two
+reasons.
+
+@itemize @bullet
+@item 
+respect for the person's time
+@item 
+a wish not to be the person who is cut off
+@end itemize
+
+There are probably many other reasons, but that's one for the good side
+in you and one for the selfish.  What more do you need.
+
+For suggestions about what constitutes `correct' behaviour, it's worth
+seeing the Robots World Wide Web page.
+@url{http://info.webcrawler.com/mak/projects/robots/robots.html}
+
+There are a number of points which make LinkController relatively safe
+as a link.  These are all related to the design and limitations on
+daily-test-link.  
+
+@itemize @bullet
+@item 
+Daily test link does @emph{not} recurse.  It only tests links that are
+specifically listed in the schedule database.
+@item 
+There is a limit to the number of links that will be tested in one run.
+This defaults to 1000, but can be configured.  
+@item
+The schedule for link testing is designed to spread the testing of links
+across time
+@item
+The testing system will not test links at a given site faster than a
+certain rate.
+@end itemize
+
+The last limitation is inherited from the @code{LWP::RobotUA}
+module and the documentation for that covers the details of how it
+works.  LinkController trys to re-order testing of links so that this
+does not cause a limit on overall testing speed.
+
+@node Bugs, Acknowledgements , Robots, Top
+@chapter Bugs and bug reporting, Acknowledgements , Robots, Top
+
+This version of LinkController is still in early development.  There are
+many changes to come.  Undoubtedly there are many bugs in the software
+already and will soon be more.  
+
+A bug is when 
+
+@itemize @bullet
+@item 
+the software doen't do something the documentation says it should
+@item 
+the software does something the documentation says it shouldn't
+@item 
+the software does something surprising and that isn't documented
+@item 
+the software does something strange but the documentation doesn't
+explain why
+@item 
+it is difficult or impossible to understand what the documentation is
+trying to say
+@end itemize
+
+some of these mean fixing the documentation and some the software.  All
+of them are bugs and should be reported and fixed.
+
+If you find a bug, I will be grateful to hear about it.  Even if you
+don't know how to fix it or anything, it is useful to know what is wrong
+so that other people don't get caught out but @emph{read the BUGS file
+first} please.  If the bug is listed there then the only useful thing
+that you can do is fix it.  If you do this and contribute it to me then
+that is very useful.
+
+When you report a bug, please tell me what release of link controller
+you were using.  This is the number which was in the name of the file
+that LinkController came in.  If your problem was with a specific
+program, please also run @samp{program --version} and send the output.
+This tells me exactly which version of that program you were running.
+
+Since this is a developers release, I'd hope most users would be able to
+make some level of fixes.  If you do this, send me context differences
+(use @samp{diff -u} if it works or try @samp{diff -c} otherwise).  I use
+CVS, so as long as I know which version you have I will be able to find
+the original file and see your changes.  However it's also important to
+explain them because I won't be able to use them unless I (relatively
+stupid computer type) understand them.
+
+Send bug reports and patches to
+
+@example
+link-controller@@tardis.ed.ac.uk
+@end example
+
+This mailing address is sent only to me right now, but may become a list
+in future.  Use my (Michael De La Rue) personal address to contact me
+please.  N.B. I am @strong{extremely} inefficient about answering email.
+
+@node Acknowledgements , Invoking the Programs, Bugs, Top
+@chapter Acknowledgements
+@cindex acknowledgements
+
+Although I wrote this system by myself, this would not have been
+nearly as easy and almost certainly wouldn't have been finished without
+the help of the following people and organisations.
+
+@unnumberedsec Esoterica Internet Portugal
+
+@c I'd like to have these people's names correct but I'm not sure how to
+@c do that in texinfo.. oh well.
+
+Esoterica provided me with full access to the internet in Portugal and
+use of their computers for free which allowed me to keep up on both this
+software and the Linux Access HOWTO.  In particular I'd like to thank
+all of the members of staff who helped me very much.  These people include
+@c M\'ario Francisco Valente
+Mario Francisco Valente (the instigator of Mini Linux) who first
+agreed to me using their kit, set me up to use their machines, and along
+with 
+@c Lu\'\i{}s Sequeira
+Luis Sequeira provided a sounding board for some ideas.
+@c Lu\'\i{}s 
+Luis also provided the odd lift home in the evening.  Also 
+@c Martim de Magalhães
+Martim de Magalhaes Pereira and Mr Mendes.  See them all on 
+
+@url{http://www.esoterica.pt/esoterica/quemsomos.html}
+
+For more about esoterica (Internet Services in Portugal) see:
+
+@url{http://www.esoterica.pt/esoterica/}
+
+These pages are in Portugese@footnote{Whilst the above names are mangled
+here.  See the correct versions in the original texinfo or on the Web
+pages.} of course.
+
+@unnumberedsec IPPT PAN Poland
+
+Thanks go to IPPT PAN (part of PAN - Polska Akademia Naukowa) in Poland
+and in particular Piotr Pogorzelski who allowed me use of facilities for
+testing this software, provided a willing victim for having his web
+pages tested and made a number of suggestions which have been
+incorporated into the software.
+
+@unnumberedsec The Tardis Project
+
+Supported by the Computing Science department of the University of
+Edinburgh, the Tardis project provides an experimental framework in
+which students, former students and other related people to do their own
+work on fully internet connected Unix and Linux hosts.
+
+The use of the facilities of the Tardis Project has made it much easier
+for me to develop software like this.  In particular, the large amount
+of disk space the administrators have allow me to use is very useful.
+
+@unnumberedsec Other Free Software Authors
+
+It is through the software provided by the Free Software Foundation
+(such as the @w{@code{gcc}} C compiler, emacs, the file utilities), the
+authors of the various packages which make up a working Linux System
+(Linux by Linus Torvalds, Alan Cox, etc.... filesystems and support by
+Theodore Tytso, Stefan Tweedie etc.. Linux-Libc by HJ Lu, based on GNU
+@w{@code{glibc}} from the FSF.. the list is indefinite) and the authors
+of Perl and its modules, especially Gisle Aas and Martijn Kostler for
+LibWWW-Perl that I was able to set this up.
+
+I'd particularly like to thank Tim Goodwin the author of the Perl CDB
+module who made and accepted a number of alterations to that, at my
+request.  These alterations made this package simpler to write and
+easier to maintain.
+
+The Free Software Foundation web pages are at
+
+@url{http://www.gnu.ai.mit.edu/}
+
+@node Invoking the Programs, Related Packages, Acknowledgements , Top
+@appendix Invoking the LinkController Programs
+
+Because they use the Perl @code{Getopt::Mixed} module, all of the
+LinkController command line programs respond to the standard POSIX style
+command line options.  At least the following two options will be implemented. 
+
+@table @samp
+@item --help
+This option will give a list of all of the options understood by the
+program along with brief explanations of what they do.  At present it
+may lie a little, but that is being corrected.
+@item --version
+This option will give some version information for the program.
+@end table
+
+You can use the @samp{--help} option to get help on each program, for
+example:
+
+@example
+extract-links --help
+@end example
+
+will give something like
+
+@example
+extract-links [arguments] [url-base [file-base]]
+
+ -V --version            Give version information for this program
+ -h --help --usage       Describe usage of this program.
+    --help-opt=OPTION    Give help information for a given option
+ -v --verbose[=VERBOSITY] Give information about what the program is doing.  Set
+                         value to control what information is given.
+
+ -e --exclude-regex=REGEX Exclude expression for excluding files.
+ -p --prune-regex=REGEX  Regular expression for excluding entire directories.
+ -d --default-infostrucs handle all default infostrucs (as well as ones listed
+                         on command line)
+
+ -l --link-database=FILENAME Database to create link records into.
+ -c --config-file=FILENAME Load in an additional configuration file
+
+ -o --out-url-list=FILENAME File to output the url of each link found to
+ -i --in-url-list=FILENAME File to input urls from to create links
+
+Extract the link and index information from a directory containing
+HTML files or from a set of WWW pages with URLs which begin with the
+given URL and which can be found by starting from that URL and
+searching other such pages.
+@end example
+
+You can then use that information to get the program to do what you
+want.
+
+@node Related Packages, Terms, Invoking the Programs, Top
+@chapter Packages Which Can Be Useful with LinkController
+
+@menu
+* cdb::                         Utilities for the LinkController indexes.
+* Tie-Transact-Hash::           Berkley DB editing tools.
+@end menu
+
+@node cdb, Tie-Transact-Hash, Related Packages, Related Packages
+@section The CDB utilities
+
+In order to have LinkController working you must have installed these.
+It is worth looking at the utilities that are provided, especially
+@code{cdbdump} which will let you look at the contents of the file.  You
+should be aware that @code{cdbget} program which is provided
+@emph{won't} be able to get at the full contents of the index files
+since they contain repeated keys.
+
+More information on cdb and new releases can be got from the www page.
+
+@url{http://pobox.com/~djb/cdb.html}
+
+@node Tie-Transact-Hash,  , cdb, Related Packages
+@section The Tie-Transact-Hash Perl Module and Programmes
+
+This is a Perl module written by myself which includes a program which
+allows direct examination and editing of berkley databases.  It can be
+useful for debugging and correcting problems in the LinkController Link
+database or schedule file.
+
+Tie::TransactHash can be downloaded from CPAN, the Comprehensive Perl
+Archive Network get there via:
+
+@url{http://www.perl.com/perl/info/software.html}
+
+@node Terms, Names Index, Related Packages, Top
+@appendix Terms
+
+@menu
+* Resource::                    The information on the World Wide Web.
+* URLs::                        The connections in the World Wide Web.
+* Infostructure::               Groups of resources.
+* Link::                        A connection between two resources.
+@end menu
+
+@node Resource, URLs, Terms, Terms
+@section Resource
+@cindex resource
+
+A resource is almost anything.  `It' can range from a person to an HTML
+file to a computer to a database or presumably eventually to phone
+numbers, possibly physical hardware.  This generality is a very
+important concept for the World Wide Web.  Really the key thing about a
+resource is that it can be `identified'.  @xref{URLs}, for more
+details.
+
+@node URLs, Infostructure, Resource, Terms
+@section URLs
+@cindex URL
+@cindex WWW
+
+A URL or `Uniform Resource Locator' are the essence of the World Wide
+Web.  Approximately, they are addresses through which `resources' can be
+located.  The idea is that almost anything can be given some kind of
+address in a form that a machine can work with.  By defining a set of
+rules, this can then be converted into a URL.  A URL has two parts.  The
+first tells us what rules to use and the second tells us what the
+address is.
+
+@node Infostructure, Link, URLs, Terms
+@section Infostructure
+@cindex infostructure
+@cindex HTML pages, groups of
+
+An infostructure is a concept which was introduced in Link Checking in
+the MOMspider package.  It is a collection of related resources.
+LinkController does not yet provide full support for this.  Probably
+this will be provided in the next version if philosophical issues can be
+dealt with to my satisfaction.  
+
+An infostructure will have the following features.
+
+@itemize @bullet
+@item 
+a rule which decides whether a given URL points to a resource which
+is a member of the infostructure
+@item
+a method of enumerating it and finding all of the pages contained in it.
+@item 
+a pair of cdb database files relating links to resources and vice
+versa.  
+@item 
+a function for editing resources to change the URLs in them.
+@end itemize
+
+@node Link,  , Infostructure, Terms
+@section Link
+
+The term link in LinkController is used for a connection between two
+resources.  It's existance really comes from the `class' or piece of
+type of computer data which is used to store information about `links'.
+Properties of a link include:
+
+@itemize @bullet
+@item 
+Knowing what the url of the target resource of the connection is.
+@item
+Knowing whether the connection to the target resource has been working
+recently.
+@item
+Knowing when the connection to the target resource was last checked.
+@end itemize
+
+Within the programs, a link is different from a URL in that it is
+specifically aimed at checking connections, where a URL just specifies
+what the connection should be if it is working.
+
+@node Names Index, Concept Index, Terms, Top
+@unnumbered Program and Variable Name Index
+
+Perl variables, which use :: to separate the different parts, are
+separated here using / instead to make it easier to work in info with
+this file.  
+
+@printindex vr
+
+@node Concept Index,  , Names Index, Top
+@unnumbered Concept Index
+
+@printindex cp
+
+@bye

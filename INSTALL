@@ -1,0 +1,109 @@
+
+     * [1]Installation
+     * [2]installation from rpm
+     * [3]installation from perl module
+          + [4]installation pre-requisites
+          + [5]detailed steps for install
+          + [6]Choosing a Platform
+     _________________________________________________________________
+   
+                                 Installation
+                                       
+   LinkController's installation system is based on that of a normal Perl
+   module.
+   
+   The module is normally distributed along with several other modules.
+   Please install these before LinkController.
+   
+   The portability of LinkController to systems other than RedHat Linux
+   is likely to be a problem. The scale of that problem will depend on
+   how far from RedHat Linux your system is.
+     _________________________________________________________________
+   
+                             installation from rpm
+                                       
+   The easiest way to install link controller is to have the distribution
+   in RPM format. In this case, simply install each of the RPMs with
+   @command{rpm -i}. Trying to install just LinkController will give a
+   list of the required rpm packages.
+     _________________________________________________________________
+   
+                         installation from perl module
+                                       
+   If your system doesn't run rpm then there isn't yet a pre-packaged
+   version (hopefully someone will do a port to Debian's packaging
+   system).
+     _________________________________________________________________
+   
+installation pre-requisites
+
+   Before installing LinkController, you must install perl and a series
+   of related perl modules. The full list is given in
+   lib/Bundle/LinkController.pm.
+     _________________________________________________________________
+   
+detailed steps for install
+
+   First you must install perl. Then run the following commands.
+   
+       perl Makefile.pl;
+       make;
+       make test;
+       make install;
+
+   All of the tests should pass. Do make sure that you run them so that
+   you know that everything is working properly.
+   
+   Please note that you must run make before you run make test because of
+   the configuration of the installation system.
+     _________________________________________________________________
+   
+Choosing a Platform
+
+   Installing this software can be easy or difficult depending on what
+   operating system platform you are running on.. In approximate order
+   from easiest to most difficult (this is my guess)
+     * RedHat Linux equal or better than 6.0 (see
+       [7]http://www.redhat.com/)
+     * other Linux (see [8]http://www.linux.org/ for example)
+     * SUNOS with perl 5.003 or better already
+     * other UNIX perl 5.003 or better already
+     * UNIX without perl
+     * WinNT
+     * Macintosh
+     * Other Windows
+       
+   With a previous version I had tried the top four. Probably to get the
+   system running on SunOS will require manually setting up the system
+   since the programs for doing the default installation (in the
+   @file{default-install}) becuase that uses various GNU administration
+   programs which SunOS probably doesn't emulate accurately.
+   
+   You will probably find it easier to just install Linux that to get
+   this running on Windows. If you do want to get it running on other
+   operating systems and provide clean patches, then I will be supportive
+   and helpful, but please note that I think most of the portability
+   problems will be with the underlying perl modules and CDB related
+   stuff.
+   
+   1. [9]file://localhost/home/mikedlr/link-controller/from-cvs/link-controller
+/LinkController/docs/INSTALL.html#Installation
+   2. [10]file://localhost/home/mikedlr/link-controller/from-cvs/link-controlle
+r/LinkController/docs/INSTALL.html#Choosing_a_Platform
+   3. [11]http://www.redhat.com/)
+   4. [12]http://www.linux.org.uk/
+
+References
+
+   1. file://localhost/home/mikedlr/LINK/link-controller/LinkController/docs/INSTALL.html#Installation
+   2. file://localhost/home/mikedlr/LINK/link-controller/LinkController/docs/INSTALL.html#installation_from_rpm
+   3. file://localhost/home/mikedlr/LINK/link-controller/LinkController/docs/INSTALL.html#installation_from_perl_module
+   4. file://localhost/home/mikedlr/LINK/link-controller/LinkController/docs/INSTALL.html#installation_pre_requisites
+   5. file://localhost/home/mikedlr/LINK/link-controller/LinkController/docs/INSTALL.html#detailed_steps_for_install
+   6. file://localhost/home/mikedlr/LINK/link-controller/LinkController/docs/INSTALL.html#Choosing_a_Platform
+   7. http://www.redhat.com/)
+   8. http://www.linux.org/
+   9. file://localhost/home/mikedlr/link-controller/from-cvs/link-controller/LinkController/docs/INSTALL.html#Installation
+  10. file://localhost/home/mikedlr/link-controller/from-cvs/link-controller/LinkController/docs/INSTALL.html#Choosing_a_Platform
+  11. http://www.redhat.com/
+  12. http://www.linux.org.uk/

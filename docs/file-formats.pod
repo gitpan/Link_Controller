@@ -1,0 +1,23 @@
+=head1 NAME 
+
+=head2 link database
+
+the link database is a hash (implemented with the DB_File perl module)
+with values containing perl objects (stored through the MLDBM perl
+module).
+
+The keys to this data are absolute URIs (and all valid absolute URI
+values are reserved for this use).
+
+Keys starting with %+++ are reserved for link-controller N.B. no valid
+URI could ever match these.
+
+Keys corresponding to valid relative URIs are reserved for future use
+in URI storage.
+
+Other keys which could not be vaild URIs are reserved for future use.
+
+This means that when going through the database looking at each URI,
+we have to be willing to skip over certain non URI values
+
+=head

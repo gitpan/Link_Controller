@@ -1,0 +1,39 @@
+	UNTESTED OPTIONS
+
+Many different options have not yet been tested.  Certainly there is
+no way that every combination of options have been tested.
+Contributions to the test suite are very much appreciated.  
+
+Particular problems in the current version are likely to be that
+collection of links from web pages has not been tested.  This software
+is still under development and should be considered as such.
+
+
+	LOSSES FROM DATABASE
+
+There were some losses from the database.  These should now be fixed.
+Of course it's still possible to lose information if a crash occurs
+during a database write.  Keep backups as usual.
+
+	LOCATION OF PERL
+
+I make the assumption that the perl that is first in your path is the
+one you want to use.  The choice of perl should be propagated through to
+the Progcopy.PL script and tests from the Makefile.PL.
+
+	SUNOS COMMAND START UP
+
+On SunOS 4, the -w flags in the first line of all the programs end up
+split across the maximum length of a command for me.  This leads to
+the error
+
+  Unrecognized switch: - .
+
+Strangely this only happens with some of the programs The only
+solution is to fix the programs by hand.  Just add ten or so spaces
+after between perl and the option.  Or better yet upgrade to a more
+modern operating system.
+
+If anyone knows the general rule about which bit of the first line is
+used on what operating system, I can try to ensure that this doesn't
+get installed broken.

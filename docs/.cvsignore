@@ -1,0 +1,17 @@
+*cache
+*.html
+*.aux
+*.cp
+*.cps
+*.dvi
+*.fn
+*.ky
+*.log
+*.pdf
+*.pg
+*.ps
+*.ps2
+*.toc
+*.tp
+*.vr
+*.vrs

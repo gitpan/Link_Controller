@@ -1,0 +1,5 @@
+I found that Texinfo with RedHat is somewhat out of date.  You may have
+to get the latest version to rebuild the documentation here.
+
+At least the texinfo.tex included here should let you generate latex and
+other formats derived from it.

@@ -1,0 +1,9 @@
+base url
+
+base directory
+
+exclusion regular expression
+	/ perl function
+
+possibly:
+	special authentication ..

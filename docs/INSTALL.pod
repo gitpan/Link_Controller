@@ -1,0 +1,111 @@
+=head1 Installation
+
+LinkController's installation system is based on that of a normal Perl
+module.  
+
+The module is normally distributed along with several other modules.
+Please install these before LinkController.  
+
+The portability of LinkController to systems other than RedHat Linux
+is likely to be a problem.  The scale of that problem will depend on
+how far from RedHat Linux your system is.  
+
+=head1 installation from rpm
+
+The easiest way to install link controller is to have the distribution
+in RPM format.  In this case, simply install each of the RPMs with
+@command{rpm -i}.  Trying to install just C<LinkController> will give
+a list of the required rpm packages.  
+
+=head1 installation from perl module
+
+If your system doesn't run rpm then there isn't yet a pre-packaged
+version (hopefully someone will do a port to Debian's packaging
+system).  
+
+=head2 installation pre-requisites
+
+Before installing LinkController, you must install perl and a series
+of related perl modules.  The full list is given in 
+C<lib/Bundle/LinkController.pm>.
+
+=head2 detailed steps for install
+
+First you must install perl.  Then run the following commands.
+
+       perl Makefile.pl;
+       make;
+       make test;
+       make install;
+
+All of the tests should pass.  Do make sure that you run them so that
+you know that everything is working properly.
+
+Please note that you must run C<make> before you run C<make test>
+because of the configuration of the installation system.
+
+=head2 Choosing a Platform
+
+Installing this software can be easy or difficult depending on what
+operating system platform you are running on..  In approximate order
+from easiest to most difficult (this is my guess)
+
+=over 4
+
+=item * 
+
+RedHat Linux equal or better than 6.0 (see http://www.redhat.com/)
+
+=item * 
+
+other Linux (see http://www.linux.org/ for example)
+
+=item * 
+
+SUNOS with perl 5.003 or better already
+
+=item * 
+
+other UNIX perl 5.003 or better already 
+
+=item * 
+
+UNIX without perl
+
+=item * 
+
+WinNT
+
+=item * 
+
+Macintosh
+
+=item * 
+
+Other Windows
+
+=back
+
+With a previous version I had tried the top four.  Probably to get
+the system running on SunOS will require manually setting up the
+system since the programs for doing the default installation (in the
+@file{default-install}) becuase that uses various GNU administration
+programs which SunOS probably doesn't emulate accurately.
+
+You will probably find it easier to just install Linux that to get
+this running on Windows.  If you do want to get it running on other
+operating systems and provide B<clean> patches, then I will be
+supportive and helpful, but please note that I think most of the
+portability problems will be with the underlying perl modules and CDB
+related stuff.
+
+=over4 References
+
+   1. file://localhost/home/mikedlr/link-controller/from-cvs/link-controller/LinkController/docs/INSTALL.html#Installation
+   2. file://localhost/home/mikedlr/link-controller/from-cvs/link-controller/LinkController/docs/INSTALL.html#Choosing_a_Platform
+   3. http://www.redhat.com/)
+   4. http://www.linux.org.uk/
+
+
+=cut
+
