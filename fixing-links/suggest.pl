@@ -79,7 +79,7 @@ EOF
 sub version() {
   print <<'EOF';
 suggest version 
-$Id: suggest.pl,v 1.6 2001/11/12 23:37:52 mikedlr Exp $
+$Id: suggest.pl,v 1.7 2001/11/22 15:33:21 mikedlr Exp $
 EOF
 }
 

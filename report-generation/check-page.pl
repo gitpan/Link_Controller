@@ -131,7 +131,7 @@ EOF
 sub version() {
   print <<'EOF';
 check-page version 
-$Id: check-page.pl,v 1.6 2001/11/12 23:37:52 mikedlr Exp $
+$Id: check-page.pl,v 1.7 2001/11/22 15:40:11 mikedlr Exp $
 EOF
 }
 

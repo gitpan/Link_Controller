@@ -106,7 +106,7 @@ EOF
 sub version() {
   print <<'EOF';
 copy-links-from-users version
-$Id: copy-links-from-users.pl,v 1.2 2001/01/06 18:43:21 mikedlr Exp $
+$Id: copy-links-from-users.pl,v 1.3 2001/11/22 15:30:29 mikedlr Exp $
 EOF
 }
 

@@ -135,7 +135,7 @@ EOF
 sub version() {
   print <<'EOF';
 configure-link-cgi version 
-$Id: configure-link-cgi.pl,v 1.5 2001/11/12 23:37:51 mikedlr Exp $
+$Id: configure-link-cgi.pl,v 1.6 2001/11/22 15:27:07 mikedlr Exp $
 EOF
 }
 

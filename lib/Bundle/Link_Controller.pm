@@ -99,12 +99,14 @@ CGI::Request 0
 CGI::Response 0
 Data::Dumper 0
 Getopt::Mixed 1.006
+HTML::Tagset 0        - this may have been separated from another module??
 HTML::LinkExtor 0
 HTML::Parse 0
 HTML::Stream 0
 HTTP::Date 0
 HTTP::Response 0
 HTTP::Status 0
+Net::Telnet 0         - used by adaptive tester to try really hard on broken links.
 LWP::Debug 0
 LWP::MediaTypes 0
 LWP::RobotUA 0 

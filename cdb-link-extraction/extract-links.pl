@@ -230,7 +230,7 @@ EOF
 sub version() {
   print <<'EOF';
 extract-links version
-$Id: extract-links.pl,v 1.1 2001/11/12 23:37:51 mikedlr Exp $
+$Id: extract-links.pl,v 1.2 2001/11/22 15:26:03 mikedlr Exp $
 EOF
 }
 

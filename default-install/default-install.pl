@@ -241,7 +241,7 @@ EOF
 sub version() {
   print <<'EOF';
 default-install version
-$Id: default-install.pl,v 1.6 2001/11/12 23:37:51 mikedlr Exp $
+$Id: default-install.pl,v 1.7 2001/11/22 15:30:29 mikedlr Exp $
 EOF
 }
 

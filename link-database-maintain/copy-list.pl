@@ -99,7 +99,7 @@ EOF
 sub version() {
   print <<'EOF';
 copy-list version 
-$Id: copy-list.pl,v 1.5 2001/11/05 19:28:03 mikedlr Exp $
+$Id: copy-list.pl,v 1.6 2001/11/22 15:39:51 mikedlr Exp $
 EOF
 }
 

@@ -8,7 +8,10 @@ Please install these before LinkController.
 
 The portability of LinkController to systems other than RedHat Linux
 is likely to be a problem.  The scale of that problem will depend on
-how far from RedHat Linux your system is.  
+how far from RedHat Linux your system is.  In the end as I get access
+to more LinuxLike systems (e.g. FreeBSD / Hurd etc. I'd like to
+improve this situation, but not at the cost of efficiency and
+maintainability on Linux.
 
 =head1 installation from rpm
 
@@ -37,6 +40,10 @@ First you must install perl.  Then run the following commands.
        make;
        make test;
        make install;
+
+The file C<check-req.out> should be empty.  If it isn't that means
+that you have to install some more perl modules.  Read the file to
+find out which.
 
 All of the tests should pass.  Do make sure that you run them so that
 you know that everything is working properly.

@@ -8,6 +8,13 @@ Particular problems in the current version are likely to be that
 collection of links from web pages has not been tested.  This software
 is still under development and should be considered as such.
 
+	FRAGMENTS
+
+It seems that fragments often contain spaces.  In this case they are
+left out of the database.  Actually, the fragment should be recorded
+separately within the link and then it should be part of resource
+_content_ verification.  For properly defined URL schemes, the
+resource its self will always be retrieved / activated in one go..
 
 	LOSSES FROM DATABASE
 

@@ -182,7 +182,7 @@ EOF
 sub version() {
   print <<'EOF';
 fix-link version
-$Id: fix-link.pl,v 1.9 2001/11/12 23:37:52 mikedlr Exp $
+$Id: fix-link.pl,v 1.10 2001/11/22 15:33:21 mikedlr Exp $
 EOF
 }
 

@@ -166,7 +166,7 @@ EOF
 sub version() {
   print <<'EOF';
 build-schedule version 
-$Id: build-schedule.pl,v 1.10 2001/11/12 23:37:53 mikedlr Exp $
+$Id: build-schedule.pl,v 1.11 2001/11/22 15:42:52 mikedlr Exp $
 EOF
 }
 

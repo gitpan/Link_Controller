@@ -59,7 +59,7 @@ EOF
 sub version() {
   print <<'EOF';
 configure-link-control version 
-$Id: configure-link-control.pl,v 1.11 2001/11/12 23:37:51 mikedlr Exp $
+$Id: configure-link-control.pl,v 1.12 2001/11/22 15:27:07 mikedlr Exp $
 EOF
 }
 

@@ -54,7 +54,7 @@ sort { $::a cmp $::b } @::changelist;
 # we have the page index (which links on what page) open both for
 # reading and writing effectively..
 
-use CDB_File;
+use CDB_File 0.86;
 use CDB_File::BiIndex::Generator;
 
 #1 tie in to the old page index

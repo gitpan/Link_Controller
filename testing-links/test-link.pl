@@ -290,7 +290,7 @@ EOF
 sub version() {
   print <<'EOF';
 test-link version
-$Id: test-link.pl,v 1.11 2001/11/12 23:37:53 mikedlr Exp $
+$Id: test-link.pl,v 1.12 2001/11/22 15:42:52 mikedlr Exp $
 EOF
 }
 
@@ -332,14 +332,14 @@ if ($::robot) {
   print STDERR "generating a robot ua\n";
   my $rules = new WWW::RobotRules::AnyDBM_File 'my-robot/1.0', '.robot.cache';
   $ua = new LWP::NoStopRobot 'LinkController/'
-    . $WWW::LinkController::Version::VERSION, $::user_address;
+    . $WWW::Link_Controller::Version::VERSION, $::user_address;
   $ua->delay(1);
   print STDERR "Waitre is $::waitre\n";
   $ua->no_wait($::waitre) unless $::waitre eq "" ;
 } else {
   print STDERR "generating a normal ua\n";
   $ua = new LWP::UserAgent 'LinkControllerTest/'
-    . $WWW::LinkController::Version::VERSION, $::user_address;
+    . $WWW::Link_Controller::Version::VERSION, $::user_address;
 }
 
 
@@ -700,7 +700,7 @@ sub auto_schedule_link {
     die "time logic wrong; just tested ($time) but wants tested at $sched_time"
       if $sched_time < $time;
     print STDERR "Link wants test between $sched_time and "
-	. $sched_time + $vary . "\n";
+	. ( $sched_time + $vary ) . "\n";
 
     my $earliest=time() + $::min_delay;
     if ( $sched_time < $earliest ) {

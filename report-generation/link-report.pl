@@ -251,7 +251,7 @@ EOF
 sub version() {
   print <<'EOF';
 link-report version
-$Id: link-report.pl,v 1.15 2001/11/12 23:37:52 mikedlr Exp $
+$Id: link-report.pl,v 1.16 2001/11/22 15:40:12 mikedlr Exp $
 EOF
 }
 
