@@ -29,12 +29,19 @@ system).
 =head2 installation pre-requisites
 
 Before installing LinkController, you must install perl and a series
-of related perl modules.  The full list is given in 
-C<lib/Bundle/LinkController.pm>.
+of related perl modules.  The full list is given in
+C<lib/Bundle/LinkController.pm>.  You may find that trying to install
+the LinkController bundle works for you (see the documentation of the
+CPAN module e.g. with `man CPAN') but it doesn't work for me.  If it
+does work then you are sorted.
+
+The prerequisites can be downloaded from CPAN.
+L<http://www.cpan.org/>
 
 =head2 detailed steps for install
 
-First you must install perl.  Then run the following commands.
+First you must install perl and the modules as explained above.  Then
+run the following commands.
 
        perl Makefile.pl;
        make;
@@ -81,7 +88,7 @@ UNIX without perl
 
 =item * 
 
-WinNT
+WinNT (use cygwin for the best chance)
 
 =item * 
 

@@ -40,10 +40,10 @@ get urls from WWW pages who's url starts with the base-url
 
 Unlike other programs which tend to resort to closing and re-opening
 files with lists of links, or holding them all in memory, this program
-uses the file containing list of links which it is generating anyway
-to follow the recursion in the WWW without actually using recursive
-functions.  This relies on output to an unbuffered file being
-available for input immediately afterwards.
+uses a file containing list of links to follow the recursion in the
+WWW without actually using recursive functions.  This relies on output
+to an unbuffered file being available for input immediately
+afterwards.
 
 We also use a temporary database to record which links have been seen
 before.  This could get LARGE.
@@ -59,7 +59,7 @@ directory and all subdirectories are excluded.
 =head1 CONFIGURATION
 
 By default, extract-links extracts and refreshes all of the
-infostructures listed in the file $::infostrucs.  The file looks like 
+infostructures listed in the file $::infostrucs.  The file looks like
 
 
    #mode	url	directory	includere	excludere
@@ -126,7 +126,7 @@ use File::Find;
 use LWP::MediaTypes;
 require HTML::LinkExtor;
 use URI::URL;
-use LWP::UserAgent;
+use LWP::Auth_UA;
 use CDB_File::BiIndex::Generator;
 
 use DB_File; #for temporary database
@@ -143,7 +143,11 @@ use CDB_File::BiIndex::Generator;
 use WWW::Link_Controller;
 use WWW::Link_Controller::URL;
 
-sub findweb ($) ;
+use WWW::Link_Controller::InfoStruc;
+
+sub link_handler ($%) ;
+sub findweb ($%) ;
+sub make_act_on_file ($$%);
 sub make_attrib_func ($$%);
 sub chunk_accept_func ($) ;
 sub read_infostruc_file ($$) ;
@@ -167,6 +171,7 @@ $::opthandler = new Getopt::Function
     "usage h>usage help>usage",
     "help-opt=s",
     "verbose:i v>verbose",
+    "silent quiet>silent q>silent",
     "",
     "exclude-regex=s e>exclude-regex",
     "prune-regex=s p>prune-regex",
@@ -198,6 +203,7 @@ $::opthandler = new Getopt::Function
 			  "File to input urls from to create links",
 			  "FILENAME" ],
      "config-file" => [ sub {
+			  print STDERR "loading extra config\n" if $::verbose;
 			  eval {require $::value};
 			  die "Additional config failed: $@"
 			    if $@;
@@ -230,18 +236,25 @@ EOF
 sub version() {
   print <<'EOF';
 extract-links version
-$Id: extract-links.pl,v 1.2 2001/11/22 15:26:03 mikedlr Exp $
+$Id: extract-links.pl,v 1.7 2001/12/25 06:31:16 mikedlr Exp $
 EOF
 }
 
 $::links=$::link_database if defined $::link_database;
+$WWW::Link_Controller::Lock::silent=1 if $::silent;
 
 if ( @ARGV ) {
   $::default_infostrucs=0 unless defined $::default_infostrucs;
   my $url_base=shift;
   my $file_base=shift;
   my $mode = defined $file_base ? "directory" : "www";
-  push @::infostrucs, [ $mode, $url_base, $file_base ];
+  push @::infostrucs, $url_base;
+  $::infostrucs{$url_base} =
+    {
+     mode => $mode,
+     url_base => $url_base,
+     file_base => $file_base
+    };
 }
 
 $::default_infostrucs = 0
@@ -273,20 +286,24 @@ EOF
 
 open (URLLIST, ">$::out_url_list") if defined $::out_url_list;
 
-#assume this means output is immediately available as input..
-
 $::checklist="/tmp/extract-links.seen.tmp.$$";
 
+#checklist protects the system overall from recording the same
+#link more than once e.g. in the urllists output and optimises
+#against accessing the link database more than once for each
+#link
 
 tie %::checklist, "DB_File", $::checklist, O_RDWR|O_CREAT, 0666
   or die $!;
 
+eval "END { unlink \$::checklist if defined \$::checklist }";
+
 
 $::write_links && do {
 
-  print STDERR "locking and creating link file $::links\n";
   WWW::Link_Controller::Lock::lock($::links);
   my $linkdbm;
+  print STDERR "opening link file $::links\n" if $::verbose;
   $linkdbm = tie %::link_db, "MLDBM", $::links, O_CREAT|O_RDWR, 0666, $DB_HASH
     or die "failed to open database `$::links': $!";
 
@@ -317,37 +334,56 @@ $::index=new CDB_File::BiIndex::Generator
 die "you must define the \$::infostrucs configuration variable"
   if $::default_infostrucs and not defined $::infostrucs ;
 
-read_infostruc_file ( $::infostrucs, \@::infostrucs) if $::default_infostrucs;
 
-INFOS: foreach my $infos ( @::infostrucs ) {
-  my ($mode, $url_base, $file_base, $includere, $excludere) = @$infos;
+if ( $::default_infostrucs ) {
+  print STDERR "loading default infostrucs\n" unless $::silent;
+  WWW::Link_Controller::InfoStruc::default_infostrucs();
+} else {
+  print STDERR "ignoring default infostrucs\n" unless $::silent;
+}
 
+die "no infostructures to extract links from" unless @::infostrucs;
+INFOS: foreach my $base_url ( @::infostrucs ) {
+  my $defs = $::infostrucs{$base_url};
+
+  my $file_base=$defs->{file_base};
   defined $file_base and not -e $file_base and die
-    "file base $file_base doesn't exist for $url_base";
+    "file base $file_base doesn't exist for $base_url";
 #  defined $directory and not -d $directory and die
 #    "base directory $directory isn't a directory for $url";
 
 
  CASE: {
+    my $mode=$defs->{mode};
     $mode eq "directory" && do {
-
+      die "file_base not defined for infostructure $base_url"
+	unless defined $file_base;
       -e $file_base || do {
-	warn "$file_base does not exist, ignoring infostruc $url_base";
+	warn "$file_base does not exist, ignoring infostruc $base_url";
 	next INFOS;
       };
 
       -d $file_base && do {
         $file_base = $file_base . "/" unless $file_base =~ m,/$,;
-	$url_base = $url_base . "/" unless $url_base =~ m,/$,;
+	$base_url = $base_url . "/" unless $base_url =~ m,/$,;
       };
 
-      my $act_on_file=make_act_on_file ($url_base,$file_base);
-      finddepth ( $act_on_file, $file_base );
+      print STDERR <<EOF if $::verbose & 2;
+About to extract links from infostructure $base_url
+using $file_base as the base directory.
+EOF
+      my $act_on_file=make_act_on_file ($base_url,$file_base,%$defs);
+      finddepth ( $act_on_file, $file_base);
       last;
     };
 
-    $mode eq "web" && do {
-      findweb ( $url_base );
+    $mode eq "www" && do {
+      print STDERR <<EOF if $::verbose & 2;
+About to extract links from infostructure $base_url
+using recursive web download.
+EOF
+      findweb ( $base_url, %$defs);
+      last;
     };
 
     die "invalid mode $mode";
@@ -361,38 +397,56 @@ print STDERR "--------------------------\n"
 
 $::index->finish();
 
-print "Ignored $::ignored files of the following types\n";
-while (my ($type, $count)=each %::ignored) {
-  my $repeat=30 - length($type) - length($count);
-  $repeat=0 if $repeat < 0;
-  $repeat+=5;
-  print $type, "." x $repeat, $count, "\n";
+if ( $::ignored and not $::silent) {
+  print "Ignored $::ignored files of the following types\n";
+  while (my ($type, $count)=each %::ignored) {
+    my $repeat=30 - length($type) - length($count);
+    $repeat=0 if $repeat < 0;
+    $repeat+=5;
+    print $type, "." x $repeat, $count, "\n";
+  }
+  print "If $::ignored seems alot then maybe you want to send in a patch?\n";
 }
-print "If $::ignored seems alot then maybe you want to send in a patch?\n";
-
 exit 0;
 
 
 #act on file, designed to be called by File::Find for each
 #file in the infostructure.
 
-sub make_act_on_file {
+sub make_act_on_file ($$%){
   my $url_base=shift;
   my $file_base=shift;
+  my %settings=@_;
+
+  my $prune_regex = $settings{prune_re};
+  my $include_regex = $settings{resource_include_re};
+  my $exclude_regex = $settings{resource_exclude_re};
+
   return sub {
+
     -d && do {
-      $File::Find::prune=1 if defined $::prune_regex
-	&& $File::Find::name =~ m/$::prune_regex/o;
+      $File::Find::prune=1 if defined $prune_regex
+	and $File::Find::name =~ m/$prune_regex/o;
       return 1;
     };
-    return if -l;
+
+    #file name for this page
     my $page_name=$File::Find::name;
-    defined $::exclude_regex && $page_name =~ m/$::exclude_regex/o && do {
+    #base url for this page
+    my $base = $File::Find::dir . '/';
+    $base =~ s/^$file_base/$url_base/;
+    #url for this page
+    my $page_url="$base$_";
+
+    return if -l;
+    ( defined $include_regex and not $page_url =~ m/$include_regex/ ) or
+      ( defined $exclude_regex and $page_url =~ m/$exclude_regex/ ) and do {
       print STDERR "excluding $page_name\n"
 	if $::verbose & 4;
       return;
     };
-    # FIXME dangerous, there could be a link to an external file which
+
+    # FIXME: dangerous, there could be a link to an external file which
     # means the external file should be included in the infostructure
 
     my $media=guess_media_type($_);
@@ -407,15 +461,10 @@ sub make_act_on_file {
 
     my @linklist=();
 
-    #1 what's the base for this file
-    my $base = $File::Find::dir . '/';
-    $base =~ s/^$file_base/$url_base/;
-    my $page_url="$base$_";
-
     print STDERR "acting on $page_name, url $page_url\n"
       if $::verbose & 4;
 
-    my $act_url=make_attrib_func($page_url,\@linklist);
+    my $act_url=make_attrib_func($page_url,\@linklist, %settings);
 
     my $p = HTML::LinkExtor->new($act_url);
 
@@ -437,8 +486,9 @@ sub make_act_on_file {
 #pages which are below that page in the URL hirearchy.
 #
 
-sub findweb ($) {
+sub findweb ($%) {
   my $url=shift;
+  my %settings=@_;
 
   my $basere='^' . quotemeta ($url);
 
@@ -451,10 +501,13 @@ sub findweb ($) {
   unlink  $tmpfile;
   -e  $tmpfile and die  "failed to remove $tmpfile";
 
+#the visited hash protects us against reading in the same page more
+#than once during this infostructure run.  thereby preventing loops.
+
   tie my %visited, "DB_File", $tmpfile, O_RDWR|O_CREAT, 0666
     or die $!;
 
-  my $ua = new LWP::UserAgent;
+  my $ua = new LWP::Auth_UA;
 
   my $worktmp="/tmp/extract-links.work.tmp.$$";
 
@@ -465,15 +518,14 @@ sub findweb ($) {
   autoflush $workout 1;
   print $workout "$url\n" ;
 
- PAGE: while (defined($work_url = <$workout>)) {
+ PAGE: while (defined($work_url = <$workin>)) {
     chomp $work_url;
 
     defined $::exclude_regex && $work_url =~ m/$::exclude_regex/ and do {
-      print STDERR "skipping $work_url\n" ;
+      print STDERR "skipping $work_url\n" if $::verbose & 4;
       next PAGE;
     };
-    print STDERR "looking at $work_url\n" ;
-    #    if $::verbose & 4;
+    print STDERR "looking at $work_url\n" if $::verbose & 4;
 
     #the following is just an optimisation which means that we don't
     #download pages that we won't process and can be got rid of if you
@@ -492,22 +544,27 @@ sub findweb ($) {
 
     #1 what's the base for this file
 
-
     my $rebound=1;
 
     my %redirect=();
 
     while ($rebound) {
 
-      if ( $visited{$url} ) {
-	print STDERR "skipping already visited url: $work_url ";
+      if ( $visited{$work_url} ) {
+	print STDERR "skipping already visited url: $work_url \n" 
+	  if $::verbose & 4;
 	next PAGE;
       }
+
+      $visited{$work_url}=1;
 
       unless ($work_url =~ m/$basere/ ) { # we are trapped in one area.
 	warn "out of bounds url $work_url";
 	next PAGE;
       }
+
+      print STDERR "going ahead with first visit to url: $work_url \n"
+	unless $::silent;
 
       my $oldurl=$work_url;
       my $request = new HTTP::Request('GET', $work_url);
@@ -515,15 +572,17 @@ sub findweb ($) {
       my @linklist=();
 
       my $link_func = make_attrib_func($work_url, \@linklist,
-				       urlre => $basere,
-				       workfile => $workout);
+				       work_url_re => $basere,
+				       workfile => $workout,
+				       %settings,
+				      );
 
       my $extractor = HTML::LinkExtor->new($link_func);
 
       my $accept_func=chunk_accept_func($extractor);
 
 
-      print STDERR "making request on $work_url\n";
+      print STDERR "making request on $work_url\n" unless $::silent;
 
       #download and parse .. big chunks becuase should be on local network
       #so can expect fast response
@@ -559,6 +618,7 @@ sub findweb ($) {
       # next PAGE unless $response->is_success() or $oldurl ne $work_url;
     }
   }
+  unlink  $tmpfile, $worktmp;
 }
 
 
@@ -568,7 +628,10 @@ sub make_attrib_func ($$%) {
   my %settings=@_;
 
   my $fh=$settings{workfile};
-  my $urlre=$settings{urlre};
+  my $urlre=$settings{work_url_re};
+
+  my $include_regex = $settings{link_include_re};
+  my $exclude_regex = $settings{link_exclude_re};
 
   #optional file handle we will print to
   # a closeure with a reference to the linklist which is
@@ -594,12 +657,21 @@ sub make_attrib_func ($$%) {
       print STDERR "extracted link $linkname\n" if
 	$::verbose & 8;
 
-      my $url=WWW::Link_Controller::URL::link_url($linkname,$base_url);
+      ( defined $include_regex and not $linkname =~ m/$include_regex/ ) or
+	( defined $exclude_regex and $linkname =~ m/$exclude_regex/ ) and do {
+	print STDERR "excluding link $linkname\n"
+	  if $::verbose & 4;
+	next LINK;
+      };
+
+      my ( $url, $fragment )
+	= WWW::Link_Controller::URL::fixup_link_url($linkname,$base_url);
+
       next unless defined $url;
 
       push @$link_array, $url;
 
-      link_handler ($url);
+      link_handler ( $url, fragment => $fragment );
 
       #this prints the link out for use in or working URL list
       #for or web recursion process.
@@ -612,6 +684,7 @@ sub make_attrib_func ($$%) {
 
 sub chunk_accept_func ($){
   my $extractor=shift;
+  #my %settings=@_; - no use for now
 
   #acceptfunc is a closeure with the link extractor which which is
   #called by the user agent with the parts of the page as they
@@ -620,13 +693,13 @@ sub chunk_accept_func ($){
   #it then calls the link extractor which in turn calls the $act_url
   #function
 
-
-  #we handle also redirects.  This a) lets us follow them further than
-  #normal and b) so that we can avoid following offsite links.
+  #Redirects etc. are handled by dying immediately.  This is caught by
+  #the user agent which then gives it back in the response and never
+  #calls us again.
 
   my $func = sub  {
     my ($chunk, $response, $protocol) = @_;
-    printf STDERR "Checking response\n";
+    printf STDERR "Checking response\n" if $::verbose & 8;
     die "only successes implemented now" unless $response->is_success();
     unless ( $response->content_type =~ m,html$,) {
       print STDERR "Wrong content type. give up.\n";
@@ -651,8 +724,17 @@ sub page_handler ($$) {
 #link_handler should be called for each valid URL found.
 #it will output it to the right places etc.
 
-sub link_handler {
+sub link_handler ($%) {
   my $url=shift;
+
+
+  my %link_info=@_;
+
+  my $fragment=$link_info{fragment};
+  print STDERR "ignoring fragment $fragment\n"
+    if $::verbose & 16 and defined $fragment;
+
+
   $::checklist{$url} && do {
     print STDERR "URL: $url already seen\n"
       if $::verbose & 32;
@@ -672,6 +754,7 @@ sub link_handler {
 	if $::verbose & 16;
       $link->last_refresh($::start_time);
     }
+
     $::link_db{$url}=$link;
   };
 
@@ -679,46 +762,17 @@ sub link_handler {
 }
 
 
-sub read_infostruc_file ($$) {
-  my $filename=shift;
-  my $info_array=shift;
 
-  die "need an array ref not " . ref $info_array
-    unless ( ref $info_array ) =~ m/ARRAY/;
+#call tree
+#
+# LWP::UserAgent
+# calls the chunk accept function
+# which calls the HTML::LinkExtor
+# which calls the attrib_func
+# which calls link_handler()
 
-  open(INFOSTRUCS, $filename) or die "couldn't open config file $filename";
-
-  print STDERR "Reading cofig file $filename\n"
-    if $::verbose & 64;
-
-  while (defined(my $conf_line=<INFOSTRUCS>)) {
-    next if $conf_line =~ m/^\s*(?:\#.*)$/; 	#comment lines and empty lines
-    print STDERR "conf line $conf_line\n";
-
-    $conf_line =~ m<^\s*(\S+)\s+(\S+)\s.*\%> and
-      die "% and \" are reserved in infostructure config file $filename";
-
-    my ($mode, $url, $directory, $includere, $excludere, $junk) =
-      $conf_line =~ m<^\s*(\S+)\s+(\S+) #non optional mode and url
-               (?:\s+(\S+) #directory
-                  (?: \s+(\S+) #includre
-                     (?: \s+(\S+) #exludere
-                        (?: \s*(.\s+) #junk
-                        )?
-                      )?
-                   )?
-                )?>x;
-
-    die "badly formatted line in infostruc conf file\n$conf_line\n"
-      . "too many spaces"
-	if $junk;
-
-    die "illegal mode $mode"
-      unless $mode eq "www" or $mode eq "directory";
-
-    print STDERR "got data for infostructure at $url\n"
-      if $::verbose & 64;
-    push @$info_array, [ $mode, $url, $directory, $includere, $excludere ];
-  }
-
-}
+# File::Find
+# calls the act_on file func
+# which calls the HTML::LinkExtor
+# which calls the attrib_func
+# which calls link_handler()

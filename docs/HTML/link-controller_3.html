@@ -1,0 +1,276 @@
+<HTML>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- Created on December, 30  2001 by texi2html 1.64 -->
+<!-- 
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Olaf Bachmann <obachman@mathematik.uni-kl.de>
+Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
+ 
+-->
+<HEAD>
+<TITLE>Using LinkController: Configuration</TITLE>
+
+<META NAME="description" CONTENT="Using LinkController: Configuration">
+<META NAME="keywords" CONTENT="Using LinkController: Configuration">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META NAME="Generator" CONTENT="texi2html 1.64">
+
+</HEAD>
+
+<BODY LANG="" BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+
+<A NAME="SEC3"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_2.html#SEC2"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC4"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_2.html#SEC2"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H1> 2. Configuration </H1>
+<!--docid::SEC3::-->
+<P>
+
+<BLOCKQUOTE><TABLE BORDER=0 CELLSPACING=0> 
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_3.html#SEC4">2.1 Setting Configuration Variables</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_3.html#SEC5">2.2 Setting Configuration Variables</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_3.html#SEC6">2.3 Link Control Configuration Variables</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">General configuration variables.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_3.html#SEC7">2.4 Configuring Infostructures</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+</TABLE></BLOCKQUOTE>
+<P>
+
+<A NAME="Automatic Configuration"></A>
+<HR SIZE="6">
+<A NAME="SEC4"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC3"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC5"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC3"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC3"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 2.1 Setting Configuration Variables </H2>
+<!--docid::SEC4::-->
+<P>
+
+<A NAME="IDX1"></A>
+<A NAME="IDX2"></A>
+<A NAME="IDX3"></A>
+</P><P>
+
+The <CODE>configure-link-control</CODE> program can be used by users to
+configure LinkController.  This will ask you a series of questions and
+then generate a configuration in your home directory.
+</P><P>
+
+The configuration that is controlled by this program is related to
+reporting and fixing links.  For other configuration see
+See section <A HREF="link-controller_15.html#SEC24">14. Administration</A>.
+</P><P>
+
+<A NAME="Setting Configuration Variables"></A>
+<HR SIZE="6">
+<A NAME="SEC5"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC4"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC6"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC3"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC3"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 2.2 Setting Configuration Variables </H2>
+<!--docid::SEC5::-->
+<P>
+
+<A NAME="IDX4"></A>
+<A NAME="IDX5"></A>
+<A NAME="IDX6"></A>
+</P><P>
+
+All of the variable information is stored in the file
+<TT>`.link-control.pl'</TT> in your home directory or
+<TT>`/etc/link-control.pl'</TT> for systemwide configuration.  The
+configuration files are written directly in Perl (the programming
+language LinkController is written in).  You can set the configuration
+variables by putting lines like this.
+</P><P>
+
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>$::links='/var/lib/link_database.bdbm';
+</pre></td></tr></table></P><P>
+
+Please note the semi colon at the end of the line and the use of single
+quotes so that Perl doesn't do anything strange to your values.
+</P><P>
+
+<A NAME="Link Variables"></A>
+<HR SIZE="6">
+<A NAME="SEC6"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC5"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC7"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC3"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC3"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 2.3 Link Control Configuration Variables </H2>
+<!--docid::SEC6::-->
+<P>
+
+<A NAME="IDX7"></A>
+<A NAME="IDX8"></A>
+</P><P>
+
+<DL COMPACT>
+<DT><CODE>$::user_address</CODE>
+<DD><A NAME="IDX9"></A>
+is the email address which the robot declares to the world as it
+goes around checking links.  If you want to check links yourself, you
+must set this to a valid email address, because if something goes badly
+wrong, it is the only way for a user at another site to know how to
+contact you.
+<P>
+
+<DT><CODE>$::base_dir</CODE>
+<DD><A NAME="IDX10"></A>
+This is the base directory for all of the configuration files.  If this
+variable is defined then the other variables will default as given
+below and do not need to be set individually.
+<P>
+
+<DT><CODE>$::links</CODE>
+<DD><A NAME="IDX11"></A>
+tells you what file is being used to store information
+about links.  This could easily be a shared database used by everyone on
+your system.  Defaults to <TT>`$::base_dir/links.bdbm'</TT>.
+<P>
+
+<DT><CODE>$::schedule</CODE>
+<DD><A NAME="IDX12"></A>
+tells the system where to find the schedule file used to
+decide which links should be checked next and when that should be.  You
+will need to set this and create the file in order to do link checking. 
+Defaults to <TT>`$::base_dir/schedule.bdbm'</TT>.
+<P>
+
+<DT><CODE>$::page_index</CODE>
+<DD><A NAME="IDX13"></A>
+tells the system where to find the schedule file used to
+decide which links should be checked next and when that should be.  You
+will need to set this and create the file in order to do link checking.
+Defaults to <TT>`$::base_dir/page_has_link.cdb'</TT>.
+<P>
+
+<DT><CODE>$::link_index</CODE>
+<DD><A NAME="IDX14"></A>
+tells the system where to find the schedule file used to
+decide which links should be checked next and when that should be.  You
+will need to set this and create the file in order to do link checking.
+Defaults to <TT>`$::base_dir/link_on_page.cdb'</TT>.
+<P>
+
+<DT><CODE>$::infostrucs</CODE>
+<DD><A NAME="IDX15"></A>
+This variable points to the configuration file where definitions of
+infostructures are should be put See section <A HREF="link-controller_3.html#SEC7">2.4 Configuring Infostructures</A>.
+Defaults to <TT>`$::base_dir/infostrucs'</TT>.
+<P>
+
+<DT><CODE>$::link_stat_log</CODE>
+<DD><A NAME="IDX16"></A>
+This variable is the name of a file where important link status changes
+will be logged.  The current definition is links which have just been
+discovered to be broken.  This can be used in email notification.  
+See section <A HREF="link-controller_8.html#SEC15">7.1 Email Reporting of Newly Broken Links</A>.
+</DL>
+<P>
+
+<A NAME="Infostructure Configuration"></A>
+<HR SIZE="6">
+<A NAME="SEC7"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC6"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC3"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC3"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 2.4 Configuring Infostructures </H2>
+<!--docid::SEC7::-->
+<P>
+
+<A NAME="IDX17"></A>
+</P><P>
+
+The infostructure configuration is used to find links within the pages
+when we are building our databases.  It is kept in a separate file
+defined by the <CODE>$::infostrucs</CODE> configuration variable.
+</P><P>
+
+The format of the file is one line for each infostructure with
+configuration directives separated by spaces.  For example
+</P><P>
+
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>directory http://example.com/manual /var/www/html/manual
+www http://example.com/strange_database
+</pre></td></tr></table></P><P>
+
+The first directive describes how <CODE>extract-links</CODE> program
+should extract the links.  It currently has three possible values.  The
+value <CODE>www</CODE> means to actually use the given URL to download the web
+pages.  The value <CODE>directory</CODE> means that <CODE>extract-links</CODE>
+should assume that all of the files are stored in a directory and that
+the directory structure matches the structure of the infostructure.  The final value "advanced"
+</P><P>
+
+In the case where we use the <CODE>directory</CODE> directive, a third
+directive is present on each line with the full path to the base
+directory of the infostructure.
+</P><P>
+
+More advanced configuration is possible by defining the information
+directly in perl.  
+</P><P>
+
+<A NAME="Advanced Configuration"></A>
+<HR SIZE="6">
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC3"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<BR>  
+<FONT SIZE="-1">
+This document was generated
+by <I>Michael De La Rue</I> on <I>December, 30  2001</I>
+using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
+"><I>texi2html</I></A>
+
+</BODY>
+</HTML>

@@ -1,4 +1,5 @@
 package HTML::AsHTML;
+$REVISION=q$Revision: 1.3 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
 
 =head1 NAME
 

@@ -11,6 +11,7 @@ constants which are not expected to be changed during an installation.
 =cut
 
 package WWW::Link_Controller;
+$REVISION=q$Revision: 1.3 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
 
 # The $refresh_key is a key used in the link database to store the
 # last time the link database was updated.

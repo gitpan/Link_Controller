@@ -1,5 +1,9 @@
-I found that Texinfo with RedHat is somewhat out of date.  You may have
-to get the latest version to rebuild the documentation here.
+Various files in this directory have different levels of up to
+dateness.  The manual (in the HTML directory in HTML format and in
+info format in the file link-controller.info) is in a reasonably good
+state.
+
+You may need to have an recent version of texinfo to build this.  
 
 At least the texinfo.tex included here should let you generate latex and
 other formats derived from it.

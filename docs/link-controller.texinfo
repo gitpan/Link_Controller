@@ -24,7 +24,7 @@ terms of the GNU public license.
 This is the alpha version of this manual and is very incomplete.
 @end titlepage
 
-@ifinfo
+@ifnottex
 This file documents LinkController
 
 Copyright 1997-2001 Michael De La Rue
@@ -33,18 +33,20 @@ Permission is granted to distribute and change this manual under the
 terms of the GNU public license.
 
 This is the alpha version of this manual and is very incomplete.
+
 @node Top, Introduction, (dir), (dir)
 
 This document describes LinkController a system for checking and
 maintaining links in infostructures
 
-This document applies to version 0.023 of LinkController
-@end ifinfo
+This document applies to version 0.030 of LinkController
+@end ifnottex
 
 @menu
 * Introduction::                What LinkController is about.
 * Getting Started::             Configuration.
 * Configuration::               
+* Advanced Configuration::      
 * Configuring CGI Programs::    
 * Extracting Links::            Getting link information from WWW pages.
 * Testing::                     Testing Links.
@@ -75,6 +77,15 @@ Configuration
 * Link Variables::              General configuration variables.
 * Infostructure Configuration::  
 
+Advanced Configuration
+
+* Advanced Infostructure Configuration::  
+* Authorisation Configuration::  
+
+Reporting Problems
+
+* Email Reporting::             
+
 The Emacs Interface
 
 * link-report-dired::           An emacs program to display broken links.
@@ -89,6 +100,13 @@ Administration
 * Default Installation::        
 * User Administration::         
 * Cron Scripts::                
+
+Acknowledgements
+
+* Esoterica Internet Portugal::  
+* IPPT PAN Poland::             
+* The Tardis Project::          
+* Other Free Software Authors::  
 
 Packages Which Can Be Useful with LinkController
 
@@ -152,11 +170,11 @@ Assuming that you have the default install, your links will be
 automatically copied and checked over time following that.  
 
 After a short time (about a day) you will begin to get information about
-links which didn't work with @command{link-report --not-perfect}.  After
-some more time (a week or so) you can use @command{link-report} to find
+links which didn't work with @w{@code{link-report --not-perfect}}.  After
+some more time (a week or so) you can use @w{@code{link-report}} to find
 out which links are really broken.
 
-@node Configuration, Configuring CGI Programs, Getting Started, Top
+@node Configuration, Advanced Configuration, Getting Started, Top
 @chapter Configuration
 
 @menu
@@ -174,7 +192,7 @@ out which links are really broken.
 @cindex setting variables
 
 The @w{@code{configure-link-control}} program can be used by users to
-configure link-contoller.  This will ask you a series of questions and
+configure LinkController.  This will ask you a series of questions and
 then generate a configuration in your home directory.
 
 The configuration that is controlled by this program is related to
@@ -255,6 +273,13 @@ Defaults to @file{$::base_dir/link_on_page.cdb}.
 This variable points to the configuration file where definitions of
 infostructures are should be put @xref{Infostructure Configuration}.
 Defaults to @file{$::base_dir/infostrucs}.
+
+@item $::link_stat_log
+@vindex $infostrucs
+This variable is the name of a file where important link status changes
+will be logged.  The current definition is links which have just been
+discovered to be broken.  This can be used in email notification.  
+@xref{Email Reporting}.
 @end table
 
 @node Infostructure Configuration,  , Link Variables, Configuration
@@ -275,17 +300,172 @@ www http://example.com/strange_database
 @end example
 
 The first directive describes how @w{@code{extract-links}} program
-should extract the links.  It currently has two possible values.  The
+should extract the links.  It currently has three possible values.  The
 value @code{www} means to actually use the given URL to download the web
 pages.  The value @code{directory} means that @w{@code{extract-links}}
 should assume that all of the files are stored in a directory and that
-the directory structure matches the structure of the infostructure.
+the directory structure matches the structure of the infostructure.  The final value "advanced"
 
 In the case where we use the @code{directory} directive, a third
 directive is present on each line with the full path to the base
 directory of the infostructure.
 
-@node Configuring CGI Programs, Extracting Links, Configuration, Top
+More advanced configuration is possible by defining the information
+directly in perl.  
+
+@node Advanced Configuration, Configuring CGI Programs, Configuration, Top
+@chapter Advanced Configuration
+
+There are various advanced ways to configure LinkController.  These are
+mostly not needed for simple checking of a small collection of web
+pages.  For larger sites and special situations however, they may well
+make life much easier.
+
+@menu
+* Advanced Infostructure Configuration::  
+* Authorisation Configuration::  
+@end menu
+
+@node Advanced Infostructure Configuration, Authorisation Configuration, Advanced Configuration, Advanced Configuration
+@section Advanced Infostructure Configuration
+@cindex infostructure, configuration
+@cindex regular expression, exclude
+@cindex regular expression, include
+@cindex filtering links
+
+Using more advanced configuration it is possible to skip over certain
+resources when we are doing link extraction and to ignore some of the
+links.  You may want to skip over this section initially and come back
+to it only when you find that there are links or pages being checked
+that you would rather avoid.
+
+For this section, we assume that you already know how to make basic perl
+code.  If not, then please read through the perl manual pages
+@samp{perl}, @samp{perlsyn} and @samp{perldata}.  You may find that the
+examples given below are sufficient to get you started.
+
+In order to get @w{@code{extract-links}} to extract links using an
+advanced infostructure, you must use the @code{advanced} keyword. In the
+infostructure file.  Infostructures not listed there will be ignored,
+but won't cause any harm.
+
+Advanced configuration is in the @file{.link-controller.pl}
+configuration file by making definitions into the @code{%::infostrucs}
+hash.  These look like the following
+
+@example
+$::infostrucs@{http://www.mypages.org/@} = @{
+   mode => "directory";
+   file_base => "/home/myself/www",
+   prune_re => "^(/home/myself/www/statistics)" #ignore referals
+              . "|(cgi-bin)", #do cgis separately
+   exclude_re => "\.secret$", #secrets shouldn't get into link database
+@};
+
+$::infostrucs@{http://www.mypages.org/cgi-bin/@} = @{
+   mode => "www";
+   exclude_re => "query", #query space is infinite!!
+@};
+@end example
+
+There are a number of keywords that can be used.  
+
+@table @samp
+@item mode
+This decides how to download the links.  Either @samp{www} or
+@samp{directory}.
+@item file_base
+If defined, this defines the directory which matches the URL where the
+infostructure is based.  This must be defined if the mode is set to
+directory.
+@item resource_include_re
+If defined, this regular expression must be matched by the @emph{URL}
+for every resource before links will be extracted from it.
+@item resource_exclude_re
+If defined, this regular expression must @emph{not} be matched by the
+@emph{URL} for every resource before links will be extracted from it.
+@item link_include_re
+If defined, this regular expression must be matched by every @emph{URL}
+found before it will be extracted and saved.
+@item link_exclude_re
+If defined, this regular expression must @emph{not} be matched by every
+@emph{URL} found before it will be extracted and saved.
+@item prune_re
+Used only in directory mode, this will completely exclude all files and
+subdirectories of directories matched by the regular expression.
+@end table
+
+N.B. the exclude and include regular expression can be used together.
+For a match, the include regular expression must match and the exclude
+must not match.  In other words excludes override includes.
+
+In order for the infostructure to be used by @code{extract-links} an
+entry must still be made in the @file{infostrucs} file.  For this use the
+@code{advanced} keyword.  The second argument is a URL used to look up
+the definition in the $::infostrucs hash.
+
+@example
+advanced   http://www.mypages.org/
+advanced   http://www.mypages.org/cgi-bin/
+@end example
+
+The url used here must match @emph{exactly} the one used in the hash.
+It is important to note that @samp{directory} and @samp{www} definitions
+in the @file{infostrucs} file will override any advanced configuration
+given.
+
+@node Authorisation Configuration,  , Advanced Infostructure Configuration, Advanced Configuration
+@section Authorisation Configuration
+@cindex authentication, basic
+@cindex basic authentication
+@cindex authorisation
+@cindex security
+
+One problem when checking links, especially within an intranet situation
+is that some pages can be protected with basic authentication.  In order
+to extract links from those pages or to simply know that they are there,
+we have to get through that authentication.  By using the advanced
+Authorisation Configuration we can give LinkController authority to
+access these pages and allow link checking to work as normal.
+
+@display
+@emph{Using this method to allow LinkController to work in an
+environment with authentication is inherently a security issue since
+authentication tokens must be stored, effectively in plaintext, in
+files.  This risk may, however, not be much higher than the one that you
+currently accept, so this can be useful}
+@end display
+
+We can store the authentication tokens simply in the %::credentials hash
+which we can create in the @file{.link-controller.pl} configuration file.
+The keys in the hash are the exact realm string which will be sent by
+the web server.  Each value of this hash is a hash with a pair of keys.
+The @samp{credentials} key should be associated to the authentication
+token.  The @samp{uri_re} key should be a regular expression which
+matches the web pages you want to visit.  For security reasons it
+shouldn't match any others.
+
+@example
+$::credentials = @{
+  my_realm => @{ uri_re => "https://myhost.example.com",
+                credential => "my_secret" @}
+@} );
+@end example
+
+As a minor sanity check, every @samp{uri_re} will be tested against the
+strings @samp{http://3133t3hax0rs.rhere.com} and
+@samp{http://3133t3hax0rs.rhere.com/secretstuff/www.goodplace.com/}.  If
+they match then those credentials will be disallowed.  The owners of
+@samp{3133t3hax0rs.rhere.com} will just have to hack the code.. 
+
+For more discussion about the security risks and how to mitigate them
+see the file @file{authorisation.pod} included with the LinkController
+distribution.  If you didn't understand the security risk from the above
+description then probably you should consider avoiding using this
+mechanism.
+
+
+@node Configuring CGI Programs, Extracting Links, Advanced Configuration, Top
 @chapter Configuring CGI Programs
 @cindex cgi, configuration
 
@@ -457,6 +637,46 @@ For more advanced reporting and editing of documents with broken links
 you may want to use the emacs interface (@pxref{Emacs, The Emacs
 Interface}).
 
+@menu
+* Email Reporting::             
+@end menu
+
+@node Email Reporting,  , Reporting, Reporting
+@section Email Reporting of Newly Broken Links
+@cindex links, examining, in emacs
+@cindex broken links, finding in emacs
+@pindex link-report-dired
+
+It's possible to arrange automatic reporting by email of links which
+have become newly broken.  This is done by getting @w{@code{test-link}}
+to make a list of links that become broken using the $::link_stat_log
+variable (@pxref{Link Variables}) and calling @w{@code{link-report}} to
+report on those links.
+
+Typically, you may don't want to have a report every time that
+@w{@code{test-link}} runs, but probably once a day instead.  In this
+case, run a script like the following from your crontab.
+
+@example
+#!/bin/sh
+STAT_LOG=$HOME/link-data/stat-log
+WORK=$STAT_LOG.work
+EMAIL=me@@example.com
+mv $STAT_LOG  $WORK
+if [ -s $WORK ]
+then
+   link-report --broken --url-file=$STAT_LOG --infostructure | 
+      mail -s "link-report for `date`" $EMAIL
+fi
+@end example
+
+Every time that this script is run, it will rename the status change
+logfile and then mail a report with all of the new broken links
+to the specified email address.  
+
+In future this feature may be folded into @w{@code{link-report}}
+directly.
+
 @node Files, Repair, Reporting, Top
 @chapter Examining Individual Files
 @cindex page, checking
@@ -503,9 +723,9 @@ fix-link http://www.tardis.ed.ac.uk/~mikedlr/climbing/ \
 Will change them to the very latest location.  
 
 At present, there's no facility for automatically updating the databases
-when you do this.  Instead, you have to run extract-links regularly so
-that new links are noticed.  Maybe a later version of LinkController
-will change this.
+when you do this.  Instead, you have to run @w{@code{extract-links}}
+regularly so that new links are noticed.  Maybe a later version of
+LinkController will change this.
 
 @node Suggestions, CGI, Repair, Top
 @chapter Making Suggestions
@@ -576,13 +796,13 @@ needed.  However another convenient interface is through
 @cindex broken links, finding in emacs
 @pindex link-report-dired
 
-There is a special emacs mode called @w{@code{link-report-dired}} written
-for locating files with broken links.  The mode is based on
+There is a special emacs mode called @w{@code{link-report-dired}}
+written for locating files with broken links.  The mode is based on
 @w{@code{find-dired}} and works very similarly.  It runs the program
-@w{@code{link-report}} with an option which makes it list file names in the
-same way as the @w{@code{ls}} program does.  The user can then move around
-the buffer as normal in emacs and enter files using a single key press
-(normally @kbd{f}).  
+@w{@code{link-report}} with an option which makes it list file names in
+the same way as the @code{ls} program does.  The user can then move
+around the buffer as normal in emacs and enter files using a single key
+press (normally @kbd{f}).
 
 @node check-page in Emacs,  , link-report-dired, Emacs
 @section Finding Broken Links in Files Within Emacs
@@ -611,7 +831,7 @@ distribution.
 
 Once you have installed the software, the next step is to configure
 LinkController so that it knows where you have all of your data.  The
-program @command{default-install} provides one model of this.  
+program @code{default-install} provides one model of this.  
 
 @menu
 * Default Installation::        
@@ -632,7 +852,7 @@ testing links.
 @node Default Installation, User Administration, Administration, Administration
 @section Default Installation
 
-Running @command{default-install -all} should set everything up
+Running @code{default-install -all} should set everything up
 correctly.  There are various variations on this command which do
 different things, but the summary is 
 
@@ -648,8 +868,8 @@ Create cron scripts which will run LinkController automatically.
 @end itemize
 
 Using this command it is also possible to activate users and groups
-e.g. @command{default-install -user username} or  
-@command{default-install -group groupname} in which case the specified
+e.g. @code{default-install -user username} or  
+@code{default-install -group groupname} in which case the specified
 users will become a member of the lcntusr group.  
 
 
@@ -663,13 +883,13 @@ site) then you will only have to check that link once.
 
 In this case, the important question is which links are copied into the
 checking database.  This is controlled by the program
-@command{copy-links-from-users} and decides copies data from users which
+@w{@code{copy-links-from-users}} and decides copies data from users which
 are in the @code{lnkusr} group.  
 
-The command @command{default-install} can be used to manipulate which
-users are in the group e.g. @command{default-install -user username} or  
-@command{default-install -group groupname} in which case the specified
-users will become a member of the lcntusr group.   *** see ***
+The command @w{@code{default-install}} can be used to manipulate which
+users are in the group e.g. @code{default-install -user username} or  
+@code{default-install -group groupname} in which case the specified
+users will become a member of the lcntusr group.
 
 Another form of user administration is limitation on which users have
 access to the database.  This can be done with normal file permissions.
@@ -692,13 +912,13 @@ add them to the database with @code{extract-links --in-url-list}
 @item 
 build a schedule for testing the links with @code{build-schedule} 
 @item 
-test the links with @code{daily-test-link} 
+test the links with @code{test-link} 
 @end itemize
 
 The other thing which is done is to remove old links from the database.
 This only needs to be done weekly.  
 
-The program @command{default-install} can create these scripts.
+The program @w{@code{default-install}} can create these scripts.
 
 @node Robots, Bugs, Administration, Top
 @chapter Robots and Sensible Behaviour
@@ -734,12 +954,12 @@ seeing the Robots World Wide Web page.
 
 There are a number of points which make LinkController relatively safe
 as a link.  These are all related to the design and limitations on
-daily-test-link.  
+@w{@code{test-link}}.  
 
 @itemize @bullet
 @item 
-Daily test link does @emph{not} recurse.  It only tests links that are
-specifically listed in the schedule database.
+@w{@code{test-link}} does @emph{not} recurse.  It only tests links that
+are specifically listed in the schedule database.
 @item 
 There is a limit to the number of links that will be tested in one run.
 This defaults to 1000, but can be configured.  
@@ -751,23 +971,24 @@ The testing system will not test links at a given site faster than a
 certain rate.
 @end itemize
 
-The last limitation is inherited from the @code{LWP::RobotUA}
-module and the documentation for that covers the details of how it
-works.  LinkController trys to re-order testing of links so that this
-does not cause a limit on overall testing speed.
+The last limitation is inherited from the @code{LWP::RobotUA} module and
+the documentation for that covers the details of how it works.
+@w{@code{test-link}} trys to re-order testing of links as needed so that
+a limit on the rate of visits to one site does not cause a limit on
+overall testing speed.
 
 @node Bugs, Acknowledgements , Robots, Top
-@chapter Bugs and bug reporting, Acknowledgements , Robots, Top
+@chapter Bugs and bug reporting
 
 This version of LinkController is still in early development.  There are
 many changes to come.  Undoubtedly there are many bugs in the software
-already and will soon be more.  
+already and will soon be more.
 
 A bug is when 
 
 @itemize @bullet
 @item 
-the software doen't do something the documentation says it should
+the software doesn't do something the documentation says it should
 @item 
 the software does something the documentation says it shouldn't
 @item 
@@ -781,7 +1002,7 @@ trying to say
 @end itemize
 
 some of these mean fixing the documentation and some the software.  All
-of them are bugs and should be reported and fixed.
+of them are bugs and should be reported and fixed.  
 
 If you find a bug, I will be grateful to hear about it.  Even if you
 don't know how to fix it or anything, it is useful to know what is wrong
@@ -804,15 +1025,17 @@ the original file and see your changes.  However it's also important to
 explain them because I won't be able to use them unless I (relatively
 stupid computer type) understand them.
 
-Send bug reports and patches to
+Send bug reports to the address you get by changing words into
+punctuation in the following.
 
 @example
-link-controller@@tardis.ed.ac.uk
+link minus controller at scotclimb dot org dot uk
 @end example
 
 This mailing address is sent only to me right now, but may become a list
 in future.  Use my (Michael De La Rue) personal address to contact me
 please.  N.B. I am @strong{extremely} inefficient about answering email.
+Don't worry if you don't get a reply.
 
 @node Acknowledgements , Invoking the Programs, Bugs, Top
 @chapter Acknowledgements
@@ -822,6 +1045,14 @@ Although I wrote this system by myself, this would not have been
 nearly as easy and almost certainly wouldn't have been finished without
 the help of the following people and organisations.
 
+@menu
+* Esoterica Internet Portugal::  
+* IPPT PAN Poland::             
+* The Tardis Project::          
+* Other Free Software Authors::  
+@end menu
+
+@node Esoterica Internet Portugal, IPPT PAN Poland, Acknowledgements , Acknowledgements
 @unnumberedsec Esoterica Internet Portugal
 
 @c I'd like to have these people's names correct but I'm not sure how to
@@ -852,6 +1083,7 @@ These pages are in Portugese@footnote{Whilst the above names are mangled
 here.  See the correct versions in the original texinfo or on the Web
 pages.} of course.
 
+@node IPPT PAN Poland, The Tardis Project, Esoterica Internet Portugal, Acknowledgements
 @unnumberedsec IPPT PAN Poland
 
 Thanks go to IPPT PAN (part of PAN - Polska Akademia Naukowa) in Poland
@@ -860,6 +1092,7 @@ testing this software, provided a willing victim for having his web
 pages tested and made a number of suggestions which have been
 incorporated into the software.
 
+@node The Tardis Project, Other Free Software Authors, IPPT PAN Poland, Acknowledgements
 @unnumberedsec The Tardis Project
 
 Supported by the Computing Science department of the University of
@@ -871,6 +1104,7 @@ The use of the facilities of the Tardis Project has made it much easier
 for me to develop software like this.  In particular, the large amount
 of disk space the administrators have allow me to use is very useful.
 
+@node Other Free Software Authors,  , The Tardis Project, Acknowledgements
 @unnumberedsec Other Free Software Authors
 
 It is through the software provided by the Free Software Foundation
@@ -1021,24 +1255,6 @@ address is.
 
 An infostructure is a concept which was introduced in Link Checking in
 the MOMspider package.  It is a collection of related resources.
-LinkController does not yet provide full support for this.  Probably
-this will be provided in the next version if philosophical issues can be
-dealt with to my satisfaction.  
-
-An infostructure will have the following features.
-
-@itemize @bullet
-@item 
-a rule which decides whether a given URL points to a resource which
-is a member of the infostructure
-@item
-a method of enumerating it and finding all of the pages contained in it.
-@item 
-a pair of cdb database files relating links to resources and vice
-versa.  
-@item 
-a function for editing resources to change the URLs in them.
-@end itemize
 
 @node Link,  , Infostructure, Terms
 @section Link

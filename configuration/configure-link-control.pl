@@ -59,7 +59,7 @@ EOF
 sub version() {
   print <<'EOF';
 configure-link-control version 
-$Id: configure-link-control.pl,v 1.12 2001/11/22 15:27:07 mikedlr Exp $
+$Id: configure-link-control.pl,v 1.13 2001/12/30 12:18:28 mikedlr Exp $
 EOF
 }
 
@@ -99,7 +99,7 @@ if (-e $homeconfig_file) {
 Do you want to try to load in the configuration in your home directory
 to use for defaults?
 EOQ
-  die "load failed: $@" if $@;
+  warn "load failed: $@ - ignoring file.. abort if that's wrong" if $@;
 }
 
 $homeconfig{"user_address"}=$::user_address if defined $::user_address;
@@ -122,8 +122,8 @@ EOQ
 } else {
   $config{"user_address"} = 
     getstring( <<EOQ ) while not defined $config{"user_address"};
-What is your email address?  You must give this because
-daily-test-link will not work without it.
+What is your email address?  You must give this if you want to do link
+testing because test-link will not work without it.
 EOQ
 }
 
@@ -241,12 +241,45 @@ be able to run link checking yourself.
 EOQ
 }
 
+CASE: {
+  $homeconfig{"infostrucs"} && do  {
+    $config{"infostrucs"} = getstring( <<EOQ, $homeconfig{"infostrucs"});
 
-foreach my $var ( qw(link_index page_index links) ) {
+Where do you keep your infostrucs file.  This defines where your web
+pages to be checked are and which files create them.  Give the
+full path to the file.  You can use '~/' to indicate your home directory.
+Press return to use the same as before:
+  $homeconfig{"infostrucs"}
+Type a single r and this will be reset to use the system configuration.
+EOQ
+    last CASE;
+  };
+  $sysconfig{"infostrucs"} && do  {
+    $config{"infostrucs"} = getstring( <<EOQ );
+Where do you keep your infostrucs file.  This defines where your web
+pages to be checked are and which files create them.  Give the
+full path to the file.  You can use '~/' to indicate your home directory.
+
+The system defines
+   $sysconfig{"infostrucs"}
+press return and we will just use the system configuration.  You need
+to set this to a file which points to your web pages.
+EOQ
+    last CASE;
+  };
+  $config{"infostrucs"} = getstring( <<EOQ );
+Where do you keep your infostrucs file.  This defines where your web
+pages to be checked are and which files create them.  Give the
+full path to the file.  You can use '~/' to indicate your home directory.
+EOQ
+}
+
+
+foreach my $var ( qw(link_index page_index links infostrucs) ) {
   defined $config{$var} or next;
   $config{"$var"} =~ m,^r$, and delete $config{"$var"};
   defined $config{$var} or next;
-  $config{"$var"} =~ s,^~/,$ENV{"HOME"},;
+  $config{"$var"} =~ s,^~/,$ENV{"HOME"}/,;
 }
 
 
@@ -261,7 +294,7 @@ print CONFIG <<'EOF';
 #Automatically generated config file for LinkController.  Maybe you
 #want to use the configuration utility configure-link-control?
 use vars qw($schedule $links $page_index $link_index $fixlink_cgi
-	    $user_address);
+	    $user_address $infostrucs);
 EOF
 
 print CONFIG <<"EOF";
@@ -273,14 +306,15 @@ EOF
     '$::page_index' => '$::page_index - filename of links on page index',
     '$::link_index' => '$::link_index - filename of page with links index',
     '$::schedule' => '$::schedule - link testing schedule filename',
-    '$::fixlink_cgi' => '$::fixlink_cgi - URL of linkfixing CGI'
+    '$::fixlink_cgi' => '$::fixlink_cgi - URL of linkfixing CGI',
+    '$::infostrucs' => '$::infostrucs - File defining where we keep our web pages',
   );
 
 foreach my $varname ( qw($::links $::page_index $::link_index $::schedule
-                         $::fixlink_cgi) ) {
+                         $::fixlink_cgi $::infostrucs) ) {
   my $configname = $varname;
   $configname =~ s/^\$:://;
-  print '#' . $comments{$varname} . "\n";
+  print CONFIG '#' . $comments{$varname} . "\n";
   if ( $config{$configname} ) {
 
     print CONFIG <<"EOF" ;
@@ -291,6 +325,7 @@ EOF
 
     print CONFIG <<"EOF" ;
 #$varname="xxxx" ;
+1; #allows file to be required
 EOF
 
   }
@@ -298,10 +333,43 @@ EOF
 close CONFIG or die "closing config file failed" . $!;
 
 print << "EOF";
-
 Your configuration has been written.  You can edit it in $homeconfig_file.
 EOF
 
+if ( $config{infostrucs} ) {
+  -e $config{infostrucs} && do {
+    print <<EOF;
+The infostrucs file already exists.  We will stop configuration here.
+Delete it if you would like to recreate it.
+EOF
+      exit;
+  }; 
+
+    my $directory=getstring( <<EOQ );
+In which directory do you keep your web pages?  Leave empty if there
+is no directory
+EOQ
+  my $baseurl=getstring( <<EOQ );
+What is the baseurl of your web pages (e.g. http://www.example.com/)?
+EOQ
+
+  if ($baseurl) {
+    open INFOS, ">" . $config{infostrucs}
+      or die "couldn't open infostrucs file " . $config{infostrucs};
+    if ( $directory ) {
+      print INFOS "directory $baseurl $directory\n";
+    } else {
+      print INFOS "www $baseurl\n";
+    }
+
+  } else { 
+    warn <<EOF;
+We can not generate an infostruc file without a baseurl.  Please look
+in the LinkController manual for details about how this file should be
+built.
+EOF
+  }
+}
 1;
 
 

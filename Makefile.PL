@@ -1,26 +1,56 @@
 use ExtUtils::MakeMaker;
 
-#we force a dependency from the install to the file copy then 
-#set the copied files as exes
-
-
-#sub MY::installbin {
-#   my $preserve=$_;
-#   ($_) = shift->SUPER::installbin(@_);
-#   m/cp.*\.pl.*\.pl/ && do {
-#     s/^(\s*)cp/${1}perl perlstart.PL/;
-#     s/\.pl\s*$//g;
-#   };
-#   my $return=$_;
-#   $_=$preserve;
-#   $return;
-# }
-
 WriteMakefile( NAME => "Link_Controller",
                VERSION_FROM => "lib/WWW/Link_Controller/Version.pm",
-               dist => {COMPRESS => "gzip",
-                        SUFFIX => "gz" },
-             );
+               dist => { COMPRESS => "gzip",
+			 SUFFIX => "gz" },
+	       #prerequisites levels have not generally been checked.
+	       PREREQ_PM =>
+	       {
+		Carp => 0,
+		CDB_File::BiIndex => 0.026,
+		CDB_File::BiIndex::Generator => 0,
+		CGI::Carp => 0,
+		CGI::Request => 0,
+		CGI::Response => 0,
+		Cwd => 0,
+		Data::Dumper => 0,
+		DB_File => 0,
+		English => 0,
+		Exporter => 0,
+		Fcntl => 0,
+		File::Copy => 0,
+		File::Find => 0,
+		File::Path => 0,
+		Getopt::Function => 0.017,
+		HTML::LinkExtor => 0,
+		HTML::Stream => 0,
+		HTML::Tagset => 0,
+		HTTP::Date => 0,
+		HTTP::Status => 0,
+		LWP::Debug => 0,
+		LWP::MediaTypes => 0,
+		LWP::RobotUA => 0,
+		LWP::UserAgent => 0,
+		MLDBM => 0,
+		Schedule::SoftTime => 0.024,
+		Search::Binary => 0,
+		Sys::Hostname => 0,
+		URI => 0,
+		URI::URL => 0,
+		WWW::Link => 0.028,
+		WWW::Link::Repair => 0,
+		WWW::Link::Repair::Substitutor => 0,
+		WWW::Link::Reporter::Compile => 0,
+		WWW::Link::Reporter::HTML => 0,
+		WWW::Link::Reporter::LongList => 0,
+		WWW::Link::Reporter::RepairForm => 0,
+		WWW::Link::Reporter::Text => 0,
+		WWW::Link::Selector => 0,
+		WWW::Link::Tester::Adaptive => 0,
+		WWW::RobotRules::AnyDBM_File => 0,
+	       },
+	     );
 
 
 

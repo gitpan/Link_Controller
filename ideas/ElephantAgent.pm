@@ -48,6 +48,7 @@ should I recheck a robots.txt
 (we should generally use head for re-checking)   
 
 package LWP::ElephantUA;
+$REVISION=q$Revision: 1.3 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
 
 
 require LWP::UserAgent;

@@ -52,6 +52,9 @@ LinkController homepage.
 
 =cut
 
+use strict;
+use warnings;
+
 use Fcntl;
 use DB_File;
 use MLDBM qw(DB_File);
@@ -93,13 +96,13 @@ EOF
 sub version() {
   print <<'EOF';
 verify-link-control version 
-$Id: verify-link-control.pl,v 1.5 2001/11/22 15:27:07 mikedlr Exp $
+$Id: verify-link-control.pl,v 1.6 2001/11/27 16:44:06 mikedlr Exp $
 EOF
 }
 
 $::now=time;
 
-my $revision='$Revision: 1.5 $';
+my $revision='$Revision: 1.6 $';
 use WWW::Link_Controller::Version;
 my $version = $WWW::Link_Controller::Version::VERSION;
 
@@ -138,7 +141,8 @@ EOF
 unless ($::link_index) {
   print STDOUT <<EOF;
 
-Links database variable needs to be defined (\$::link_index)
+Page index variable needs to be defined (\$::link_index) to allow
+rebuilding of link index.  It's a filename.
 EOF
 } elsif (! -e $::link_index) {
   print STDOUT <<EOF;
@@ -186,8 +190,9 @@ EOF
 unless ($::base_dir) {
   print STDOUT <<EOF;
 
-Base directory variable should be defined (\$::base_dir)
-this will give default definitions for many other variables.
+Base directory variable should be defined (\$::base_dir) this will
+give default definitions for many other variables.  It should be a
+directory where LinkController can keep various data files.
 EOF
 }
 
@@ -197,12 +202,22 @@ EOF
 #verify database
   #are all indexed forms included
 
+defined $::links or do {
+  print STDOUT <<EOF;
+
+Can't check databases due to previous configuration errors.  Giving up.
+EOF
+  exit 1;
+};
+
+
 print STDOUT <<EOF;
 
 Checking through entire schedule and link database; this may take time
 EOF
 
-$::linkdbm = tie %::links, "MLDBM", $::links, O_RDONLY, 0666, $::DB_HASH
+#$::linkdbm =
+tie %::links, "MLDBM", $::links, O_RDONLY, 0666, $::DB_HASH
   or die $!;
 
 SCHED: {
@@ -254,7 +269,7 @@ EOF
 
   my ($count, $past, $future);
 
-  ($time,$url) = $sched->first_item();
+  my ($time,$url) = $sched->first_item();
 
   defined $time or do {
     print STDOUT <<EOF;
@@ -287,7 +302,7 @@ EOF
       next ENTRY;
     };
 
-    $inverted{$url}=$time;
+    $::inverted{$url}=$time;
 
     $time > ( $::now + 3 * 30 * 24 * 60 * 60 ) and do {
       print STDOUT <<EOF;
@@ -300,7 +315,7 @@ EOF
     };
 
     $count++;
-    $time > $now ? $future++ : $past++;
+    $time > $::now ? $future++ : $past++;
 
   } continue {
     ($time,$url) = $sched->next_item();
@@ -380,7 +395,7 @@ EOF
 
   next unless $::check_inverted;
 
-  exists $inverted{$url} or do {
+  exists $::inverted{$url} or do {
     print STDOUT <<EOF;
 Link url $url is not scheduled for testing.  Use build-schedule to
 rebuild the schedule.  If the link should be scheduled, then please

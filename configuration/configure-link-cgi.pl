@@ -1,4 +1,4 @@
-y#!/usr/bin/perl -w
+#!/usr/bin/perl -w
 
 =head1 NAME
 
@@ -92,7 +92,7 @@ use WWW::Link_Controller::ReadConf::utils;
 use Fcntl;
 
 use vars qw(%config $reporter_script $fixer_script
-            $reporter_filename $fixer_filename);
+            $reporter_filename $fixer_filename @vars);
 
 use Getopt::Function qw(maketrue makevalue);
 
@@ -135,7 +135,7 @@ EOF
 sub version() {
   print <<'EOF';
 configure-link-cgi version 
-$Id: configure-link-cgi.pl,v 1.6 2001/11/22 15:27:07 mikedlr Exp $
+$Id: configure-link-cgi.pl,v 1.8 2001/12/30 12:18:27 mikedlr Exp $
 EOF
 }
 
@@ -173,7 +173,8 @@ EOQ
   print "\n";
 }
 
-$config{"url_regex"} = getstring( <<EOQ );
+if ($::reporter) {
+  $config{"url_regex"} = getstring( <<EOQ );
 Give a (perl) regular expression for those URLs you want this CGI to
 be able to report on (e.g. ^http://somewhere.somedom/somesite). Leave
 blank if you want to allow any broken links in the links database to
@@ -181,10 +182,25 @@ be reported on.  For full details of how to write such regular expressions
 see the perlre(1) manual page.
 EOQ
 
-$config{"url_regex"} =~ m/^[a-z]{2,10}:/ and print STDERR
+  $config{"url_regex"} =~ m/^[a-z]{2,10}:/ and print STDERR
   "\nWarning: You should probably have started with a caret ('^')\n\n";
 
-print "\n";
+  print "\n";
+}
+
+if ($::fixer) {
+  $config{"infostrucs"} = getstring( <<EOQ );
+Give the filename of the infostrucs file where the definitions of the
+infostructures to be repaired are stored.  N.B. this is the only
+control on which files the CGI can edit.  See the LinkController
+manual for information about the format of the file.
+EOQ
+
+  $config{"url_regex"} =~ m/^[a-z]{2,10}:/ and print STDERR
+  "\nWarning: You should probably have started with a caret ('^')\n\n";
+
+  print "\n";
+}
 
 $config{"links"} = getstring( <<EOQ );
 The location of the links database file given from your configuration is
@@ -221,7 +237,8 @@ $::fix_link=`which fix-link.cgi`;
 chomp $::fix_link;
 
 if ( $::reporter ) {
-  $reporter_script=cgi_script($::link_report);
+  @vars=qw($::links $::page_index $::link_index $::url_regex);
+  $reporter_script=cgi_script($::link_report, \@vars);
   print "The generated reporter is as follows:\n\n";
   print $reporter_script , "\n";
   if ($reporter_filename) {
@@ -233,7 +250,8 @@ if ( $::reporter ) {
 }
 
 if ( $::fixer ) {
-  $fixer_script=cgi_script($::fix_link);
+  @vars=qw($::links $::page_index $::link_index $::infostrucs);
+  $fixer_script=cgi_script($::fix_link, \@vars);
   print "The generated fixer is as follows:\n\n";
   print $fixer_script , "\n";
   if ($fixer_filename) {
@@ -248,6 +266,7 @@ exit 0;
 
 sub cgi_script {
   my $cgiprogram=shift;
+  my $vars=shift;
 
   my $perl=`which perl`;
   chomp $perl;
@@ -259,11 +278,10 @@ sub cgi_script {
 #!$perl -Tw
 EOF
 
-  my $cgiscript .= <<'EOF' ;
+  $cgiscript .= <<'EOF' ;
 #
 ######################################################################
 # This file has been automatically created by configure-link-cgi.    #
-# If you edit it by hand it may not be possible to fix it afterwards.#
 ######################################################################
 use strict;
 use vars qw($dont_run_cgi $fixed_config $url_regex $links $links $link_index);
@@ -275,17 +293,14 @@ EOF
   #this gives us the appropriate configuration file; I think it's safe;
   my $home=$ENV{HOME};
 
-  my $cgiscript .= <<"EOF" ;
+  $cgiscript .= <<"EOF" ;
   \$ENV{PATH} = "/bin:/usr/bin";
   \$ENV{HOME} = "$home";
   delete \@ENV{qw(HOME IFS CDPATH ENV BASH_ENV)};   # Make \%ENV safer
 EOF
 
-  my $cgiscript .= <<'EOF' ;
+  $cgiscript .= <<'EOF' ;
 }
-
-#  $ENV{PATH} = "/bin:/usr/bin";
-#  delete @ENV{qw(HOME IFS CDPATH ENV BASH_ENV)};   # Make %ENV safer
 
 $fixed_config = 1; #flag that we have been run in this way.
 
@@ -293,8 +308,7 @@ use WWW::Link_Controller::ReadConf;
 
 EOF
 
-  foreach my $varname ( qw($::url_regex $::links
-                         $::page_index $::link_index) ) {
+  foreach my $varname ( @$vars ) {
     my $configname = $varname;
     $configname =~ s/^\$:://;
     next unless $config{$configname};

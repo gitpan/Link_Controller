@@ -7,7 +7,11 @@ default-install - Configure LinkController to run in a basic way.
 =head1 DESCRIPTION
 
 This is an attempt to build a default installation of link-controller
-to make it plug in and play.  We want the following attributes.
+to make it plug in and play.  This is designed for an installation
+where the system adminstrator will run LinkController whilst users
+will use the central database of links, but repair their own web
+pages.  This would be suitable for use by e.g. a web hosting company.
+We want the following attributes.
 
 =over 4
 
@@ -241,7 +245,7 @@ EOF
 sub version() {
   print <<'EOF';
 default-install version
-$Id: default-install.pl,v 1.7 2001/11/22 15:30:29 mikedlr Exp $
+$Id: default-install.pl,v 1.8 2001/12/14 21:32:44 mikedlr Exp $
 EOF
 }
 

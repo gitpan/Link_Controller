@@ -1,6 +1,7 @@
 #Configuration - we go through %ENV, so you'd better not be running SUID
 #eval to ignore if a file doesn't exist.. e.g. the system config
 package WWW::Link_Controller::ReadConf;
+$REVISION=q$Revision: 1.4 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
 use vars qw($VERSION);
 $VERSION=0.002;
 

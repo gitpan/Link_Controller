@@ -9,12 +9,17 @@ requires.PL - work out which RPMs are being used by Link_Controller.
 Based on the bundle file this works out the list of RPMs that are
 required to install Link_Controller
 
+=head1 BUGS
+
+This is rather carless about running RPM on systems which don't have
+it but should result in an empty output file anyway.
+
 =cut
 
 
 #It would be nice to implement this using the functions from CPAN
 #which read the contents of a bundle but they don't seem to be
-#stable.  
+#stable.
 #
 
 $bfile="lib/Bundle/Link_Controller.pm";

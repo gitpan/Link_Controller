@@ -2,35 +2,35 @@
      * [1]README for LinkController 0.005
      * [2]Thanks
      _________________________________________________________________
-   
+
                         README for LinkController 0.005
-                                       
+
    LinkController is a package which is designed to allow the checking of
-   links in sophisticated ways. If you have ever noticed that link
-   checkers spend more time sending you to sites which just happen to be
-   down for the day due to maintainance problems than to real broken
+   links  in  sophisticated  ways.  If  you  have  ever noticed that link
+   checkers  spend more time sending you to sites which just happen to be
+   down  for  the  day  due  to maintainance problems than to real broken
    links, this should be for you.
-   
-   LinkController normally works by checking all of your links to a
-   database during low usage times on your network. After a few days, it
-   will have built up a list of those links which are really broken and
+
+   LinkController  normally  works  by  checking  all  of your links to a
+   database  during low usage times on your network. After a few days, it
+   will  have  built up a list of those links which are really broken and
    you can then examine them and do what repairs and changes are needed.
-   
-   Once you have the database built, you can selectively report problems
-   with your links across all of your pages and repair broken ones
-   rapidly, either using LinkControllers direct substitution system, or
-   by directly opening the page up in your favorite editor (direct emacs
+
+   Once  you have the database built, you can selectively report problems
+   with  your  links  across  all  of  your  pages and repair broken ones
+   rapidly,  either  using LinkControllers direct substitution system, or
+   by  directly opening the page up in your favorite editor (direct emacs
    support is provided).
-   
-   LinkController includes a system for rapidly changing links through
+
+   LinkController  includes  a  system for rapidly changing links through
    your html pages, for example as you write new ones. To do this it uses
    the database that it has already built up.
-   
+
    Link controller is based over the World Wide Web capabilities provided
-   by LibWWW-Perl and as such should be easy to modify and extend. It
+   by  LibWWW-Perl  and  as  such should be easy to modify and extend. It
    should also be reliable and safe to use.
-   
-   Link Controller is available under the GNU Public License to protect
+
+   Link  Controller  is available under the GNU Public License to protect
    your rights as a user of the software.
      * Link checking
      * Link repair
@@ -39,48 +39,46 @@
      * obeys robot exclusion rules
      * has features for intranet usage
      * source code included and protected under the GPL
-       
-   That the source code is under the GPL means that your right to modify
-   it is protected and that you can be sure that if you come across a
+
+   That  the source code is under the GPL means that your right to modify
+   it  is  protected  and  that you can be sure that if you come across a
    version of this software in use somewhere, and have to do maintainance
-   on it, you will at least have access to the source code. That means
+   on  it,  you  will at least have access to the source code. That means
    that even if you can't fix it yourself, you can hire someone who can.
-   
-   Link controller is user supported software, and no warantee is
-   provided, no support is guaranteed. Bugs and patches are gratefully
-   accepted ([3]link-controller@tardis.ed.ac.uk) no response is
-   guaranteed or expected. Of course, if you were willing to pay for
+
+   Link  controller  is  user  supported  software,  and  no  warantee is
+   provided,  no  support  is guaranteed. Bugs and patches are gratefully
+   accepted    ([3]link-controller@tardis.ed.ac.uk)    no   response   is
+   guaranteed  or  expected.  Of  course,  if you were willing to pay for
    support the situation might be different (mail [4]mikedlr@it.com.pl if
    contacting me for commercial reasons).
-   
-   See the file INSTALL included in the distribution for information on
+
+   See  the  file INSTALL included in the distribution for information on
    how to install it.
-   
+
    You can download LinkController from
-   
         [5]ftp://ftp.tardis.ed.ac.uk/~mikedlr/link-controller
 
    or
-   
         [6]http://www.tardis.ed.ac.uk/pub/users/mikedlr/link-controller
      _________________________________________________________________
-   
+
                                     Thanks
-                                       
-   Thanks must go to various people and institutions which provided
+
+   Thanks  must  go  to  various  people  and institutions which provided
    access or help.
      * Esoterica Internet Portugal
      * IPPT PAN Institute in Poland and in particular
      * Piotr Pogorzelszi there
      * The Tardis Project at the University of Edinburgh CS Department
-       
-   Please see the LinkController user guide included with the
+
+   Please   see   the   LinkController   user  guide  included  with  the
    distribution.
 
 References
 
-   1. file://localhost/home/mikedlr/LINK/link-controller/LinkController/docs/README.html#README_for_LinkController_0_005
-   2. file://localhost/home/mikedlr/LINK/link-controller/LinkController/docs/README.html#Thanks
+   1. file://localhost/home/mikedlr/LINK/link-controller/LinkController/docs/README.html#readme for linkcontroller 0.005
+   2. file://localhost/home/mikedlr/LINK/link-controller/LinkController/docs/README.html#thanks
    3. mailto:link-controller@tardis.ed.ac.uk
    4. mailto:mikedlr@it.com.pl
    5. ftp://ftp.tardis.ed.ac.uk/~mikedlr/link-controller

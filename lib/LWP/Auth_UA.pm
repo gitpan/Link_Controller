@@ -1,6 +1,7 @@
-package LWP::Auth_UA.pm;
-
-@ISA=qw(LWP::UserAgent.pm);
+package LWP::Auth_UA;
+$REVISION=q$Revision: 1.5 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
+use LWP::UserAgent;
+@ISA=qw(LWP::UserAgent);
 
 use strict;
 use warnings;
@@ -9,12 +10,25 @@ use warnings;
 
 LWP::Auth_UA.pm - a user agent which knows some authorisation tokens
 
+=head1 SYNOPSIS
+
+  use LWP::Auth_UA.pm
+  credentials ( {
+    my_realm => { uri_re => "https://myhost.example.com",
+                  credential => "my_secret" }
+  } );
+
+  $ua = LWP::Auth_UA->new;
+  $request = HTTP::Request->new('GET', 'file://localhost/etc/motd');
+  $response = $ua->request($request);
+  etc...
+
 =head1 DESCRIPTION
 
 This is a LWP user agent which is almost identical to the normal user
-agent except that if it reaches a situation where it needs an
-authentication token then it will automaticall retrieve it from a file
-if it is there.
+agent (LWP::UserAgent) except that if it reaches a situation where it
+needs an authentication token then it will send a token which it has
+stored.
 
 Storing authentication tokens in a file is inherently a security
 issue.  This risk may, however, not be much higher than the one that
@@ -40,7 +54,7 @@ monitor this password.
 
 This applies even if we keep the password in some encrypted form,
 since we then have to store the decryption key in the program which
-can then be found and used to decrypt the key.  
+can then be found and used to decrypt the key.
 
 So there are only two possible defenses:
 
@@ -57,12 +71,12 @@ make sure that the passwords the program has can't do any real damage
 =back
 
 We demand permissions on our files which protect against accidental
-disclosure by encouraging the user to be more secure.  
+disclosure by encouraging the user to be more secure.
 
 Making sure that the program can't do any damage is normally achieved
 by giving it a dedicated account which has only read only privilages
-and, preferably, can only use it's privilages from a specified IP
-address which will be the host on which the link checking is run.
+and, preferably, can only use it's privilages from a specified system
+which will be the host on which the link checking is run.
 
 =head2 Accidental Sending of Tokens
 
@@ -73,6 +87,14 @@ regular expression used for limiting the URI matches only host names
 which are under the control of the body responsible for handing out
 the authentication token.
 
+The security of this system is not of course perfect.  If we can
+pretend to be the host that we are meant to send the authentication
+token to then we will can trick the user agent into sending the token.
+Remember that the hostname being used is the one in the URL we are
+trying to examine, so the protection against this is having a secure
+and correct DNS system and ensuring that we have a secure IP
+connection to the end host.
+
 =head2 Sending of Tokens over Insecure protocols
 
 If an insecure protocol like HTTP is used for sending an
@@ -80,26 +102,7 @@ authentication token, then it is possible for someone to listen to the
 transaction and record the token for later use.
 
 The protection against this is to switch over to only using secure
-tokens and hard wire the protocol name into the URI regular expression.
-
-=head1 TOKEN STORAGE
-
-Each authentication token (password) is stored in a file with a URI
-Regexp and a Relm token, separated by whitespace.
-
-  # comment
-  <uri-regexp> <authentication-token> <realm-regexp>
-
-The location of this file is determined by the C<$::authfile>
-configuration variable.
-
-The authentication token is `encrypted' with the rot13 (Caesar)
-scheme.  This is not a security measure as such.  Rather it allows
-those who don't want to know the password to read the file but not
-directly see the passwords.
-
-At startup, test-link reads in the file.  Whenever a document needing
-authentication is
+protocols and hard wire the protocol name into the URI regular expression.
 
 =cut
 
@@ -108,25 +111,53 @@ sub get_basic_credentials {
   my $realm=shift;
   my $uri=shift;
   my $proxy=shift;
-  my $credentials=$self->{Auth_UA-credentials};
-  $credentials=$self->aua_load_credentials() unless defined $credentials;
-  foreach ( @$credentials ) {
-
-  };
-  
+  my $credentials=$self->{"Auth_UA-credentials"};
+  return undef unless defined $credentials;
+  my $rec=$credentials->{$realm};
+  return undef unless defined $rec;
+  my $re=$rec->{uri_re};
+  return undef unless $uri =~ m/$re/;
+  return $rec->{credential}
 }
 
-sub aua_load_credentials {
+sub auth_ua_credentials {
   my $self=shift;
-  my $file=$self->{Auth_UA-authfile};
-  open my $cred, $file;
-  while ( <$cred> ) {
-    my ($realm, $auth, $uri_re) = m/
-  };
+  return $self->{"Auth_UA-credentials"} unless @_;
+  my $cred=shift;
+  $self->{"Auth_UA-credentials"} = $cred;
+  return $cred;
 }
 
-sub aua_authfile {
+sub delete_brain_dead_credentials {
   my $self=shift;
-  return $self->{Auth_UA-authfile} unless @_;
-  $self->{Auth_UA-authfile} = shift;
+  my $cred=shift;
+  $cred=$self->{"Auth_UA-credentials"} unless defined $cred;
+  return undef unless defined $cred;
+  foreach my $key ( keys %$cred ) {
+    my $rec=$cred->{$key};
+    my $re=$rec->{uri_re};
+    ( "http://3133t3hax0rs.rhere.com" =~ m/$re/
+      or "http://3133t3hax0rs.rhere.com/secretstuff/www.goodplace.com/" =~ m/$re/ )
+	and do {
+	  warn "Deleting credential with dangerous URI RE $re in Auth_UE for real $key";
+	  delete $cred->{$key};
+	};
+  }
+  return $cred;
 }
+
+
+#  sub aua_load_credentials {
+#    my $self=shift;
+#    my $file=$self->{Auth_UA-authfile};
+#    open my $cred, $file;
+#    while ( <$cred> ) {
+#      my ($realm, $auth, $uri_re) = m/
+#    };
+#  }
+
+#  sub aua_authfile {
+#    my $self=shift;
+#    return $self->{Auth_UA-authfile} unless @_;
+#    $self->{Auth_UA-authfile} = shift;
+#  }

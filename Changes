@@ -1,5 +1,6 @@
-Mon Apr 28 1997
+Release 0.029
 
-	I have now added some tests to prove that actual link
-reporting is working approximately correctly.  Also corrected various
-bugs.
+	We now use an infostrucs file for storing definitions of where
+	the web pages are and what directories they map to.  This allows
+	us to handle multiple sets of web pages at a time including ones
+	which don't have a directory equivalent.

@@ -41,6 +41,7 @@ sub work {
   -d && do { m/^((blib)|(old)|(t))$/ and $File::Find::prune = 1;
 	     return; };
   return unless m/^[^.].*.pl$/;
+  return if m/test-tmp/;
   my $save=$_;
   ($name=$_) =~ s/.pl$//;
   my $target=$target_dir . $name;

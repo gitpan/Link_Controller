@@ -1,0 +1,103 @@
+<HTML>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- Created on December, 30  2001 by texi2html 1.64 -->
+<!-- 
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Olaf Bachmann <obachman@mathematik.uni-kl.de>
+Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
+ 
+-->
+<HEAD>
+<TITLE>Using LinkController: Extracting Links</TITLE>
+
+<META NAME="description" CONTENT="Using LinkController: Extracting Links">
+<META NAME="keywords" CONTENT="Using LinkController: Extracting Links">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META NAME="Generator" CONTENT="texi2html 1.64">
+
+</HEAD>
+
+<BODY LANG="" BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+
+<A NAME="SEC12"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC11"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_7.html#SEC13"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC11"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_7.html#SEC13"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H1> 5. Extracting Links </H1>
+<!--docid::SEC12::-->
+<P>
+
+This section is written assuming that you are using a standard HTML
+infostructure in a directory or on the World Wide Web
+</P><P>
+
+The first part of using link controller is to extract the links.  When
+doing this, a pair of index files is built which list which URLs happen
+on which pages along with a file listing all of the URLs in the
+infostructure.  
+</P><P>
+
+<STRONG>FIXME:</STRONG> compare and contrast multi-user configuration with
+single user
+</P><P>
+
+<A NAME="IDX20"></A>
+The first stage of the process is done by <CODE>extract-links</CODE>
+<A NAME="DOCF2" HREF="link-controller_fot.html#FOOT2">(2)</A>.
+</P><P>
+
+There are two modes for extract links <CODE>directory</CODE> and <CODE>www</CODE>.
+The key difference between them is that the latter actually downloads
+from a server so it is less efficient but will work in more
+circumstances and is more likely to represent your site as seen by
+users.  This is assuming that all of your WWW pages are interconnected
+so it can find them.
+</P><P>
+
+<STRONG>FIXME</STRONG> : need to describe modes of operation of extract link
+</P><P>
+
+<A NAME="IDX21"></A>
+<A NAME="IDX22"></A>
+</P><P>
+
+<CODE>extract-links</CODE> creates three files.  The first two files
+(<TT>`*.cdb'</TT>) are the index files for your infostructure and are
+located wherever you have configured them to by default they are called
+<TT>`link_on_page.cdb'</TT>, <TT>`page_has_link.cdb'</TT>.  The third file is
+the database file <TT>`links.db'</TT>.  <CODE>extract-links</CODE> can also
+optionally create a text file which lists all of the urls in the
+infostructure, one per line.
+</P><P>
+
+<A NAME="Testing"></A>
+<HR SIZE="6">
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC11"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_7.html#SEC13"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<BR>  
+<FONT SIZE="-1">
+This document was generated
+by <I>Michael De La Rue</I> on <I>December, 30  2001</I>
+using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
+"><I>texi2html</I></A>
+
+</BODY>
+</HTML>

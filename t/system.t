@@ -27,16 +27,17 @@ $fail=0;
 sub nogo {print "not "; $fail=1;}
 sub ok {my $t=shift; print "ok $t\n"; $fail=0}
 
-do "t/config/files.pl" or die "files.pl script not read: $!" if $! ;
-die "files.pl script failed: $@" if $@;
+do "t/config/files.pl" or die "files.pl script not read: " . ($@ ? $@ :$!);
+#die "files.pl script failed: $@" if $@;
 
 #try to generate the lists.
+unlink ($lonp, $phasl, $urls, $linkdb);
 
 -e $_ and die "file $_ exists" foreach ($lonp, $phasl, $urls, $linkdb);
 # create a "urllist" file from the directories
 nogo if system @start, qw(blib/script/extract-links http://www.test.nowhere/
                           test-data/sample-infostruc/),
-                          "--config-file=$conf";
+                          "--config-file=$conf", ($verbose ? undef : "--silent");
 
 ok(1);
 
@@ -67,7 +68,7 @@ use DB_File;
 use WWW::Link;
 use MLDBM qw(DB_File);
 
-tie %::links, MLDBM, "test-links.bdbm", O_RDWR, 0666, $DB_HASH
+tie %::links, MLDBM, $linkdb, O_RDWR, 0666, $DB_HASH
   or die $!;
 
 $link = $::links{"http://www.rum.com/"};
@@ -121,11 +122,34 @@ $output =~ m(http://www\.ix\.com)sx or nogo ;
 
 ok(8);
 
+$::driver='cgi-driver.test-tmp.pl';
+my $rep_cgi="blib/script/link-report.cgi";
+open (CGI_DRIVER,">$::driver") or die "couldn't open $driver: $!";
+print CGI_DRIVER <<EOF;
+#!/usr/bin/perl
+use Cwd;
+my \@store=\( \$ENV{PATH}, \$ENV{BASH_ENV} \);
+\$ENV{PATH}="/bin:/usr/bin";
+delete \$ENV{BASH_ENV};
+#print "CGI driver starting directory " . cwd() . " dir list\\n";
+#print \`ls\`;
+(\$ENV{PATH}, \$ENV{BASH_ENV})=\@store;
+\$::verbose=0xFFF;
+\$::verbose=0;
+\$WWW::Link::Selector::verbose=0xFFF;
+\$WWW::Link::Selector::verbose=0;
+\$fixed_config=0;
+\$fixed_config=1;
+
+do "./$conf" or die "script $conf failed: \$!";
+do "./$rep_cgi" or die "script $rep_cgi failed: \$!";
+EOF
+close CGI_DRIVER or die "couldn't close $driver: $!";
+
 #add tainting for the CGIbin
 @start = qw(perl -Iblib/lib -w -T);
 
-$command= (join (" ", @start) )
-  . ' blib/script/link-report.cgi';
+$command= (join (" ", @start) ) . " $driver";
 
 $output = `echo | $command`;
 
@@ -140,10 +164,10 @@ $output =~ m(\<HEAD\>.*\<TITLE\>.*\</TITLE\>.*\</HEAD\>.*\<BODY\>.*
 
 ok(9);
 
-print STDERR "#going to run: echo infostructure=1 | $command";
+print STDERR "#going to run: echo infostructure=1 | $command" if $::verbose;
 $output = `echo infostructure=1 | $command`;
 ($mesg="output:\n\n$output\n\n") =~ s/^/#/mg;
-print STDERR $mesg;
+print STDERR $mesg if $::verbose;
 
 
 $output =~ m(\<HEAD\>.*\<TITLE\>.*\</TITLE\>.*\</HEAD\>.*\<BODY\>.*

@@ -40,16 +40,17 @@ $fail=0;
 sub nogo {print "not "; $fail=1;}
 sub ok {my $t=shift; print "ok $t\n"; $fail=0}
 
-do "t/config/files.pl" or die "files.pl script not read: $!";
-die "files.pl script failed $@" if $@;
+do "t/config/files.pl" or die "files.pl script not read: " . ($@ ? $@ :$!);
+#die "files.pl script failed $@" if $@;
 
--e $_ and die "file $_ exists" foreach ($lonp, $phasl, $urls, $linkdb);
+-e $_ and die "file $_ exists" foreach ($lonp, $phasl, $linkdb);
 
 # create a "urllist" file from the directories
 
 nogo if system @start, qw(blib/script/extract-links http://www.test.nowhere/
 			  test-data/sample-infostruc/),
-                          "--config-file=$conf";
+                          "--config-file=$conf", 
+                          ($::verbose ? '--verbose' : '--silent');
 
 ok(1);
 
@@ -69,41 +70,41 @@ nogo unless ( -e $lonp and -e $phasl and -e $linkdb );
 ok(4);
 
 unlink $sched;
+
 die "failed to delete schedule" if -e $sched;
 #check we can tell the schedule doesn't exist.
-nogo unless system @start, 'blib/script/test-link',
-  "--config-file=$conf";
+$command= (join (" ", @start, 'blib/script/test-link',"--config-file=$conf",
+		 ($::verbose ? '--verbose' : '--silent')) );
+nogo unless system "$command 2> /dev/null";
 
 ok(5);
 
 nogo if system @start, 'blib/script/build-schedule', '--spread-time=100',
-  "--config-file=$conf", "--verbose";
+  "--config-file=$conf", ($::verbose ? '--verbose' : ('--silent', '--no-warn'));
 
 ok(6);
 
-die "failed to create schedule" unless -e 'schedule.bdbm';
+die "failed to create schedule" unless -e $sched;
 
 #check we can run and do no links; the schedule has just been built, so
 #when we set the halt time in the past none of the links should match.
 nogo if system @start, 'blib/script/test-link', '--halt-time=-1000',
-  "--config-file=$conf", '--sequential';
+  "--config-file=$conf", '--sequential', ($::verbose ? '--verbose' : '--silent');
 
 ok(7);
 
 unlink $sched;
 die "failed to delete schedule" if -e $sched;
 
-unlink $urls;
-die "failed to delete schedule" if -e $urls;
-
+unlink $linkdb;
+die "failed to delete schedule" if -e $linkdb;
 
 ok(8);
 
 
-
 nogo if system @start, qw(blib/script/extract-links http://www.test.nowhere/
 			  test-data/multi-protocol-infostruc/),
-                          "--config-file=$conf";
+                          "--config-file=$conf", ($::verbose ? '--verbose' : '--silent');
 
 ok(9);
 
@@ -117,17 +118,18 @@ ok(10);
 
 
 nogo if system @start, 'blib/script/build-schedule', '--spread-time=100',
-  "--config-file=$conf", "--url-list=$urls";
+  "--config-file=$conf", ($::verbose ? '--verbose' : ('--silent', '--no-warn'));
 
-die "failed to create schedule" unless -e 'schedule.bdbm';
+die "failed to create schedule" unless -e $sched;
 
 ok(11);
 
 #rebuilding a schedule
 nogo if system @start, 'blib/script/build-schedule', '--spread-time=100',
-  "--config-file=$conf", "--url-list=$urls";
+  "--config-file=$conf", ($::verbose ? '--verbose' : ('--silent', '--no-warn'));
 
-die "failed to create schedule" unless -e 'schedule.bdbm';
+
+die "failed to create schedule" unless -e $sched;
 
 ok(12);
 
@@ -135,16 +137,20 @@ ok(12);
 
 #check we can run and do nothing to unsupported protocols
 nogo if system @start, ( 'blib/script/test-link', '--test-now', '--never-stop',
-			 '--max-links=10', '--verbose', '--waitre=127.0.0.1',
-			 "--config-file=$conf", '--sequential' );
+			 '--max-links=10',
+			 ($::verbose ? '--verbose' : ('--silent', '--no-warn')),
+			 '--no-waitre=127.0.0.1', "--config-file=$conf", '--sequential' );
 
 ok(13);
 
 use WWW::Link_Controller::Lock;
+$WWW::Link_Controller::Lock::silent = 1;
 WWW::Link_Controller::Lock::lock($linkdb);
-#check we don't run if lock file exists
-nogo unless system @start, 'blib/script/test-link',
-  "--config-file=$conf";
+#check we throw an error if lock file exists
+$command= join (" ", @start, 'blib/script/test-link', "--config-file=$conf",
+		 ($::verbose ? '--verbose' : ('--silent', '--no-warn')));
+#FIXME: check the database modtime isn't altered
+nogo unless system "$command 2> /dev/null";
 
 ok(14);
 

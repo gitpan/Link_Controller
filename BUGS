@@ -4,10 +4,6 @@ Many different options have not yet been tested.  Certainly there is
 no way that every combination of options have been tested.
 Contributions to the test suite are very much appreciated.  
 
-Particular problems in the current version are likely to be that
-collection of links from web pages has not been tested.  This software
-is still under development and should be considered as such.
-
 	FRAGMENTS
 
 It seems that fragments often contain spaces.  In this case they are
@@ -44,3 +40,10 @@ modern operating system.
 If anyone knows the general rule about which bit of the first line is
 used on what operating system, I can try to ensure that this doesn't
 get installed broken.
+
+	BASE URLS
+
+lack of clarity about when we should end an infostructure base with a
+slash ( `/' ).  I don't think there are any bad cases, but if you find
+one, please tell me.
+

@@ -23,9 +23,12 @@ The url to be fixed
 
 =head2 canned-suggestion
 
-the canned-suggestion parameter is used for returning values from a list of choices.  If the parameter is given the value "user" then 
+the canned-suggestion parameter is used for returning values from a
+list of choices.  If the parameter is given the value "user" then;
 
 =head2 user-suggestion
+
+will contain the string typed in by the user.
 
 =head1 SEE ALSO
 
@@ -46,23 +49,27 @@ BEGIN {
   delete @ENV{qw(HOME IFS CDPATH ENV BASH_ENV)};   # Make %ENV safer
 }
 
-use CDB_File::BiIndex;
-use WWW::Link;
-use WWW::Link::Repair;
-use WWW::Link::Repair::Substitutor;
-use CGI::Request;
-use Fcntl;
-use DB_File;
 use strict;
+
+use Cwd;
+use CDB_File::BiIndex 0.026;
+use CGI::Request;
+use DB_File;
+use Fcntl;
 use HTML::Stream;
 use CGI::Response;
 use MLDBM qw(DB_File);
-use vars qw($req @oldurls $oldurl $newurl $linkdbm);
-use Cwd;
+use WWW::Link;
+use WWW::Link::Repair;
+use WWW::Link::Repair::Substitutor;
+use WWW::Link_Controller::InfoStruc;
+use WWW::Link_Controller::URL;
+
+use vars qw($req @oldurls $origuri $newuri $linkdbm $fixed_config);
 
 #if the config files are to be previously overridden then this must
 #have already been "used"
-use WWW::Link_Controller::ReadConf;
+#use WWW::Link_Controller::ReadConf;
 
 #FIXME
 #Configuration - here we bypass tainting
@@ -71,11 +78,12 @@ use WWW::Link_Controller::ReadConf;
 # the user's hardwired script..
 
 BEGIN {
+  print STDERR "links before $::links\n" if $::verbose;
   $DB::single = 1;
-  my $icwd=getcwd();
-  print "icwd: $icwd\n";
+  my $icwd=cwd();
+  print STDERR "icwd: $icwd\n"  if $::verbose;
   (my $cwd) = ($icwd =~ m/(.*)/) ; #force launder
-  print "cwd: $cwd\n";
+  print STDERR "cwd: $cwd\n"  if $::verbose;
   if ((! $fixed_config) && -r ".cgi-infostruc.pl") {
     my $file=$cwd . "/.cgi-infostruc.pl";
     defined (do $file) || do {
@@ -83,8 +91,10 @@ BEGIN {
       die "couldn't open $file: $!"
     }
   } else {
-    warn "using default configuration";
+    warn "using default configuration" if $::verbose;
   }
+
+  print STDERR "links after $::links\n" if $::verbose;
 };
 
 #controls - not really configuration yet.
@@ -107,31 +117,30 @@ print &CGI::Response::ContentType("text/html");
 #what url should we fix?
 
 
-my ($tmpoldurl,$tmpnewurl);
+my ($tmporiguri,$tmpnewuri);
 
-$tmpoldurl=$req->param("orig-url");
-die "arguments missing" unless $tmpoldurl;
-print STDERR "got origurl $tmpoldurl\n";
-$tmpnewurl=$req->param("canned-suggestion");
-die "argument missing" unless $tmpoldurl;
-print STDERR "got new $tmpnewurl\n";
-$tmpnewurl=$req->param("user-suggestion") 
-  unless ( defined $tmpnewurl and $tmpnewurl ne "user" );
+$tmporiguri=$req->param("orig-url");
+die "arguments missing" unless $tmporiguri;
+warn "got origurl $tmporiguri\n" if $::verbose;
+$tmpnewuri=$req->param("canned-suggestion");
+die "argument missing" unless $tmporiguri;
+warn "got newuri $tmpnewuri\n" if $::verbose;
+$tmpnewuri=$req->param("user-suggestion") 
+  unless ( defined $tmpnewuri and $tmpnewuri ne "user" );
 
-die "called without url to change from\n" unless defined $tmpoldurl;
-die "called without url to change to\n" unless defined $tmpnewurl;
+die "called without url to change from\n" unless defined $tmporiguri;
+die "called without url to change to\n" unless defined $tmpnewuri;
 
 # we take in the urls untainting them as we go.. this is potentially
 # important for security if you are using this code to allow users to
 # change url in HTML code.  Nothing should come through which might
 # screw up the HTML code.
 
-$tmpoldurl =~ m/([^\s<>"']*)/;
-$oldurl = $1;
-$tmpnewurl =~ m/([^\s<>"']*)/;
-$newurl = $1;
-die "oldurl tainted when should be clean" if is_tainted($oldurl);
-die "newurl tainted when should be clean" if is_tainted($newurl);
+
+$origuri=WWW::Link_Controller::URL::untaint_url($tmporiguri);
+$newuri=WWW::Link_Controller::URL::untaint_url($tmpnewuri);
+die "untaint of origuri failed" unless defined($origuri);
+die "untaint of newuri failed" unless defined($newuri);
 
 $::hstr->HTML->HEAD
        ->TITLE->t("Results of Link Fix")->_TITLE
@@ -139,8 +148,8 @@ $::hstr->HTML->HEAD
        ->BODY
        ->H1->t("Results")->_H1;
 
-
-unless ($oldurl eq $tmpoldurl and $newurl eq $tmpnewurl) {
+#print STDERR "$origuri eq $tmporiguri and $newuri eq $tmpnewuri\n";
+unless ($origuri eq $tmporiguri and $newuri eq $tmpnewuri) {
   $::hstr->P ->t("The url you suggested wasn't a correct, full format," .
 		 "url.  Aborting. Sorry.")
          ->_P;
@@ -149,16 +158,30 @@ unless ($oldurl eq $tmpoldurl and $newurl eq $tmpnewurl) {
 
 if ($::authorised) {
   #we have a known authorised user for this infostructure carry out all of the fixes.
+
+  print STDERR "page index $::page_index, link index $::link_index\n"
+    if $::verbose;
+
   $::index = new CDB_File::BiIndex $::page_index, $::link_index;
-  $::substitutor=WWW::Link::Repair::Substitutor::gen_substitutor($oldurl, $newurl, 0, 0);
-  $::handler=WWW::Link::Repair::Substitutor::gen_simple_file_handler($::substitutor);
 
-  warn ( "substituting $oldurl for $newurl" );
+  #FIXME tree options?  Relative Links
+  $::file_subs= WWW::Link::Repair::Substitutor::gen_file_substitutor
+    ($origuri, $newuri, ($::tree ? ( tree_mode => 1 ) : () ),
+     ($::relative ? ( relative => 1 , 
+		      file_to_url => \&WWW::Link_Controller::InfoStruc::file_to_url)
+                  : () ),
+     );
 
-  WWW::Link::Repair::infostructure($::index, $::handler, $oldurl);
+  warn ( "substituting $origuri for $newuri" ) if $::verbose;
+
+  my $trans_sub=\&WWW::Link_Controller::InfoStruc::url_to_file;
+  my $fixed=WWW::Link::Repair::infostructure($origuri, $::index,$trans_sub,
+					     $::file_subs);
+
   $::hstr->P 
-         -> t("Your link change of $oldurl\n to $newurl\n" .
-              "has been carried out as requested.\n" )
+         -> t("Your link change of $origuri\n to $newuri\n" .
+              "has been carried out as requested.  We made" .
+	      "$fixed fixeds in the process\n" )
          ->_P->nl;
 } else {
   $::hstr->P ->t("you don't seem to be an authorised user so I can't directly" .
@@ -170,9 +193,9 @@ if ($::authorised) {
 unless ($::secret_suggestions) {
   $::linkdbm = tie %::links, "MLDBM", $::links, O_RDONLY, 0666, $::DB_HASH
     or die $!;
-  my $link=$::links{$oldurl};
-  accept_suggestion($link, $newurl);
-  $::links{$oldurl} = $link; #MLDBMhack
+  my $link=$::links{$origuri};
+  accept_suggestion($link, $newuri);
+  $::links{$origuri} = $link; #MLDBMhack
 }
 
 $::hstr->_BODY->_HTML;
@@ -182,16 +205,16 @@ exit 0;
 sub accept_suggestion {
   my $link=shift;
   my $suggestion=shift;
-  my $oldurl = $link->url();
+  my $origuri = $link->url();
   if ( $link->add_suggestion($suggestion) ) {
     $::hstr->P 
-           -> t("Your link change of $oldurl\n to $suggestion\n" .
+           -> t("Your link change of $origuri\n to $suggestion\n" .
                 "has been added as a suggestion to the database.\n" .
 		"Thankyou.")
 	   ->_P->nl;
   } else {
     $::hstr->P 
-           -> t("Your link change of $oldurl\n to $suggestion\n" .
+           -> t("Your link change of $origuri\n to $suggestion\n" .
                 "is already recorded in the database.\n"  .
 		"Thankyou for offering anyway.")
 	   ->_P->nl;
@@ -200,6 +223,7 @@ sub accept_suggestion {
 
 
 sub is_tainted {
+  no warnings;
   return ! eval {
     join('',@_), kill 0;
     1;

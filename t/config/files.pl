@@ -9,17 +9,27 @@ We create the file .cgi-infostruc.pl.
 
 =cut
 
+use Cwd;
+
+$verbose=0 unless defined $verbose;
+
 print STDERR "fixing up files; the current directory is ", cwd, "\n"
   if $verbose & 8;
 
 #setup files for start of tests
 
-$conf='.cgi-infostruc.pl';
+$conf='link-cont-conf.test-tmp';
 $blib=cwd . '/blib'; $script=$blib . '/script';
-$lonp='link_on_page.cdb'; $phasl='page_has_link.cdb';
-$urls='urllist'; $linkdb='test-links.bdbm'; $sched='schedule.bdbm';
+$lonp='link_on_page.test-tmp.cdb'; $phasl='page_has_link.test-tmp.cdb';
+$urls='urllist.test-tmp'; $linkdb='links.test-tmp.bdbm';
+$sched='schedule.test-tmp.bdbm';
 
-unlink $lonp, $phasl, $linkdb, $urls, $conf, $sched;
+$lock="#$linkdb.lock";
+
+@unlink=( $conf, $lonp, $phasl, $urls, $linkdb, $sched, $lock);
+unlink @unlink;
+
+-e $_ and die "couldn't unlink $_" foreach @unlink;
 
 open (CONFIG, ">$conf") or die "can't open conf file: $conf";
 print CONFIG <<"EOF";
@@ -28,6 +38,12 @@ print CONFIG <<"EOF";
 \$::link_index="$lonp";
 \$::schedule="$sched";
 EOF
+
+defined $::infos and do {
+  print CONFIG "\$::infostrucs='$::infos';\n";
+};
+  print CONFIG "1;\n";
+
 close CONFIG  or die "can't close conf file: $conf";;
 
 3921;

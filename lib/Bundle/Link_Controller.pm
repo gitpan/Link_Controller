@@ -1,6 +1,5 @@
 package Bundle::Link_Controller;
-
-$VERSION=0.001;
+$REVISION=q$Revision: 1.9 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
 
 =head1 NAME
 
@@ -31,7 +30,7 @@ section.
 Data::Dumper 0       - required by libnet
 MD5 0                - required by libwww-perl
 Net::FTP 0           - required by libwww-perl
-CDB_File 0.6         - earlier versions don't have multiget inbuilt.
+CDB_File 0.86         - there are bugs in version 0.83
 
 =item perl-CGI-modules
 
@@ -107,21 +106,23 @@ HTTP::Date 0
 HTTP::Response 0
 HTTP::Status 0
 Net::Telnet 0         - used by adaptive tester to try really hard on broken links.
+MIME::Base64          - for authentication in LWP
 LWP::Debug 0
 LWP::MediaTypes 0
 LWP::RobotUA 0 
 LWP::UserAgent 0
 MLDBM 1.22           - earlier versions are database incompatible
 URI::URL 0
+Search::Binary 0
 
 =head1 INCLUDED MODULES
 
 The following modules are included in the LinkController distribution
 and do not need to be installed separately.
 
-	CDB_File::BiIndex 0
+	CDB_File::BiIndex 0.026
 	CDB_File::BiIndex::Generator 0
-	CDB_File::Generator 0
+	CDB_File::Generator 0.018
 	WWW::Link 0
 	WWW::Link::Repair 0
 	WWW::Link::Repair::DirectSubstitutor 0

@@ -66,10 +66,16 @@ print out links which were redirected
 
 =back
 
+=head1 BUGS
+
+Infostructure mode C<-I> should be the default and there should be a
+switch to use the database.
+
 =head1 TODO
 
 Much detailed control of the kind of links reported should be provided
-(e.g. how many times detected broken etc.).
+(e.g. how many times detected broken etc.).  This should be done as a
+more advanced database system is integrated.
 
 =head1 SEE ALSO
 
@@ -90,7 +96,7 @@ use strict;
 use Fcntl;
 use DB_File;
 use MLDBM qw(DB_File);
-use CDB_File::BiIndex;
+use CDB_File::BiIndex 0.026;
 use WWW::Link;
 use WWW::Link::Reporter::HTML;
 use WWW::Link::Reporter::Text;
@@ -134,7 +140,8 @@ $::opthandler = new Getopt::Function
     "help-opt=s",
     "verbose:i v>verbose",
     "",
-    "url=s u>url",
+    "url=s U>url",
+    "url-file=s f>url",
     "url-exclude=s E>url-exclude",
     "url-include=s I>url-include",
     "page-exclude=s e>page-exclude",
@@ -196,6 +203,11 @@ $::opthandler = new Getopt::Function
    "ignore-missing" => [ \&maketrue,
 			 "Don't complain about links which aren't in "
 			 . "the database." ],
+   "url-file" => [ sub { open URLS, ">$_"; my @urls=<URLS>;
+			 my @fixed = map { s/\s*$// } @urls;
+			 push @::urls, grep (!/^\s*#/, @fixed); },
+		   "Read all URLs in a file (one URL per line).",
+		   "FILENAME"],
    "url" => [ sub { push @::urls, split /\s+/, $::value; },
 	      "Give urls which are to be reported on.",
 	      "URLs"],
@@ -251,7 +263,7 @@ EOF
 sub version() {
   print <<'EOF';
 link-report version
-$Id: link-report.pl,v 1.16 2001/11/22 15:40:12 mikedlr Exp $
+$Id: link-report.pl,v 1.19 2001/12/25 06:31:18 mikedlr Exp $
 EOF
 }
 

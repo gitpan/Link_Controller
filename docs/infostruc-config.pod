@@ -1,3 +1,13 @@
+=head1 NAME
+
+infostructures - LinkController configuration definitions
+
+=head1 DESCRIPTION
+
+LinkController uses the name "infostructure" for a set of resources
+(web pages) which should have their links checked.  This manpage documents how to configure
+
+
 base url
 
 base directory

@@ -1,4 +1,5 @@
 package WWW::Link_Controller::ReadConf::utils;
+$REVISION=q$Revision: 1.3 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
 use Exporter;
 @ISA=qw(Exporter);
 @EXPORT=qw(yesno getstring);

@@ -102,19 +102,18 @@ LinkController homepage.
 
 =cut
 
-use File::Find;
-use File::Copy;
-use CDB_File::BiIndex;
-use Fcntl;
-use DB_File;
-use MLDBM qw(DB_File);
-use WWW::Link::Repair::Substitutor;
-use WWW::Link::Repair;
-use URI;
 use strict;
 
-#Configuration - we go through %ENV, so you'd better not be running SUID
-#eval to ignore if a file doesn't exist.. e.g. the system config
+use CDB_File::BiIndex 0.026;
+use DB_File;
+use File::Find;
+use File::Copy;
+use Fcntl;
+use MLDBM qw(DB_File);
+use WWW::Link::Repair;
+use WWW::Link::Repair::Substitutor;
+use WWW::Link_Controller::InfoStruc;
+use URI;
 
 use WWW::Link_Controller::ReadConf;
 
@@ -134,12 +133,17 @@ $::opthandler = new Getopt::Function
     "usage h>usage help>usage",
     "help-opt=s",
     "verbose:i v>verbose",
+    "silent q>silent quiet>silent",
+    "no-warn",
     "",
 #    "link-index=s",
     "directory=s",
-
+    "",
+    "relative r>relative",
     "tree t>tree",
     "base=s b>base",
+    "",
+    "config-file=s",
   ],  {
 #         "link-index" => [ sub { $::link_index=$::value; },
 #  			 "Use the given file as the index of which file has "
@@ -155,11 +159,20 @@ $::opthandler = new Getopt::Function
 #  		  "FILENAME" ],
        "tree" => [ \&maketrue,
 		   "Fix the link and any others based on it." ],
+       "no-warn" => [ sub { $::no_warn = 1; },
+		      "Avoid issuing warnings about non-fatal problems." ],
        "relative" => [ \&maketrue,
-		   "Fix relative links (expensive??)." ],
+		       "Fix relative links (expensive??)." ],
        "base" => [ \&makevalue,
 		   "Base uri of the document or directory to be fixed.",
 		   "FILENAME" ],
+       "config-file" => [ sub {
+			    eval {require $::value};
+			    die "Additional config failed: $@"
+			      if $@; #if it's not there die anyway. compare Config.pm
+			  },
+			  "Load in an additional configuration file",
+			  "FILENAME" ],
   };
 
 $::opthandler->std_opts;
@@ -182,9 +195,14 @@ EOF
 sub version() {
   print <<'EOF';
 fix-link version
-$Id: fix-link.pl,v 1.10 2001/11/22 15:33:21 mikedlr Exp $
+$Id: fix-link.pl,v 1.18 2001/12/29 07:45:20 mikedlr Exp $
 EOF
 }
+
+$WWW::Link::Repair::no_warn=1 if $::no_warn;
+$WWW::Link::Repair::verbose=0xFFF if $::verbose;
+$WWW::Link::Repair::Substitutor::verbose=0xFFF if $::verbose;
+$WWW::Link_Controller::InfoStruc::verbose=0xFFF if $::verbose;
 
 my $origuri=shift;
 die "missing arguments, giving up\n" unless @ARGV;
@@ -206,12 +224,20 @@ if (defined $::base) {
 
 print STDERR "going to change $origuri to $newuri\n" if $::verbose;
 
-$::substitutor=
-  WWW::Link::Repair::Substitutor::gen_substitutor ( $origuri, $newuri,
-					       $::tree, $::relative);
+$::file_subs= WWW::Link::Repair::Substitutor::gen_file_substitutor
+    ($origuri, $newuri, ($::tree ? ( tree_mode => 1 ) : () ),
+     ($::relative ? ( relative => 1 , 
+		      file_to_url => \&WWW::Link_Controller::InfoStruc::file_to_url)
+                  : () ),
+     );
 
-$::handler=
-  WWW::Link::Repair::Substitutor::gen_simple_file_handler($::substitutor);
+$::default_infostrucs=1 unless defined $::default_infostrucs;
+
+die "you must define the \$::infostrucs configuration variable"
+  if $::default_infostrucs and not defined $::infostrucs ;
+
+WWW::Link_Controller::InfoStruc::default_infostrucs()
+  if $::default_infostrucs;
 
 unless ( $::directory  ) {
 
@@ -232,14 +258,16 @@ unless ( $::directory  ) {
   $::index = new CDB_File::BiIndex $::page_index, $::link_index;
 
   print STDERR "using index to find files\n" if $::verbose;
-
-  WWW::Link::Repair::infostructure($::index, $::handler, $origuri);
-
+  my $trans_sub=\&WWW::Link_Controller::InfoStruc::url_to_file;
+  my $fixed=WWW::Link::Repair::infostructure($origuri, $::index, $trans_sub,
+					     $::file_subs, $::tree);
+  print "fix-link finished: made $fixed substitutions\n"
+    unless $::silent;
 } else {
-
   print STDERR "searching through directory $::directory\n" if $::verbose;
-
-  WWW::Link::Repair::directory($::handler, $::directory)
+  my $fixed=WWW::Link::Repair::directory($::file_subs, $::directory);
+  print "fix-link finished: made $fixed substitutions\n"
+    unless $::silent;
 }
 
 exit;

@@ -105,6 +105,8 @@ $::opthandler = new Getopt::Function
     "usage h>usage help>usage",
     "help-opt=s",
     "verbose:i v>verbose",
+    "silent quite>silent q>silent",
+    "no-warn",
     "",
     "url-list=s l>url-list",
     "schedule=s s>schedule",
@@ -112,10 +114,12 @@ $::opthandler = new Getopt::Function
     "start-offset=i S>start-offset",
     "ignore-db d>ignore-db",
     "ignore-link i>ignore-link",
-    "",
+    "no-warn",
     "config-file=s",
 #    "old-schedule=s o>old-schedlue",
   ],  {
+       "no-warn" => [ sub { $::no_warn = 1; },
+		      "Avoid issuing warnings about non-fatal problems." ],
        "url-list" => [ \&makevalue,
 		       "File with complete list of URLs to schedule",
 		       "FILENAME" ],
@@ -147,6 +151,7 @@ $::opthandler = new Getopt::Function
 #       "clear" => [ \&maketrue, "Clear out old entries."]
       };
 
+
 $::opthandler->std_opts;
 
 $::opthandler->check_opts;
@@ -166,10 +171,11 @@ EOF
 sub version() {
   print <<'EOF';
 build-schedule version 
-$Id: build-schedule.pl,v 1.11 2001/11/22 15:42:52 mikedlr Exp $
+$Id: build-schedule.pl,v 1.13 2001/12/25 06:31:19 mikedlr Exp $
 EOF
 }
 
+$Schedule::SoftTime::silent = 1 if $::silent;
 #command-line-end
 
 die 'you must define the $::links configuration variable'
@@ -185,6 +191,9 @@ die 'you must define the $::schedule configuration variable'
     or die "could not rename old schedule";
   $::old_file=$::schedule . ".bak" unless $::old_file;
 };
+
+defined $::url_list and not -e $::url_list and
+    die "url list file doesn't exist";
 
 #FIXME. This is bad; we must read the entire old schedule into memory in 
 #order to invert it.  We could use a temp file?  Still seems ugly..
@@ -253,16 +262,16 @@ if ($::url_list) {
     };
 
     defined $link or do {
-      warn "key $url had undefined link";
+      warn "key $url had undefined link" unless $::no_warn;
       next;
     };
 
     $url =~ m/\w{3,}:.*\w{3,}/ or do {
-      warn "link $url not sensible??";
+      warn "link $url not sensible??" unless $::no_warn;
     };
     print STDERR "Scheduling URL $url\n" if $::verbose;
     my $check_time=check_time($link, $url, %old_inverted);
-    print STDERR "check at $check_time\n" if $::verbose;
+    print STDERR "check $url at $check_time\n" unless $::silent;
     $sched->schedule($check_time, $link->url);
   }
 }
@@ -306,7 +315,7 @@ sub check_time ($$;\%) {
 
 sub randsecs {
   my $number = int ( logrand() * $spread_time ) ;
-  print STDERR "randsecs generated $number\n";
+  print STDERR "randsecs generated $number\n" if $::verbose;
   die "should generate positive number" unless $number >= 0;
   return $number;
 }
@@ -320,7 +329,7 @@ sub randsecs {
 
 sub logrand {
   my $return=log ( rand(1) +1);
-  print STDERR "logrand generated $return\n";
+  print STDERR "logrand generated $return\n" if $::verbose;
   return $return;
 }
 

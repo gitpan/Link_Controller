@@ -55,6 +55,7 @@ Reasonably safe
 =cut
 
 package WWW::Link_Controller::Lock;
+$REVISION=q$Revision: 1.7 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
 use warnings;
 use strict;
 use English;
@@ -66,6 +67,9 @@ $lock_file=undef;
 $lock_owner=0;
 $link_data=undef;
 $localhost=hostname;
+
+$WWW::Link_Controller::Lock::silent = 0 unless defined
+  $WWW::Link_Controller::Lock::silent;
 
 =head2 WWW::Link_Controller::Lock::lock($linkfile)
 
@@ -94,7 +98,8 @@ sub lock ($) {
     };
 
     $link_data=$PROCESS_ID . '@' . $localhost;
-    print STDERR "W::L::Lock creating lock file $lock_file -> $link_data\n";
+    print STDERR "W::L::Lock creating lock file $lock_file -> $link_data\n"
+      unless $WWW::Link_Controller::Lock::silent;
     symlink $link_data, $lock_file
 	or die "failed to create lock_file $lock_file";
     $lock_owner=1;
@@ -118,7 +123,8 @@ sub checklock () {
 #    die "lock file $lock_file doesn't exist in " . cwd unless -e $lock_file;
     die "lock isn't a symlink" unless -l $lock_file;
     die "lock has been stolen" unless readlink $lock_file eq $link_data;
-    print STDERR "WWW::Link_Controller::Lock: checked lock file $lock_file\n";
+    print STDERR "WWW::Link_Controller::Lock: checked lock file $lock_file\n"
+      unless $WWW::Link_Controller::Lock::silent;
     return 1;
 }
 
@@ -134,8 +140,10 @@ sub END {
 	unless -l $lock_file;
     do { warn "lock has been stolen" ; $?=1 unless $?; return}
 	unless readlink $lock_file eq $link_data;
-    print STDERR "W::L::Lock deleting lock file $lock_file  -> $link_data\n";
+    print STDERR "W::L::Lock deleting lock file $lock_file  -> $link_data\n"
+      unless $WWW::Link_Controller::Lock::silent;
     unlink $lock_file or warn "failed to delete lock file $lock_file"
 	      if  $lock_owner
 }
 
+1;

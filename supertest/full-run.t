@@ -79,7 +79,7 @@ ok(5);
 
 nogo if system @start, ( $script . '/test-link', '--test-now', '--never-stop',
 			 '--max-links=10', '--verbose=2047',
-			 '--waitre=127.0.0.1',
+			 '--no-waitre=127.0.0.1',
 			 "--config-file=$conf", '--sequential' );
 
 ok(6);

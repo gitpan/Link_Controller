@@ -1,3 +1,8 @@
+handle relative link substitution in the CGIs.  Test relative link
+substitutions alot more.
+
+handle exclusion regular expressions in the infostructure definition.
+
 handle fragments with characters that would otherwise be illegal.
 
 
@@ -131,7 +136,7 @@ option.
 REGRESSION TESTS
 
 As interesting bugs are fixed they should be added here.  Later
-regression tests should be added which check these cases are working
+regression tests should be added which check these cases are working.
+Better yet, bug reports should be made in terms of failed regression
+tests.
 
-   empty / non-existant schedule database for daily-test-links
- 

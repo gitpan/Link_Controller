@@ -36,20 +36,23 @@ site.
 =head1 IMPLEMENTATION NOTES
 
 Becuase LWP::RobotUA collapses completely when called with URLs other
-than HTTP this is implemented directly over the top of LWP::UserAgent.
+than HTTP this is implemented over the top of LWP::UserAgent (via
+LWP::Auth_UA) rather than as a subclass of LWP::RobotUA.
 
 =cut
 
+package LWP::NoStopRobot;
+$REVISION=q$Revision: 1.7 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
+
 use strict;
 use warnings;
-package LWP::NoStopRobot;
 use Carp;
-use LWP::UserAgent;
+use LWP::Auth_UA;
 
 use vars qw(@ISA $VERSION);
 
-@ISA=qw(LWP::UserAgent);
-$VERSION = sprintf("%d.%02d", q$Revision: 1.3 $ =~ /(\d+)\.(\d+)/);
+@ISA=qw(LWP::Auth_UA);
+$VERSION = sprintf("%d.%02d", q$Revision: 1.7 $ =~ /(\d+)\.(\d+)/);
 
 require WWW::RobotRules;
 require HTTP::Request;
@@ -121,7 +124,7 @@ sub _robot_get {
 
     }
   } else {
-    warn "can't handle robot rules on " . $url->as_string;
+    LWP::Debug::debug("can't handle robot rules on " . $url->as_string);
     $allowed=1;
   }
   return $allowed;
@@ -185,11 +188,11 @@ sub simple_request
 
  CASE: {
 	not defined $netloc and do  {
-	    warn "host_port() undefined for: " . $url;
+	  LWP::Debug::debug("_url_to_netloc failed to return host_port() for: ". $url);
 	    last;
 	};
-	#this is not correct english, but iproute2 uses it and so I
-	#will :-)
+	#this is not strictly correct english, but iproute2 uses it
+	#and so I will :-)
 	#fix this till it really checks for a hostname + port
 	$netloc =~ m/[a-zA-Z0-9].*[a-zA-Z0-9]:[a-zA-Z0-9]+/ or do  {
 	    die "host_port is a garbage: " . $url;
@@ -226,19 +229,21 @@ sub _url_to_netloc
     my $scheme=$url->scheme();
 
     #basically schemes which support host and port / that is server methods
+    #FIXME: hardwired lists are BAD.
+
+    #wierd : mailto - could be supported in certain cases
+    #excluded : data / file
 
     $scheme =~
 	m/ftp|gopher|http|https|ldap|news|nntp|pop|rlogin|rsync|snews|telnet/
 	    or do {
-		warn "host_port() not defined for " . $url . " no wait";
-		return
+	      LWP::Debug::debug("_url_to_netloc can't deal with $scheme urls");
+	      return
 	    };
 
     my $netloc=$url->host_port();
 
     return $netloc;
-    #wierd : mailto - could be supported in certain cases
-    #exlcuded : data / file
 
 }
 
@@ -326,13 +331,13 @@ sub no_wait {
 
 
 
-#  # $Id: NoStopRobot.pm,v 1.3 2001/09/30 17:30:49 mikedlr Exp $
+#  # $Id: NoStopRobot.pm,v 1.7 2001/12/25 06:31:17 mikedlr Exp $
 
 #  package LWP::RobotUA;
 
 #  require LWP::UserAgent;
 #  @ISA = qw(LWP::UserAgent);
-#  $VERSION = sprintf("%d.%02d", q$Revision: 1.3 $ =~ /(\d+)\.(\d+)/);
+#  $VERSION = sprintf("%d.%02d", q$Revision: 1.7 $ =~ /(\d+)\.(\d+)/);
 
 #  require WWW::RobotRules;
 #  require HTTP::Request;
@@ -409,7 +414,7 @@ sub new
     Carp::croak('LWP::RobotUA name required') unless $name;
     Carp::croak('LWP::RobotUA from address required') unless $from;
 
-    my $self = new LWP::UserAgent;
+    my $self = new LWP::Auth_UA;
     $self = bless $self, $class;
 
     $self->{'delay'} = 1;   # minutes

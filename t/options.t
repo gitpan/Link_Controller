@@ -17,6 +17,7 @@ sub ok {my $t=shift; print "ok $t\n";}
 $err=0;
 HELPCHECK: foreach (glob 'blib/script/*') {
   m/cgi/ && next;
+  m/test-tmp/ && next;
   $response = `perl -I ./blib/lib ./$_ --help`;
   $response or do {warn "./$_ had no --help text"; $err++; next};
   ($base=$_) =~ s,.*/,,;
@@ -33,6 +34,7 @@ ok(1);
 $err=0;
 VERCHECK: foreach (glob 'blib/script/*') {
   m/cgi/ && next;
+  m/test-tmp/ && next;
   $response = `perl -I ./blib/lib ./$_ --version`;
   $response or do {warn "$_ had no --version text"; $err++; next};
   ($base=$_) =~ s,.*/,,;

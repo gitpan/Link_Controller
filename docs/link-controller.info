@@ -16,13 +16,14 @@ File: link-controller.info,  Node: Top,  Next: Introduction,  Prev: (dir),  Up: 
    This document describes LinkController a system for checking and
 maintaining links in infostructures
 
-   This document applies to version 0.023 of LinkController
+   This document applies to version 0.030 of LinkController
 
 * Menu:
 
 * Introduction::                What LinkController is about.
 * Getting Started::             Configuration.
 * Configuration::
+* Advanced Configuration::
 * Configuring CGI Programs::
 * Extracting Links::            Getting link information from WWW pages.
 * Testing::                     Testing Links.
@@ -52,6 +53,15 @@ Configuration
 * Link Variables::              General configuration variables.
 * Infostructure Configuration::
 
+Advanced Configuration
+
+* Advanced Infostructure Configuration::
+* Authorisation Configuration::
+
+Reporting Problems
+
+* Email Reporting::
+
 The Emacs Interface
 
 * link-report-dired::           An emacs program to display broken links.
@@ -66,6 +76,13 @@ Administration
 * Default Installation::
 * User Administration::
 * Cron Scripts::
+
+Acknowledgements
+
+* Esoterica Internet Portugal::
+* IPPT PAN Poland::
+* The Tardis Project::
+* Other Free Software Authors::
 
 Packages Which Can Be Useful with LinkController
 
@@ -141,7 +158,7 @@ some more time (a week or so) you can use `link-report' to find out
 which links are really broken.
 
 
-File: link-controller.info,  Node: Configuration,  Next: Configuring CGI Programs,  Prev: Getting Started,  Up: Top
+File: link-controller.info,  Node: Configuration,  Next: Advanced Configuration,  Prev: Getting Started,  Up: Top
 
 Configuration
 *************
@@ -160,7 +177,7 @@ Setting Configuration Variables
 ===============================
 
    The `configure-link-control' program can be used by users to
-configure link-contoller.  This will ask you a series of questions and
+configure LinkController.  This will ask you a series of questions and
 then generate a configuration in your home directory.
 
    The configuration that is controlled by this program is related to
@@ -230,6 +247,12 @@ Link Control Configuration Variables
      infostructures are should be put *Note Infostructure
      Configuration::.  Defaults to `$::base_dir/infostrucs'.
 
+`$::link_stat_log'
+     This variable is the name of a file where important link status
+     changes will be logged.  The current definition is links which
+     have just been discovered to be broken.  This can be used in email
+     notification.  *Note Email Reporting::.
+
 
 File: link-controller.info,  Node: Infostructure Configuration,  Prev: Link Variables,  Up: Configuration
 
@@ -247,18 +270,170 @@ configuration directives separated by spaces.  For example
      www http://example.com/strange_database
 
    The first directive describes how `extract-links' program should
-extract the links.  It currently has two possible values.  The value
+extract the links.  It currently has three possible values.  The value
 `www' means to actually use the given URL to download the web pages.
 The value `directory' means that `extract-links' should assume that all
 of the files are stored in a directory and that the directory structure
-matches the structure of the infostructure.
+matches the structure of the infostructure.  The final value "advanced"
 
    In the case where we use the `directory' directive, a third
 directive is present on each line with the full path to the base
 directory of the infostructure.
 
+   More advanced configuration is possible by defining the information
+directly in perl.
+
 
-File: link-controller.info,  Node: Configuring CGI Programs,  Next: Extracting Links,  Prev: Configuration,  Up: Top
+File: link-controller.info,  Node: Advanced Configuration,  Next: Configuring CGI Programs,  Prev: Configuration,  Up: Top
+
+Advanced Configuration
+**********************
+
+   There are various advanced ways to configure LinkController.  These
+are mostly not needed for simple checking of a small collection of web
+pages.  For larger sites and special situations however, they may well
+make life much easier.
+
+* Menu:
+
+* Advanced Infostructure Configuration::
+* Authorisation Configuration::
+
+
+File: link-controller.info,  Node: Advanced Infostructure Configuration,  Next: Authorisation Configuration,  Prev: Advanced Configuration,  Up: Advanced Configuration
+
+Advanced Infostructure Configuration
+====================================
+
+   Using more advanced configuration it is possible to skip over certain
+resources when we are doing link extraction and to ignore some of the
+links.  You may want to skip over this section initially and come back
+to it only when you find that there are links or pages being checked
+that you would rather avoid.
+
+   For this section, we assume that you already know how to make basic
+perl code.  If not, then please read through the perl manual pages
+`perl', `perlsyn' and `perldata'.  You may find that the examples given
+below are sufficient to get you started.
+
+   In order to get `extract-links' to extract links using an advanced
+infostructure, you must use the `advanced' keyword. In the
+infostructure file.  Infostructures not listed there will be ignored,
+but won't cause any harm.
+
+   Advanced configuration is in the `.link-controller.pl' configuration
+file by making definitions into the `%::infostrucs' hash.  These look
+like the following
+
+     $::infostrucs{http://www.mypages.org/} = {
+        mode => "directory";
+        file_base => "/home/myself/www",
+        prune_re => "^(/home/myself/www/statistics)" #ignore referals
+                   . "|(cgi-bin)", #do cgis separately
+        exclude_re => "\.secret$", #secrets shouldn't get into link database
+     };
+     
+     $::infostrucs{http://www.mypages.org/cgi-bin/} = {
+        mode => "www";
+        exclude_re => "query", #query space is infinite!!
+     };
+
+   There are a number of keywords that can be used.
+
+`mode'
+     This decides how to download the links.  Either `www' or
+     `directory'.
+
+`file_base'
+     If defined, this defines the directory which matches the URL where
+     the infostructure is based.  This must be defined if the mode is
+     set to directory.
+
+`resource_include_re'
+     If defined, this regular expression must be matched by the _URL_
+     for every resource before links will be extracted from it.
+
+`resource_exclude_re'
+     If defined, this regular expression must _not_ be matched by the
+     _URL_ for every resource before links will be extracted from it.
+
+`link_include_re'
+     If defined, this regular expression must be matched by every _URL_
+     found before it will be extracted and saved.
+
+`link_exclude_re'
+     If defined, this regular expression must _not_ be matched by every
+     _URL_ found before it will be extracted and saved.
+
+`prune_re'
+     Used only in directory mode, this will completely exclude all
+     files and subdirectories of directories matched by the regular
+     expression.
+
+   N.B. the exclude and include regular expression can be used together.
+For a match, the include regular expression must match and the exclude
+must not match.  In other words excludes override includes.
+
+   In order for the infostructure to be used by `extract-links' an
+entry must still be made in the `infostrucs' file.  For this use the
+`advanced' keyword.  The second argument is a URL used to look up the
+definition in the $::infostrucs hash.
+
+     advanced   http://www.mypages.org/
+     advanced   http://www.mypages.org/cgi-bin/
+
+   The url used here must match _exactly_ the one used in the hash.  It
+is important to note that `directory' and `www' definitions in the
+`infostrucs' file will override any advanced configuration given.
+
+
+File: link-controller.info,  Node: Authorisation Configuration,  Prev: Advanced Infostructure Configuration,  Up: Advanced Configuration
+
+Authorisation Configuration
+===========================
+
+   One problem when checking links, especially within an intranet
+situation is that some pages can be protected with basic
+authentication.  In order to extract links from those pages or to
+simply know that they are there, we have to get through that
+authentication.  By using the advanced Authorisation Configuration we
+can give LinkController authority to access these pages and allow link
+checking to work as normal.
+
+     _Using this method to allow LinkController to work in an
+     environment with authentication is inherently a security issue since
+     authentication tokens must be stored, effectively in plaintext, in
+     files.  This risk may, however, not be much higher than the one that you
+     currently accept, so this can be useful_
+
+   We can store the authentication tokens simply in the %::credentials
+hash which we can create in the `.link-controller.pl' configuration
+file.  The keys in the hash are the exact realm string which will be
+sent by the web server.  Each value of this hash is a hash with a pair
+of keys.  The `credentials' key should be associated to the
+authentication token.  The `uri_re' key should be a regular expression
+which matches the web pages you want to visit.  For security reasons it
+shouldn't match any others.
+
+     $::credentials = {
+       my_realm => { uri_re => "https://myhost.example.com",
+                     credential => "my_secret" }
+     } );
+
+   As a minor sanity check, every `uri_re' will be tested against the
+strings `http://3133t3hax0rs.rhere.com' and
+`http://3133t3hax0rs.rhere.com/secretstuff/www.goodplace.com/'.  If
+they match then those credentials will be disallowed.  The owners of
+`3133t3hax0rs.rhere.com' will just have to hack the code..
+
+   For more discussion about the security risks and how to mitigate them
+see the file `authorisation.pod' included with the LinkController
+distribution.  If you didn't understand the security risk from the above
+description then probably you should consider avoiding using this
+mechanism.
+
+
+File: link-controller.info,  Node: Configuring CGI Programs,  Next: Extracting Links,  Prev: Advanced Configuration,  Up: Top
 
 Configuring CGI Programs
 ************************
@@ -420,6 +595,43 @@ other program which is part of LinkController) using
 links you may want to use the emacs interface (*note The Emacs
 Interface: Emacs.).
 
+* Menu:
+
+* Email Reporting::
+
+
+File: link-controller.info,  Node: Email Reporting,  Prev: Reporting,  Up: Reporting
+
+Email Reporting of Newly Broken Links
+=====================================
+
+   It's possible to arrange automatic reporting by email of links which
+have become newly broken.  This is done by getting `test-link' to make
+a list of links that become broken using the $::link_stat_log variable
+(*note Link Variables::) and calling `link-report' to report on those
+links.
+
+   Typically, you may don't want to have a report every time that
+`test-link' runs, but probably once a day instead.  In this case, run a
+script like the following from your crontab.
+
+     #!/bin/sh
+     STAT_LOG=$HOME/link-data/stat-log
+     WORK=$STAT_LOG.work
+     EMAIL=me@example.com
+     mv $STAT_LOG  $WORK
+     if [ -s $WORK ]
+     then
+        link-report --broken --url-file=$STAT_LOG --infostructure |
+           mail -s "link-report for `date`" $EMAIL
+     fi
+
+   Every time that this script is run, it will rename the status change
+logfile and then mail a report with all of the new broken links to the
+specified email address.
+
+   In future this feature may be folded into `link-report' directly.
+
 
 File: link-controller.info,  Node: Files,  Next: Repair,  Prev: Reporting,  Up: Top
 
@@ -461,7 +673,7 @@ Climbing pages when they moved some while ago and
    Will change them to the very latest location.
 
    At present, there's no facility for automatically updating the
-databases when you do this.  Instead, you have to run extract-links
+databases when you do this.  Instead, you have to run `extract-links'
 regularly so that new links are noticed.  Maybe a later version of
 LinkController will change this.
 
@@ -632,7 +844,7 @@ the `lnkusr' group.
    The command `default-install' can be used to manipulate which users
 are in the group e.g. `default-install -user username' or
 `default-install -group groupname' in which case the specified users
-will become a member of the lcntusr group.   *** see ***
+will become a member of the lcntusr group.
 
    Another form of user administration is limitation on which users have
 access to the database.  This can be done with normal file permissions.
@@ -656,7 +868,7 @@ will be used.
 
    * build a schedule for testing the links with `build-schedule'
 
-   * test the links with `daily-test-link'
+   * test the links with `test-link'
 
    The other thing which is done is to remove old links from the
 database.  This only needs to be done weekly.
@@ -694,9 +906,9 @@ worth seeing the Robots World Wide Web page.
 
    There are a number of points which make LinkController relatively
 safe as a link.  These are all related to the design and limitations on
-daily-test-link.
+`test-link'.
 
-   * Daily test link does _not_ recurse.  It only tests links that are
+   * `test-link' does _not_ recurse.  It only tests links that are
      specifically listed in the schedule database.
 
    * There is a limit to the number of links that will be tested in one
@@ -710,14 +922,15 @@ daily-test-link.
 
    The last limitation is inherited from the `LWP::RobotUA' module and
 the documentation for that covers the details of how it works.
-LinkController trys to re-order testing of links so that this does not
-cause a limit on overall testing speed.
+`test-link' trys to re-order testing of links as needed so that a limit
+on the rate of visits to one site does not cause a limit on overall
+testing speed.
 
 
 File: link-controller.info,  Node: Bugs,  Next: Acknowledgements,  Prev: Robots,  Up: Top
 
-Bugs and bug reporting, Acknowledgements , Robots, Top
-******************************************************
+Bugs and bug reporting
+**********************
 
    This version of LinkController is still in early development.  There
 are many changes to come.  Undoubtedly there are many bugs in the
@@ -725,7 +938,7 @@ software already and will soon be more.
 
    A bug is when
 
-   * the software doen't do something the documentation says it should
+   * the software doesn't do something the documentation says it should
 
    * the software does something the documentation says it shouldn't
 
@@ -761,13 +974,15 @@ find the original file and see your changes.  However it's also
 important to explain them because I won't be able to use them unless I
 (relatively stupid computer type) understand them.
 
-   Send bug reports and patches to
+   Send bug reports to the address you get by changing words into
+punctuation in the following.
 
-     link-controller@tardis.ed.ac.uk
+     link minus controller at scotclimb dot org dot uk
 
    This mailing address is sent only to me right now, but may become a
 list in future.  Use my (Michael De La Rue) personal address to contact
 me please.  N.B. I am *extremely* inefficient about answering email.
+Don't worry if you don't get a reply.
 
 
 File: link-controller.info,  Node: Acknowledgements,  Next: Invoking the Programs,  Prev: Bugs,  Up: Top
@@ -778,6 +993,16 @@ Acknowledgements
    Although I wrote this system by myself, this would not have been
 nearly as easy and almost certainly wouldn't have been finished without
 the help of the following people and organisations.
+
+* Menu:
+
+* Esoterica Internet Portugal::
+* IPPT PAN Poland::
+* The Tardis Project::
+* Other Free Software Authors::
+
+
+File: link-controller.info,  Node: Esoterica Internet Portugal,  Next: IPPT PAN Poland,  Prev: Acknowledgements,  Up: Acknowledgements
 
 Esoterica Internet Portugal
 ===========================
@@ -800,6 +1025,14 @@ Martim de Magalhaes Pereira and Mr Mendes.  See them all on
 
    These pages are in Portugese(1) of course.
 
+   ---------- Footnotes ----------
+
+   (1) Whilst the above names are mangled here.  See the correct
+versions in the original texinfo or on the Web pages.
+
+
+File: link-controller.info,  Node: IPPT PAN Poland,  Next: The Tardis Project,  Prev: Esoterica Internet Portugal,  Up: Acknowledgements
+
 IPPT PAN Poland
 ===============
 
@@ -808,6 +1041,9 @@ Poland and in particular Piotr Pogorzelski who allowed me use of
 facilities for testing this software, provided a willing victim for
 having his web pages tested and made a number of suggestions which have
 been incorporated into the software.
+
+
+File: link-controller.info,  Node: The Tardis Project,  Next: Other Free Software Authors,  Prev: IPPT PAN Poland,  Up: Acknowledgements
 
 The Tardis Project
 ==================
@@ -821,6 +1057,9 @@ work on fully internet connected Unix and Linux hosts.
 easier for me to develop software like this.  In particular, the large
 amount of disk space the administrators have allow me to use is very
 useful.
+
+
+File: link-controller.info,  Node: Other Free Software Authors,  Prev: The Tardis Project,  Up: Acknowledgements
 
 Other Free Software Authors
 ===========================
@@ -842,11 +1081,6 @@ easier to maintain.
    The Free Software Foundation web pages are at
 
    <http://www.gnu.ai.mit.edu/>
-
-   ---------- Footnotes ----------
-
-   (1) Whilst the above names are mangled here.  See the correct
-versions in the original texinfo or on the Web pages.
 
 
 File: link-controller.info,  Node: Invoking the Programs,  Next: Related Packages,  Prev: Acknowledgements,  Up: Top
@@ -994,22 +1228,6 @@ Infostructure
 
    An infostructure is a concept which was introduced in Link Checking
 in the MOMspider package.  It is a collection of related resources.
-LinkController does not yet provide full support for this.  Probably
-this will be provided in the next version if philosophical issues can be
-dealt with to my satisfaction.
-
-   An infostructure will have the following features.
-
-   * a rule which decides whether a given URL points to a resource which
-     is a member of the infostructure
-
-   * a method of enumerating it and finding all of the pages contained
-     in it.
-
-   * a pair of cdb database files relating links to resources and vice
-     versa.
-
-   * a function for editing resources to change the URLs in them.
 
 
 File: link-controller.info,  Node: Link,  Prev: Infostructure,  Up: Terms
@@ -1060,7 +1278,8 @@ this file.
 * fix-link:                              Repair.
 * fix-link.cgi:                          CGI.
 * link-report:                           Reporting.
-* link-report-dired:                     link-report-dired.
+* link-report-dired <1>:                 link-report-dired.
+* link-report-dired:                     Email Reporting.
 * link-report.cgi:                       CGI.
 * suggest:                               Suggestions.
 * test-link, using:                      Testing.
@@ -1075,9 +1294,13 @@ Concept Index
 
 * acknowledgements:                      Acknowledgements.
 * authentication:                        CGI.
+* authentication, basic:                 Authorisation Configuration.
+* authorisation:                         Authorisation Configuration.
 * bandwidth:                             Robots.
+* basic authentication:                  Authorisation Configuration.
 * broken links, finding:                 Reporting.
-* broken links, finding in emacs:        link-report-dired.
+* broken links, finding in emacs <1>:    link-report-dired.
+* broken links, finding in emacs:        Email Reporting.
 * CGI interface:                         CGI.
 * cgi, configuration:                    Configuring CGI Programs.
 * checking individual pages:             Files.
@@ -1090,21 +1313,27 @@ Concept Index
 * emacs interface:                       Emacs.
 * extracting links:                      Extracting Links.
 * file, individual, checking:            Files.
+* filtering links:                       Advanced Infostructure Configuration.
 * HTML pages, groups of:                 Infostructure.
 * infostructure:                         Infostructure.
+* infostructure, configuration:          Advanced Infostructure Configuration.
 * interface, CGI:                        CGI.
 * interface, emacs:                      Emacs.
 * link index, creating:                  Extracting Links.
 * links, examining:                      Reporting.
-* links, examining, in emacs:            link-report-dired.
+* links, examining, in emacs <1>:        link-report-dired.
+* links, examining, in emacs:            Email Reporting.
 * links, extracting:                     Extracting Links.
 * links, repairing:                      Repair.
 * page index, creating:                  Extracting Links.
 * page, checking:                        Files.
+* regular expression, exclude:           Advanced Infostructure Configuration.
+* regular expression, include:           Advanced Infostructure Configuration.
 * repairing links:                       Repair.
 * reports:                               Reporting.
 * resource:                              Resource.
 * robots:                                Robots.
+* security:                              Authorisation Configuration.
 * setting variables <1>:                 Setting Configuration Variables.
 * setting variables:                     Automatic Configuration.
 * suggestions:                           Suggestions.
@@ -1118,45 +1347,53 @@ Concept Index
 
 Tag Table:
 Node: Top350
-Node: Introduction2833
-Ref: Introduction-Footnote-13945
-Node: Getting Started4054
-Node: Configuration5439
-Node: Automatic Configuration5758
-Node: Setting Configuration Variables6309
-Node: Link Variables7041
-Node: Infostructure Configuration9073
-Node: Configuring CGI Programs10224
-Node: Extracting Links10724
-Ref: Extracting Links-Footnote-112228
-Node: Testing12585
-Node: Reporting14383
-Node: Files16793
-Node: Repair17387
-Node: Suggestions18442
-Node: CGI19374
-Node: Emacs20045
-Node: link-report-dired20583
-Node: check-page in Emacs21167
-Node: Setting up LinkController21863
-Node: Administration22568
-Node: Default Installation22878
-Node: User Administration23736
-Node: Cron Scripts24906
-Node: Robots25670
-Node: Bugs27655
-Node: Acknowledgements30052
-Ref: Acknowledgements-Footnote-133061
-Node: Invoking the Programs33181
-Node: Related Packages35375
-Node: cdb35725
-Node: Tie-Transact-Hash36354
-Node: Terms36944
-Node: Resource37329
-Node: URLs37787
-Node: Infostructure38329
-Node: Link39163
-Node: Names Index39928
-Node: Concept Index41261
+Node: Introduction3125
+Ref: Introduction-Footnote-14237
+Node: Getting Started4346
+Node: Configuration5731
+Node: Automatic Configuration6048
+Node: Setting Configuration Variables6599
+Node: Link Variables7331
+Node: Infostructure Configuration9637
+Node: Advanced Configuration10908
+Node: Advanced Infostructure Configuration11401
+Node: Authorisation Configuration14916
+Node: Configuring CGI Programs17123
+Node: Extracting Links17632
+Ref: Extracting Links-Footnote-119136
+Node: Testing19493
+Node: Reporting21291
+Node: Email Reporting23731
+Node: Files24900
+Node: Repair25494
+Node: Suggestions26551
+Node: CGI27483
+Node: Emacs28154
+Node: link-report-dired28692
+Node: check-page in Emacs29276
+Node: Setting up LinkController29972
+Node: Administration30677
+Node: Default Installation30987
+Node: User Administration31845
+Node: Cron Scripts33001
+Node: Robots33759
+Node: Bugs35780
+Node: Acknowledgements38231
+Node: Esoterica Internet Portugal38684
+Ref: Esoterica Internet Portugal-Footnote-139736
+Node: IPPT PAN Poland39856
+Node: The Tardis Project40340
+Node: Other Free Software Authors41003
+Node: Invoking the Programs42011
+Node: Related Packages44205
+Node: cdb44555
+Node: Tie-Transact-Hash45184
+Node: Terms45774
+Node: Resource46159
+Node: URLs46617
+Node: Infostructure47159
+Node: Link47418
+Node: Names Index48183
+Node: Concept Index49574
 
 End Tag Table

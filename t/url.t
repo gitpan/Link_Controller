@@ -6,13 +6,16 @@ test our url verification functions
 
 $::verbose=0;
 
-BEGIN {print "1..16\n"; }
+BEGIN {print "1..18\n"; }
 END {print "not ok 1\n" unless $loaded;}
 
 sub nogo {print "not "; }
 sub ok {my $t=shift; print "ok $t\n";}
 
 use WWW::Link_Controller::URL;
+
+$WWW::Link_Controller::URL::no_warn=1;;
+
 $loaded = 1;
 ok(1);
 nogo if WWW::Link_Controller::URL::verify_url
@@ -60,11 +63,20 @@ nogo unless WWW::Link_Controller::URL::verify_url
   ('telnet://melvyl.ucop.edu/');
 ok(14);
 
-nogo unless WWW::Link_Controller::URL::link_url
+nogo unless WWW::Link_Controller::URL::fixup_link_url
   ('http://scotclimb.org.uk', 'http://example.com')
   eq 'http://scotclimb.org.uk';
 ok(15);
-nogo unless WWW::Link_Controller::URL::link_url
+nogo unless WWW::Link_Controller::URL::fixup_link_url
   ('fred.html', 'http://example.com')
   eq 'http://example.com/fred.html';
 ok(16);
+
+
+nogo unless WWW::Link_Controller::URL::untaint_url
+  ('http://example.com') eq 'http://example.com';
+ok(17);
+nogo if WWW::Link_Controller::URL::untaint_url
+  ('bad
+url');
+ok(18);

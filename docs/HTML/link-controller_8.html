@@ -1,0 +1,173 @@
+<HTML>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- Created on December, 30  2001 by texi2html 1.64 -->
+<!-- 
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Olaf Bachmann <obachman@mathematik.uni-kl.de>
+Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
+ 
+-->
+<HEAD>
+<TITLE>Using LinkController: Reporting</TITLE>
+
+<META NAME="description" CONTENT="Using LinkController: Reporting">
+<META NAME="keywords" CONTENT="Using LinkController: Reporting">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META NAME="Generator" CONTENT="texi2html 1.64">
+
+</HEAD>
+
+<BODY LANG="" BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+
+<A NAME="SEC14"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_7.html#SEC13"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC15"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_7.html#SEC13"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC16"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H1> 7. Reporting Problems </H1>
+<!--docid::SEC14::-->
+<P>
+
+The easiest way to find out which links are broken is to use the command
+line interface.  The simplest report you can generate is just a list of
+all the known broken links.  Do this like so:
+</P><P>
+
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>link-report
+</pre></td></tr></table></P><P>
+
+On the system I'm testing on right now, this gives:
+</P><P>
+
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/cgi
+        http://www.ippt.gov.pl/docs-1.4/cgi/examples.html
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
+ent/httpd_1.4_irix5.2.Z
+        http://www.ippt.gov.pl/docs-1.4/setup/PreExec.html
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
+ent/httpd_1.4_linux.Z
+        http://www.ippt.gov.pl/docs-1.4/setup/PreExec.html
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
+ent/httpd_1.4_osf3.0.Z
+        http://www.ippt.gov.pl/docs-1.4/setup/PreExec.html
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
+ent/httpd_1.4_solaris2.4.Z
+        http://www.ippt.gov.pl/docs-1.4/setup/PreExec.html
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
+ent/httpd_1.4_solaris2.4.tar.Z
+        http://www.ippt.gov.pl/docs-1.4/setup/PreCompiled.html
+Sorry, couldn't find info for url file://ftp.ncsa.uiuc.edu/Web/httpd/U
+nix/ncsa_httpd/current/httpd_1.4_source.tar.Z
+please remember to check you have put it in full format
+broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/docu
+ments/usage.ps
+        http://www.ippt.gov.pl/docs-1.4/postscript-docs/Overview.html
+..etc...
+</pre></td></tr></table></P><P>
+
+Which just tells you which links are broken.  (In this chapter examples
+are folded at the 70th row, so that they fit well on narrow screens and
+in TeX.  I wanted to use real text rather than making something up.)
+</P><P>
+
+We also know which page they are broken on and can go and look at that
+on the World Wide Web or directly as a file on the server.
+</P><P>
+
+You can get a complete list of options for <CODE>link-report</CODE> (or
+any other program which is part of LinkController) using
+</P><P>
+
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>link-report -h
+</pre></td></tr></table></P><P>
+
+For more advanced reporting and editing of documents with broken links
+you may want to use the emacs interface (see section <A HREF="link-controller_13.html#SEC20">The Emacs Interface</A>).
+</P><P>
+
+<BLOCKQUOTE><TABLE BORDER=0 CELLSPACING=0> 
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_8.html#SEC15">7.1 Email Reporting of Newly Broken Links</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+</TABLE></BLOCKQUOTE>
+<P>
+
+<A NAME="Email Reporting"></A>
+<HR SIZE="6">
+<A NAME="SEC15"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC14"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC16"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC14"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC14"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC16"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 7.1 Email Reporting of Newly Broken Links </H2>
+<!--docid::SEC15::-->
+<P>
+
+It's possible to arrange automatic reporting by email of links which
+have become newly broken.  This is done by getting <CODE>test-link</CODE>
+to make a list of links that become broken using the $::link_stat_log
+variable (see section <A HREF="link-controller_3.html#SEC6">2.3 Link Control Configuration Variables</A>) and calling <CODE>link-report</CODE> to
+report on those links.
+</P><P>
+
+Typically, you may don't want to have a report every time that
+<CODE>test-link</CODE> runs, but probably once a day instead.  In this
+case, run a script like the following from your crontab.
+</P><P>
+
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>#!/bin/sh
+STAT_LOG=$HOME/link-data/stat-log
+WORK=$STAT_LOG.work
+EMAIL=me@example.com
+mv $STAT_LOG  $WORK
+if [ -s $WORK ]
+then
+   link-report --broken --url-file=$STAT_LOG --infostructure | 
+      mail -s "link-report for `date`" $EMAIL
+fi
+</pre></td></tr></table></P><P>
+
+Every time that this script is run, it will rename the status change
+logfile and then mail a report with all of the new broken links
+to the specified email address.  
+</P><P>
+
+In future this feature may be folded into <CODE>link-report</CODE>
+directly.
+</P><P>
+
+<A NAME="Files"></A>
+<HR SIZE="6">
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC14"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC16"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<BR>  
+<FONT SIZE="-1">
+This document was generated
+by <I>Michael De La Rue</I> on <I>December, 30  2001</I>
+using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
+"><I>texi2html</I></A>
+
+</BODY>
+</HTML>

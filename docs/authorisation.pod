@@ -67,9 +67,9 @@ transaction and record the token for later use.
 The protection against this is to switch over to only using secure
 tokens and hard wire the protocol name into the URI regular expression.
 
-=head1 TOKEN STORAGE
+=head1 "ENCRYPTED" TOKEN STORAGE
 
-Each authentication token (password) is stored in a file with a URI
+
 Regexp and a Relm token, separated by whitespace.
 
   # comment

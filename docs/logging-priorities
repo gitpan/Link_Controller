@@ -1,0 +1,54 @@
+facility
+
+	queue debugging
+	email report
+	scheduling
+
+priority
+
+	DEBUG
+	detailed debugging
+		(full queue details etc)
+	normal debugging
+		(new entry to queue / dispatched links)
+	INFO
+	trace
+		link checked
+	interesting
+		robots refused
+	NOTICE
+	notice
+		empty schedule
+	WARNING
+	warning
+		scheduled link not in database
+	ERR
+		improperly formatted database
+	CRIT
+		
+
+
+DEBUGGING
+
+information that is only useful on occasion for investigating details
+of the actions of a program.
+
+TRACE
+
+information which lets us know the actions the program is taking
+
+SUMMARY
+
+information which lets us know tht the program run and how it thought
+that it did.
+
+SITUATION WARNINGS
+
+information that something isn't normal, but which could be normal
+(e.g, a program has no data to operate on)
+
+WARNINGS
+
+information that tells us that the program had a real problem
+(e.g. couldn't open a file that should be opened)
+

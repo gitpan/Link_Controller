@@ -1,0 +1,110 @@
+<HTML>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- Created on December, 30  2001 by texi2html 1.64 -->
+<!-- 
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Olaf Bachmann <obachman@mathematik.uni-kl.de>
+Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
+ 
+-->
+<HEAD>
+<TITLE>Using LinkController: Testing</TITLE>
+
+<META NAME="description" CONTENT="Using LinkController: Testing">
+<META NAME="keywords" CONTENT="Using LinkController: Testing">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META NAME="Generator" CONTENT="texi2html 1.64">
+
+</HEAD>
+
+<BODY LANG="" BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+
+<A NAME="SEC13"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_6.html#SEC12"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC14"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_6.html#SEC12"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC14"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H1> 6. Testing Links </H1>
+<!--docid::SEC13::-->
+<P>
+
+If you are using someone else's link information then you may be able to
+skip this part and go straight on to the next one on generating reports.
+</P><P>
+
+Testing links takes a long time.  To begin to detect broken ones will
+take about ten days.  This is a deliberate feature of LinkController.
+It is designed this way firstly to give people at the other end of links
+a chance to repair their resources and secondly to reduce the amount of
+network bandwidth LinkController uses at a given time and so its impact
+on other people's internet usage.
+</P><P>
+
+<A NAME="IDX23"></A>
+The key program which you want to use is <CODE>test-link</CODE>.  I run
+this from a shell script which directs its output to a log file
+</P><P>
+
+<STRONG>FIXME</STRONG> actually I now just use a cron job.
+</P><P>
+
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>#!/bin/sh
+#this is just a little sample script of how I run the program.
+
+LOGDIR=$HOME/log
+test-link &#62;&#62; \
+        $LOGDIR/runlog-`/bin/date +%Y-%m-%d`.log 2&#62;&#38;1 
+#assumes the use of a gnu style date command which can print 
+#out full dates.
+</pre></td></tr></table></P><P>
+
+And I run this shell script from my <TT>`crontab'</TT> with a command like
+this
+</P><P>
+
+<A NAME="IDX24"></A>
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>42 02 * * *     /..directories./run-daily-test.sh
+</pre></td></tr></table></P><P>
+
+The string <CODE>/..directories./</CODE> should be replaced with the directory
+where you have the script.  Remember to make the script executable.  
+</P><P>
+
+This will now run until completion each night.   However, you should
+make sure that it does actually finish.  If you have too many links to
+check in the given time, then you can end up with a backlog and the
+system will take a long time to stop.  To avoid this, either make
+testing less frequent or make checking run faster.  This will have to be
+done by editing the program itself at present.
+</P><P>
+
+<A NAME="Reporting"></A>
+<HR SIZE="6">
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_6.html#SEC12"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC14"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<BR>  
+<FONT SIZE="-1">
+This document was generated
+by <I>Michael De La Rue</I> on <I>December, 30  2001</I>
+using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
+"><I>texi2html</I></A>
+
+</BODY>
+</HTML>

@@ -78,8 +78,6 @@ BEGIN {
   delete @ENV{qw(HOME IFS CDPATH ENV BASH_ENV)};   # Make %ENV safer
 }
 
-$::verbose=0;
-
 use Cwd;
 use strict;
 use vars qw($linkdbm $fixed_config);
@@ -96,12 +94,15 @@ use WWW::Link;
 use WWW::Link::Reporter::RepairForm;
 use WWW::Link::Reporter::HTML;
 use WWW::Link::Selector;
-use CDB_File::BiIndex;
+use CDB_File::BiIndex 0.026;
 
+$::verbose=0 unless defined $::verbose;
+$WWW::Link::Selector::verbose = 0xFF if $::verbose;
 
 #if the config files are to be previously overridden then this must
 #have already been "used"
-use WWW::Link_Controller::ReadConf;
+#   Read this yourself..
+#use WWW::Link_Controller::ReadConf;
 
 #FIXME
 #Configuration - here we bypass tainting
@@ -110,11 +111,12 @@ use WWW::Link_Controller::ReadConf;
 # the user's hardwired script..
 
 BEGIN {
+  print STDERR "links before $::links\n" if $::verbose;
   $DB::single = 1;
   my $icwd=cwd();
-  print STDERR "icwd: $icwd\n";
+  print STDERR "icwd: $icwd\n" if $::verbose;
   (my $cwd) = ($icwd =~ m/(.*)/) ; #force launder
-  print STDERR "cwd: $cwd\n";
+  print STDERR "cwd: $cwd\n" if $::verbose;
   if ((! $fixed_config) && -r ".cgi-infostruc.pl") {
     my $file=$cwd . "/.cgi-infostruc.pl";
     defined (do $file) || do {
@@ -122,8 +124,10 @@ BEGIN {
       die "couldn't open $file: $!"
     }
   } else {
-    warn "using default configuration";
+    warn "using default configuration" if $::verbose;
   }
+
+  print STDERR "links after $::links\n" if $::verbose;
 };
 
 
@@ -144,8 +148,13 @@ $::req = new CGI::Request;
 
 die 'you must define the $::links configuration variable'
     unless $::links;
+
+print STDERR "Opening link database $::links\n"
+  if $::verbose & 16;
+
 $::linkdbm = tie %::links, "MLDBM", $::links, O_RDONLY, 0666, $::DB_HASH
   or die "opening link file $::links: $!";
+
 
 $::index = undef;
 
@@ -163,12 +172,12 @@ if ($::urls = $::req->param("urllist") ) {
 } else {
 
   if ( $::req->param('infostructure') ) {
-    print STDERR "dealing with infostructure\n"#
-      if $::verbose & 16;
     die 'you must define the $::link_index configuration variable'
       unless $::link_index;
     die 'you must define the $::page_index configuration variable'
       unless $::link_index;
+    print STDERR "dealing with infostructure: $::page_index, $::link_index\n"
+      if $::verbose & 16;
     $::index = new CDB_File::BiIndex $::page_index, $::link_index;
     #FIXME... we should check if we have a known user or something.
     if ( $::req->param('repair') ) {

@@ -75,45 +75,6 @@ The suggested time is created by the link (see WWW::Link) for details.
 We then check that it's at least a certain amount (hard wired to be
 one day at present) into the future.
 
-=head1 LOCKING
-
-test-link uses a very simple application level lock to protect the
-links database.  If you bypass this locking it could corrupt the
-database.  Only other runs of test-link will follow this locking.
-
-During a run you can run link-report, but there is in principle no
-guarantee that it works properly at all.  However it shouldn't
-normally do any damage since it has read only access to the database.
-
-Note that the lock is done on the links database filename.
-
-Other programs such as build-schedule and link creation programs should not 
-
-=head1 BUGS
-
-The locking used in the current design could be considered a bug..
-
-There should be a mechanism for detecting that the computer is not
-connected to the network at all and aborting the run completely.  This
-would avoid false positive broken links.
-
-There is a problem with redirects.  The second request has to wait for
-the robot rules to permit it after the first.  We should allow a
-number of levels of redirects without waiting...  Maybe this is fixed
-best with a parallel agent.
-
-=head1 SEE ALSO
-
-L<verify-link-control(1)>; L<extract-links(1)>; L<build-schedule>
-L<link-report(1)>; L<fix-link(1)>; L<link-report.cgi(1)>; L<fix-link.cgi>
-L<suggest(1)>; L<link-report.cgi(1)>; L<configure-link-control>
-
-The LinkController manual in the distribution in HTML, info, or
-postscript formats, included in the distribution.
-
-http://scotclimb.org.uk/software/linkcont - the
-LinkController homepage.
-
 =cut
 
 use strict;
@@ -144,6 +105,8 @@ use WWW::Link_Controller::ReadConf;
 use Getopt::Function qw(maketrue makevalue);
 
 use WWW::Link_Controller::Version;
+
+sub status_change ($);
 
 #signal handling
 
@@ -208,6 +171,7 @@ $::opthandler = new Getopt::Function
     "help-opt=s",
     "verbose:i v>verbose",
     "silent quite>silent q>silent",
+    "no-warn",
 #the following info comes from the config file, but overriding it on the 
 #command line would be nice
 #    "link-file=s l>link-file", #do we need this???
@@ -219,13 +183,15 @@ $::opthandler = new Getopt::Function
     "",
     "never-stop",
     "no-robot",  #no short form.. don't want to encourage this much
-    "waitre=s w>waitre",
+    "no-waitre=s w>no-waitre",
     "test-now", #also don't encourage
     "untested", #also don't encourage
     "sequential", 
     "halt-time=i H>halt-time",
     "max-links=i m>max-links",
   ],  {
+       "no-warn" => [ sub { $::no_warn = 1; },
+		      "Avoid issuing warnings about non-fatal problems." ],
        "user-address" => [ \&makevalue,
 			   "Email address for user running link testing.",
 			   "STRING" ],
@@ -237,7 +203,7 @@ $::opthandler = new Getopt::Function
        "no-robot" => [ \&maketrue,
 		       "Don't follow robot rules.  Dangerous!!!" ],
        #FIXME no-wait
-       "waitre" => [ \&makevalue,
+       "no-waitre" => [ \&makevalue,
 		     "Home HOST regex: no robot rules.. (danger?)!!!",
 		     "NETLOC-REGEX" ],
        "test-now" => [ \&maketrue,
@@ -290,9 +256,12 @@ EOF
 sub version() {
   print <<'EOF';
 test-link version
-$Id: test-link.pl,v 1.12 2001/11/22 15:42:52 mikedlr Exp $
+$Id: test-link.pl,v 1.16 2001/12/25 06:28:56 mikedlr Exp $
 EOF
 }
+
+$Schedule::SoftTime::no_warn=1 if $::no_warn;
+$WWW::Link_Controller::Lock::silent=1 if $::silent;
 
 LWP::Debug::level("+trace") if $::verbose;
 LWP::Debug::level("+debug") if $::verbose & 1024;
@@ -305,7 +274,7 @@ die "don't accept arguments, giving up\n" if @ARGV;
 die 'you must define the $::links configuration variable'
     unless $::links;
 
-print STDERR "locking and creating link file $::links\n";
+print STDERR "locking link database file $::links\n" unless $::silent;
 
 WWW::Link_Controller::Lock::lock($::links);
 $::linkdbm = tie %::links, "MLDBM", $::links, O_RDWR, 0666, $DB_HASH
@@ -325,20 +294,22 @@ die "there is no schedule file $::schedule" unless -e $::schedule;
 #existing one.  At time of writing Schedule.pm doesn't support that.
 $::sched=new Schedule::SoftTime $::schedule;
 
-print STDERR "test-link begins @ time:$::start_time\n";
+print STDERR "test-link begins @ time:$::start_time testing with " unless $::silent;
 
 my $ua;
 if ($::robot) {
-  print STDERR "generating a robot ua\n";
+  print STDERR "a robot ua\n" unless $::silent;
   my $rules = new WWW::RobotRules::AnyDBM_File 'my-robot/1.0', '.robot.cache';
   $ua = new LWP::NoStopRobot 'LinkController/'
     . $WWW::Link_Controller::Version::VERSION, $::user_address;
   $ua->delay(1);
-  print STDERR "Waitre is $::waitre\n";
-  $ua->no_wait($::waitre) unless $::waitre eq "" ;
+  unless ($::waitre eq "") {
+    print STDERR "Waitre is $::waitre\n";
+    $ua->no_wait($::waitre);
+  }
 } else {
-  print STDERR "generating a normal ua\n";
-  $ua = new LWP::UserAgent 'LinkControllerTest/'
+  print STDERR "a normal ua\n" unless $::silent;
+  $ua = new LWP::Auth_UA 'LinkControllerTest/'
     . $WWW::Link_Controller::Version::VERSION, $::user_address;
 }
 
@@ -391,32 +362,39 @@ for ( ($link, $check_time)=get_first_link();
   }
 
   #for one link only testing. should do maxlinks.
-  ( $now < $check_time )
-    and print STDERR "testing link $link ". ( $check_time - $now ) .
-      " seconds early\n";
-  ( $now == $check_time )
-    and print STDERR "testing link $link on time\n";
-  ( $now > $check_time )
-    and print STDERR "testing link $link ". ( $now - $check_time ) .
-      " seconds late\n";
-  print STDERR "url is ",$url,"\n";
+  $::verbose and do {
+    print STDERR "testing link $link ";
+    ( $now < $check_time )
+      and print STDERR ( $check_time - $now ) . " seconds early\n";
+    ( $now == $check_time )
+      and print STDERR " on time\n";
+    ( $now > $check_time )
+      and print STDERR ( $now - $check_time ) .	" seconds late\n";
+  };
 
-  $tester->test_link($link) ;
+  print STDERR "url is ",$url,"\n" if $::verbose;
 
-  print STDERR "updating link\n";
+  my $was_broken=$link->is_broken();
+
+  $tester->test_link($link);
+
+  status_change($link) if ($link->is_broken() and not $was_broken);
+
+  print STDERR "updating link\n" if $::verbose;;
   update_link($link);
-  print STDERR "rescheduling $link\n";
+  print STDERR "rescheduling $link\n" if $::verbose;
   $::sched->unschedule($check_time);
   auto_schedule_link($link);
   $no_links_so_far++;
 
   if ($::max_links and $no_links_so_far == $::max_links) {
-    print STDERR "Checked maximum number of links.  Exiting\n";
+    print STDERR "Checked maximum number of links.  Exiting\n"
+      unless $::silent;
     exit 0;
   }
 }
 
-print STDERR "No more links to check.  Exiting\n";
+print STDERR "No more links to check.  Exiting\n" unless $::silent;
 exit 0;
 
 exit;
@@ -467,7 +445,7 @@ sub get_next_link(;$) {
   my $first=shift; #should we load the first link from the queue
   my ($link, $time);
   #loop checks queue is empty and then reads from database to queue if needed
-   CASE:  {
+ CASE:  {
     $::verbose && ($#::link_queue > -1) and do {
       print STDERR "link queue looks as follows\n";
       for (my $index=0; $index <= $#::link_queue; $index++) {
@@ -488,7 +466,7 @@ sub get_next_link(;$) {
       print STDERR "index in queue is $index\n"
 	if $::verbose;
       ($link, $time)=@{$::link_queue[$index]};
-      print STDERR "considering link $link from queue\n";
+      print STDERR "considering link $link from queue\n" if $::verbose;;
       if (skip_for_time($link)) {
 	print STDERR "link $link on queue is still waiting around\n"
 	  if $::verbose;
@@ -542,7 +520,8 @@ sub get_next_link(;$) {
 
     push @::link_queue, [$link, $time];
     print STDERR "added\n" . $#::link_queue . ") Link: " . $link
-	 . " time " . $time . "\n" . " URL: " . $link->url() . "\n";
+	 . " time " . $time . "\n" . " URL: " . $link->url() . "\n"
+	   if $::verbose;
   }
 
   my $ref=shift @::link_queue;
@@ -564,7 +543,7 @@ sub skip_for_time () {
   $url = new URI::URL $link->url;
   #sometimes this accesses the robots.txt so slow and difficult
   check_sigs();
-  print STDERR "about to check for robots access\n";
+  print STDERR "about to check for robots access\n" if $::verbose;
   my $scheme = $url->scheme();
   ($scheme eq "http" or $scheme eq "ftp") or return 0;
   $ua->robot_check($url);
@@ -639,8 +618,9 @@ sub next_link {
 	if $::verbose;
       next;
     };
-    defined $::refresh_time and 
-      $link->last_refresh() < ( $::refresh_time -  $::max_link_age * DAY) and do {
+    defined $::refresh_time and
+      $link->last_refresh() < ( $::refresh_time -  $::max_link_age * DAY)
+	and do {
       print STDERR "deleting old link " . $link->url() . " from database";
       delete $::links{$name};
       next;
@@ -652,7 +632,7 @@ sub next_link {
     #what happens if you remove the cursor item?? oh well
   }
   print STDERR "Next link: " . $link . " URL: " . $link->url() . " for time " .
-    $time . "\n";
+    $time . "\n" if $::verbose;
   return $link, $time;
 }
 
@@ -667,13 +647,13 @@ sub update_link {
   # here be danger.. this could cause multiplication of links in
   # the database if the url function returns variable values..
   # it `shouldn´t´
-  print STDERR "New link is ", $link; print STDERR Dumper ( $link )
-    if $::verbose;
-  print STDERR "Before "; print STDERR Dumper( $::links{$link->url()} ), "\n"
+  print STDERR "New link is " , $link,  Dumper ( $link )
+    if $::verbose & 16;
+  print STDERR "Before " , Dumper( $::links{$link->url()} ), "\n"
     if $::verbose & 256;
   WWW::Link_Controller::Lock::checklock();
   $::links{$link->url()} = $link;
-  print STDERR "After  "; print STDERR Dumper( $::links{$link->url()} ), "\n"
+  print STDERR "After  " , Dumper( $::links{$link->url()} ), "\n"
     if $::verbose & 128;
   #FIXME Fsync???
 }
@@ -697,7 +677,7 @@ sub auto_schedule_link {
   if ( $::sequential ) {
     $sched_time=$::next_sched;
   } else {
-    die "time logic wrong; just tested ($time) but wants tested at $sched_time"
+    warn "time logic wrong; just tested ($time) but wants tested at $sched_time"
       if $sched_time < $time;
     print STDERR "Link wants test between $sched_time and "
 	. ( $sched_time + $vary ) . "\n";
@@ -717,3 +697,60 @@ sub auto_schedule_link {
   }
   $::sched->schedule(int($sched_time) , $link->url() );
 }
+
+=head2 status log handling
+
+During it's operation, test-link can write a log file (to a file given
+in the $::link_stat_log configuration variable).  This can be used to
+alerts to the webmaster about newly broken links.
+
+=cut
+
+sub status_change ($) {
+  my $link=shift;
+  defined $::link_stat_log or return undef;
+  open STAT, ">$::link_stat_log" or die "couldn't open status log";
+  print STAT $link->url();
+  close STAT or die "couldn't open status log";
+}
+
+=head1 LOCKING
+
+test-link uses a very simple application level lock to protect the
+links database.  If you bypass this locking it could corrupt the
+database.  Only other runs of test-link will follow this locking.
+
+During a run you can run link-report, but there is in principle no
+guarantee that it works properly at all.  However it shouldn't
+normally do any damage since it has read only access to the database.
+
+Note that the lock is done on the links database filename.
+
+Other programs such as build-schedule and link creation programs should not 
+
+=head1 BUGS
+
+The locking used in the current design could be considered a bug..
+
+There should be a mechanism for detecting that the computer is not
+connected to the network at all and aborting the run completely.  This
+would avoid false positive broken links.
+
+There is a problem with redirects.  The second request has to wait for
+the robot rules to permit it after the first.  We should allow a
+number of levels of redirects without waiting...  Maybe this is fixed
+best with a parallel agent.
+
+=head1 SEE ALSO
+
+L<verify-link-control(1)>; L<extract-links(1)>; L<build-schedule>
+L<link-report(1)>; L<fix-link(1)>; L<link-report.cgi(1)>; L<fix-link.cgi>
+L<suggest(1)>; L<link-report.cgi(1)>; L<configure-link-control>
+
+The LinkController manual in the distribution in HTML, info, or
+postscript formats, included in the distribution.
+
+http://scotclimb.org.uk/software/linkcont - the
+LinkController homepage.
+
+=cut
