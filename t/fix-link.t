@@ -3,24 +3,7 @@ use warnings;
 
 =head1 DESCRIPTION
 
-Test those bits of the functionality of test-link that can be done
-safely without any network connection or servers..  Unfortunately this
-mostly means behavior where it doesn't do anything.
-
-We mostly don't want to test things which require a working network
-connection (unscalable and unreliable)
-
-We don't want much external configuration because this could cause
-confusion.
-
-We don't want to take too long becuase this should be run by every
-single person trying to install the software.
-
-=head1 TESTS
-
-first we test normal http
-
-then we try to test other protocols
+this tests the fix-link program.
 
 =cut
 
@@ -30,7 +13,7 @@ $ENV{HOME}=cwd() . "/t/homedir";
 $config=$ENV{HOME} . "/.link-control.pl";
 die "LinkController test config file, $config missing." unless -e $config;
 
-BEGIN {print "1..14\n"}
+BEGIN {print "1..20\n"}
 
 @start = qw(perl -Iblib/lib);
 
@@ -40,7 +23,14 @@ $fail=0;
 sub nogo {print "not "; $fail=1;}
 sub ok {my $t=shift; print "ok $t\n"; $fail=0}
 
-$::infos="fixlink-infostruc.test-tmp";
+sub fgrep {
+  ($string, $file)=@_;
+  my $result = not system "grep $string $file > /dev/null";
+  print "grep $string $file > /dev/null gives $result\n" if $verbose;
+  return $result;
+}
+
+$::infos="fixlink-infostruc.test-tmp~";
 
 $fixed='test-data/fixlink-infostruc';
 unlink $::infos;
@@ -52,6 +42,8 @@ close DEFS or die "couldn't close $infos $!";
 
 do "t/config/files.pl" or die "files.pl script not read: " . ($@ ? $@ :$!);
 #die "files.pl script failed $@" if $@;
+
+unlink ($lonp, $phasl, $linkdb);
 
 -e $_ and die "file $_ exists" foreach ($lonp, $phasl, $linkdb);
 
@@ -87,23 +79,65 @@ nogo if system @start, 'blib/script/fix-link',
 
 ok(4);
 
-nogo unless system "grep $starturl $fixfile > /dev/null" ;
+nogo if fgrep ($starturl, $fixfile);
 
 ok(5);
 
-nogo if system "grep $endurl $fixfile > /dev/null" ;
+nogo unless fgrep ($endurl, $fixfile);
+
+ok(6);
+
+#check that fixing of fragments works
+
+$starturl='http://www.liquer.com/orange';
+$endurl='http://www.drinks.com/liquer/orange';
+$fixfile='test-data/fixlink-infostruc/orange.html';
+
+nogo if system @start, 'blib/script/fix-link',
+  "--config-file=$conf", $starturl, $endurl,
+    ($::verbose ? "--verbose" : () );
+
+ok(7);
+
+nogo if fgrep ($starturl, $fixfile);
+
+ok(8);
+
+nogo unless fgrep ($endurl, $fixfile);
+
+ok(9);
+
+#check that fixing towards a fragment works
+
+$starturl='http://www.drinks.com/sweet/orange.html';
+$endurl='http://www.drinks.com/sweet/all-about#orange';
+$fixfile='test-data/fixlink-infostruc/orange.html';
+
+nogo if system @start, 'blib/script/fix-link',
+  "--config-file=$conf", $starturl, $endurl,
+    ($::verbose ? "--verbose" : () );
+
+
+ok(10);
+
+nogo if fgrep ($starturl, $fixfile);
+
+ok(11);
+
+nogo unless fgrep ($endurl, $fixfile);
 
 #testing relative fixing
 
 $base='http://example.com/';
 $startrel='../recipe';
 $endrel='recipe';
+$fixfile='test-data/fixlink-infostruc/banana.html';
 
-ok(6);
+ok(12);
 
-nogo if system "grep $startrel $fixfile > /dev/null" ;
+nogo unless fgrep ($startrel, $fixfile);
 
-ok(7);
+ok(13);
 
 #this should NOT fix the infostructure
 
@@ -112,15 +146,15 @@ nogo if system @start, 'blib/script/fix-link',
     ($::verbose ? "--verbose" : "--no-warn" );
 
 
-ok(8);
+ok(14);
 
-nogo if system "grep $startrel $fixfile > /dev/null" ;
+nogo unless fgrep ($startrel, $fixfile);
 
-ok(9);
+ok(15);
 
-nogo unless system "grep 'HREF=.$endrel.' $fixfile > /dev/null" ;
+nogo if fgrep ("'HREF=.$endrel.'", $fixfile);
 
-ok(10);
+ok(16);
 
 #this should now fix the infostructure doing relative substitution
 
@@ -128,16 +162,15 @@ nogo if system @start, 'blib/script/fix-link', '--relative',
   "--config-file=$conf", $base . $startrel, $base . $endrel,
     ($::verbose ? "--verbose" : "--no-warn" );
 
-ok(11);
+ok(17);
 
-nogo unless system "grep $startrel $fixfile > /dev/null" ;
+nogo if fgrep ($startrel, $fixfile);
 
-ok(12);
+ok(18);
 
-nogo if system "grep 'HREF=.$endrel.' $fixfile > /dev/null" ;
+nogo unless fgrep ("'HREF=.$endrel.'", $fixfile);
 
-
-ok(13);
+ok(19);
 
 #now test that we can cope with links containing ..
 
@@ -154,6 +187,6 @@ nogo if system @start, 'blib/script/fix-link',
   "http://scotclimb.org.uk/images/coire_an_lochain_diag.gif",
   ($::verbose ? "--verbose" : "--no-warn" ); #"--silent" if ever we need
 
-ok(14);
+ok(20);
 
 

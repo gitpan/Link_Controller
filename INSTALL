@@ -1,5 +1,7 @@
 INSTALLATION
 
+    <em>Last updated for LinkController 0.33.</em>
+
     LinkController's installation system is based on that of a normal Perl
     module.
 
@@ -13,17 +15,51 @@ INSTALLATION
     situation, but not at the cost of efficiency and maintainability on
     Linux.
 
+installation from Perl module
+
+    Currently the best way to install LinkController is to directly install
+    it as a perl module.
+
+    *   install the CDB system
+
+        If you have RedHat Linux 7.0 or greater, this should be included
+        within your distribution. Probably called "freecdb". If not then
+        download it from the section on "/packages.debian.org/freecdb" in
+        the http: manpage or from RedHat if you have another rpm based
+        system.
+
+    *   upgrade the perl CPAN module if needed
+
+        The CPAN module distributed with `perl' 5.6.0 and included in RedHat
+        7.1 and 7.2 has bugs which make it try to re-install `perl'
+        repeatedly. Download and manually install version 1.59 or newer.
+        N.B. don't use CPAN to upgrade itsself. That would trigger the
+        `perl' reinstallation.
+
+    *   install LinkController using CPAN
+
+        Run the command `perl -MCPAN -e shell' then within the CPAN shell
+        run the command <install WWW::Link_Controller>.
+
 installation from rpm
 
     The easiest way to install link controller is to have the distribution
-    in RPM format. In this case, simply install each of the RPMs with
+    in RPM format. Unfortunately, right now my version of RPM is patched and
+    experimental, so I'm not producing RPMs yet. Hopefully, this will soon
+    be fixed. In this case, simply install each of the RPMs with
     @command{rpm -i}. Trying to install just `LinkController' will give a
     list of the required rpm packages.
 
-installation from Perl module
-
     If your system doesn't run rpm then there isn't yet a pre-packaged
     version (hopefully someone will do a port to Debian's packaging system).
+
+manual installation
+
+    Manual installation is a possibility, however since LinkController has
+    been designed with the free use of perl modules, it takes patience. The
+    basic technique to solve problems is to try installing each module in
+    turn and to solve any requirements that it throws up when you try to do
+    so.
 
   installation pre-requisites
 
@@ -37,7 +73,7 @@ installation from Perl module
     The prerequisites can be downloaded from CPAN. the section on
     "/www.cpan.org/" in the http: manpage
 
-  detailed steps for install
+  installing the LinkController module
 
     First you must install Perl and the modules as explained above. Then run
     the following commands.
@@ -57,15 +93,17 @@ installation from Perl module
     Please note that you must run `make' before you run `make test' because
     of the configuration of the installation system.
 
-  Choosing a Platform
+Choosing a Platform
 
     Installing this software can be easy or difficult depending on what
     operating system platform you are running on.. In approximate order from
-    easiest to most difficult (this is my guess)
+    easiest to most difficult (this is my guess).
 
-    *   RedHat Linux equal or better than 6.0 (see http://www.redhat.com/)
+    *   RedHat Linux equal or better than 6.0 (see the section on
+        "/www.redhat.com/" in the http: manpage )
 
-    *   other Linux (see http://www.linux.org/ for example)
+    *   other Linux (see the section on "/www.linux.org/" in the http:
+        manpage for example)
 
     *   SUN-OS with Perl 5.003 or better already
 
@@ -73,17 +111,17 @@ installation from Perl module
 
     *   UNIX without Perl
 
-    *   WinNT (use cygwin for the best chance)
+    *   WinNT / Windows2000 (use cygwin for the best chance)
 
     *   Macintosh
 
     *   Other Windows
 
     With a previous version I had tried the top four. Probably to get the
-    system running on Sun-OS will require manually setting up the system
-    since the programs for doing the default installation (in the
-    @file{default-install}) because that uses various GNU administration
-    programs which SunOS probably doesn't emulate accurately.
+    system running on other UNIX systems will require manually setting up
+    the system since the programs for doing the default installation (in the
+    @file{default-install}) because UNIX doesn't accurately emulate the GNU
+    administration programs.
 
     You will probably find it easier to just install Linux that to get this
     running on Windows. If you do want to get it running on other operating
@@ -93,6 +131,13 @@ installation from Perl module
 
 References
 
-       http://www.redhat.com/
-       http://www.linux.org/
+    the section on "/scotclimb.org.uk/software/linkcont/" in the http:
+    manpage - download LinkController
+
+    the section on "/www.linux.org/" in the http: manpage - Get Linux
+
+    the section on "/www.redhat.com/" in the http: manpage - RedHat Linux -
+    tested version
+
+    the section on "/www.debian.org/" in the http: manpage - Debian Linux.
 

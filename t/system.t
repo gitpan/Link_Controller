@@ -17,7 +17,7 @@ $home_config=$ENV{HOME} . "/.link-control.pl";
 die "LinkController test config file, $home_config missing."
   unless -e $home_config;
 
-BEGIN {print "1..9\n"}
+BEGIN {print "1..10\n"}
 
 @start = qw(perl -Iblib/lib -I../Link.pm/lib);
 
@@ -26,6 +26,15 @@ $verbose=0 unless defined $verbose;
 $fail=0;
 sub nogo {print "not "; $fail=1;}
 sub ok {my $t=shift; print "ok $t\n"; $fail=0}
+
+$::infos="fixlink-infostruc.test-tmp~";
+
+$fixed='test-data/system-infostruc';
+unlink $::infos;
+-e $::infos and die "can't unlink infostruc file $::infos";
+open DEFS, ">$infos" or die "couldn't open $infos $!";
+print DEFS "directory http://www.test.nowhere/ test-data/sample-infostruc/\n";
+close DEFS or die "couldn't close $infos $!";
 
 do "t/config/files.pl" or die "files.pl script not read: " . ($@ ? $@ :$!);
 #die "files.pl script failed: $@" if $@;
@@ -109,6 +118,20 @@ $output =~ m(http://www\.ix\.com)sx or nogo ;
 
 ok(6);
 
+
+$command= (join (" ", @start) )
+  . " blib/script/link-report --long-list --config-file=$conf " . '--okay';
+
+$output = `$command`;
+
+print STDERR "output\n$output\n" if $verbose;
+
+$output =~ m( http://www\.ix\.com .*
+	      rw.*test-data/sample-infostruc/banana.html .*
+	      rw.*test-data/sample-infostruc/orange.html )sx or nogo;
+
+ok(7);
+
 #test reporting on a specified url
 
 open URL,">report-urls.test-tmp~";
@@ -116,7 +139,7 @@ print URL "http://www.ix.com\n";
 close URL;
 
 $command= (join (" ", @start) )
-  . " blib/script/link-report --url-file=report-urls.test-tmp~ "
+  . " blib/script/link-report --all-links --uri-file=report-urls.test-tmp~ "
     .  "--config-file=$conf " . ($verbose ? "--verbose=2047" : "");
 
 print STDERR "running $command" if $::verbose;
@@ -127,7 +150,7 @@ print STDERR "output is:\n$output\n" if $::verbose;
 
 $output =~ m(http://www\.ix\.com)sx or nogo ;
 
-ok(7);
+ok(8);
 
 $::driver='cgi-driver.test-tmp.pl';
 my $rep_cgi="blib/script/link-report.cgi";
@@ -169,13 +192,12 @@ $output =~ m(\<HEAD\>.*\<TITLE\>.*\</TITLE\>.*\</HEAD\>.*\<BODY\>.*
              \</A\> .*
             \</BODY\>)isx or nogo ;
 
-ok(8);
+ok(9);
 
 print STDERR "#going to run: echo infostructure=1 | $command" if $::verbose;
 $output = `echo infostructure=1 | $command`;
 ($mesg="output:\n\n$output\n\n") =~ s/^/#/mg;
 print STDERR $mesg if $::verbose;
-
 
 $output =~ m(\<HEAD\>.*\<TITLE\>.*\</TITLE\>.*\</HEAD\>.*\<BODY\>.*
 	     BROKEN .*
@@ -191,7 +213,7 @@ $output =~ m(\<HEAD\>.*\<TITLE\>.*\</TITLE\>.*\</HEAD\>.*\<BODY\>.*
              \</A\> .*
             \</BODY\>)isx or nogo ;
 
-ok(9);
+ok(10);
 
 #FIXME write tests for url reporting tests for include or exclude features.
 

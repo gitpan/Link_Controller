@@ -16,7 +16,8 @@ $verbose=0 unless defined $verbose;
 print STDERR "fixing up files; the current directory is ", cwd, "\n"
   if $verbose & 8;
 
-#setup files for start of tests
+#setup files for start of tests everything ends in a ~ so it is
+#deleted by make clean with no further thought.
 
 $conf='link-cont-conf.test-tmp~';
 $blib=cwd . '/blib'; $script=$blib . '/script';

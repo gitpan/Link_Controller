@@ -38,7 +38,7 @@ die "$man_dir is not a directory" unless -d $man_dir;
 $man_dir = cwd() . '/' . $man_dir . '/'; #so we can find it later
 
 sub work {
-  -d && do { m/^((blib)|(old)|(t))$/ and $File::Find::prune = 1;
+  -d && do { m/^((docs)|(blib)|(old)|(t))$/ and $File::Find::prune = 1;
 	     return; };
   return unless m/^[^.].*.pl$/;
   return if m/test-tmp/;

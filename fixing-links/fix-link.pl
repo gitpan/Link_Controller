@@ -97,7 +97,7 @@ L<suggest(1)>; L<link-report.cgi(1)>; L<configure-link-control>
 The LinkController manual in the distribution in HTML, info, or
 postscript formats, included in the distribution.
 
-http://scotclimb.org.uk/software/linkcont - the
+http://scotclimb.org.uk/software/linkcont/ - the
 LinkController homepage.
 
 =cut
@@ -150,8 +150,7 @@ $::opthandler = new Getopt::Function
 #  			 . "what link.",
 #  			 "FILENAME" ],
        "directory" => [ \&makevalue,
-			 "correct all files in the given directory"
-			 . "what link.",
+			 "correct all files in the given directory.",
 			 "DIRNAME" ],
 #   "mode" => [ sub { $::link_index=$::value; },
 #  		  "Use the given file as the index of which file has "
@@ -195,7 +194,7 @@ EOF
 sub version() {
   print <<'EOF';
 fix-link version
-$Id: fix-link.pl,v 1.19 2002/01/06 21:18:34 mikedlr Exp $
+$Id: fix-link.pl,v 1.22 2002/02/03 21:18:46 mikedlr Exp $
 EOF
 }
 
@@ -261,8 +260,13 @@ unless ( $::directory  ) {
   my $trans_sub=\&WWW::Link_Controller::InfoStruc::url_to_file;
   my $fixed=WWW::Link::Repair::infostructure($origuri, $::index, $trans_sub,
 					     $::file_subs, $::tree);
-  print "fix-link finished: made $fixed substitutions\n"
-    unless $::silent;
+  unless ( $::silent ) {
+    if ( $fixed or $::relative ) {
+      print "fix-link finished: made $fixed substitutions\n";
+    } else {
+      print "fix-link finished: made no substitutions.. try --relative?\n"
+    }
+  }
 } else {
   print STDERR "searching through directory $::directory\n" if $::verbose;
   my $fixed=WWW::Link::Repair::directory($::file_subs, $::directory);

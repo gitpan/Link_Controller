@@ -260,7 +260,7 @@ sub httpd_get_basic  {
 @start = qw(perl -Iblib/lib);
 
 my @prog= (@start, qw(blib/script/extract-links),
-  "--config-file=$conf", "--out-url-list=$urls", );
+  "--config-file=$conf", "--out-uri-list=$urls", );
 
 if ($::verbose ) {
   push @prog, "--verbose";

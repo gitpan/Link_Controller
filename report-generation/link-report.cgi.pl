@@ -68,7 +68,7 @@ L<suggest(1)>; L<link-report.cgi(1)>; L<configure-link-control>
 The LinkController manual in the distribution in HTML, info, or
 postscript formats, included in the distribution.
 
-http://scotclimb.org.uk/software/linkcont - the
+http://scotclimb.org.uk/software/linkcont/ - the
 LinkController homepage.
 
 =cut

@@ -1,6 +1,6 @@
 <HTML>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Created on January, 6  2002 by texi2html 1.64 -->
+<!-- Created on February, 3  2002 by texi2html 1.64 -->
 <!-- 
 Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
             Karl Berry  <karl@freefriends.org>
@@ -11,10 +11,10 @@ Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
  
 -->
 <HEAD>
-<TITLE>Using LinkController: Administration</TITLE>
+<TITLE>Using LinkController: Related Packages</TITLE>
 
-<META NAME="description" CONTENT="Using LinkController: Administration">
-<META NAME="keywords" CONTENT="Using LinkController: Administration">
+<META NAME="description" CONTENT="Using LinkController: Related Packages">
+<META NAME="keywords" CONTENT="Using LinkController: Related Packages">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
 <META NAME="Generator" CONTENT="texi2html 1.64">
@@ -23,164 +23,109 @@ Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
 
 <BODY LANG="" BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
 
-<A NAME="SEC24"></A>
+<A NAME="SEC49"></A>
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
-<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_14.html#SEC23"> &lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC25"> &gt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_14.html#SEC23"> &lt;&lt; </A>]</TD>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_14.html#SEC48"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC50"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_14.html#SEC42"> &lt;&lt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top"> Up </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC28"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC52"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
 </TR></TABLE>
-<H1> 14. Administration </H1>
-<!--docid::SEC24::-->
+<H1> G. Packages Which Work With LinkController </H1>
+<!--docid::SEC49::-->
 <P>
 
-There are various aspects of administration.  This is mostly related to
-testing links.  
+LinkController uses several programs and can work with several others.
+This section covers the most important ones.
 </P><P>
 
 <BLOCKQUOTE><TABLE BORDER=0 CELLSPACING=0> 
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_15.html#SEC25">14.1 Default Installation</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_15.html#SEC26">14.2 User Administration</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_15.html#SEC27">14.3 Cron Scripts</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_15.html#SEC50">G.1 The CDB utilities</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Utilities for the LinkController indexes.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_15.html#SEC51">G.2 The Tie-Transact-Hash Perl Module and Programmes</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Berkeley DB editing tools.</TD></TR>
 </TABLE></BLOCKQUOTE>
 <P>
 
-<A NAME="Default Installation"></A>
+<A NAME="cdb"></A>
 <HR SIZE="6">
-<A NAME="SEC25"></A>
+<A NAME="SEC50"></A>
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
-<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC24"> &lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC26"> &gt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC24"> &lt;&lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC24"> Up </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC28"> &gt;&gt; </A>]</TD>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC49"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC51"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC49"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC49"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC52"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
 </TR></TABLE>
-<H2> 14.1 Default Installation </H2>
-<!--docid::SEC25::-->
+<H2> G.1 The CDB utilities </H2>
+<!--docid::SEC50::-->
 <P>
 
-Running <CODE>default-install -all</CODE> should set everything up
-correctly.  There are various variations on this command which do
-different things, but the summary is 
+In order to have LinkController working you must have installed these.
+It is worth looking at the utilities that are provided, especially
+<CODE>cdbdump</CODE> which will let you look at the contents of the file.  You
+should be aware that <CODE>cdbget</CODE> program which is provided
+<EM>won't</EM> be able to get at the full contents of the index files
+since they contain repeated keys.
 </P><P>
 
-<UL>
-<LI>
-Create a linkcont user-id and group which will be used for running programs
-<LI>
-Create a working directory where LinkController will keep it's data
-<LI>
-Create configuration files, especially /etc/link-control.pl
-<LI>
-Create cron scripts which will run LinkController automatically.
-</UL>
-<P>
-
-Using this command it is also possible to activate users and groups
-e.g. <CODE>default-install -user <VAR>username</VAR></CODE> or  
-<CODE>default-install -group <VAR>groupname</VAR></CODE> in which case the specified
-users will become a member of the <CODE>linkcont</CODE> group.  
+More information on cdb and new releases can be got from the www page.
 </P><P>
 
-<A NAME="User Administration"></A>
+<A HREF="http://cr.yp.to/cdb.html">http://cr.yp.to/cdb.html</A>
+</P><P>
+
+When using link controller you are advised to use FreeCDB which, because
+of its better license terms, has the extra guarantee that it will be
+possible for anybody to distribute fixed versions and provide support
+for them.
+</P><P>
+
+<A HREF="http://packages.debian.org/freecdb">http://packages.debian.org/freecdb</A>
+</P><P>
+
+<A NAME="Tie-Transact-Hash"></A>
 <HR SIZE="6">
-<A NAME="SEC26"></A>
+<A NAME="SEC51"></A>
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
-<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC25"> &lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC27"> &gt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC24"> &lt;&lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC24"> Up </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC28"> &gt;&gt; </A>]</TD>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC50"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC52"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC49"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC49"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC52"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
 </TR></TABLE>
-<H2> 14.2 User Administration </H2>
-<!--docid::SEC26::-->
+<H2> G.2 The Tie-Transact-Hash Perl Module and Programmes </H2>
+<!--docid::SEC51::-->
 <P>
 
-User administration is really only needed if you are running link
-testing centrally for your users.  This makes sense since it means that
-if several users have a link to the same place (likely in any given
-site) then you will only have to check that link once.  
+This is a Perl module written by myself which includes a program which
+allows direct examination and editing of Berkeley databases.  It can be
+useful for debugging and correcting problems in the LinkController Link
+database or schedule file.
 </P><P>
 
-In this case, the important question is which links are copied into the
-checking database.  This is controlled by the program
-<CODE>copy-links-from-users</CODE> and decides copies data from users which
-are in the <CODE>lnctusr</CODE> group.  
+Tie::TransactHash can be downloaded from CPAN, the Comprehensive Perl
+Archive Network get there via:
 </P><P>
 
-The command <CODE>default-install</CODE> can be used to manipulate which
-users are in the group e.g. <CODE>default-install --user <VAR>username</VAR></CODE> or  
-<CODE>default-install -group <VAR>groupname</VAR></CODE> in which case the specified
-users will become a member of the lcntusr group.
+<A HREF="http://www.perl.com/language/info/software.html">http://www.perl.com/language/info/software.html</A>
 </P><P>
 
-Another form of user administration is limitation on which users have
-access to the database.  This can be done with normal file permissions.
-There isn't any specific control to stop users from seeing which links
-other users have put into the database.  
-</P><P>
-
-<A NAME="Cron Scripts"></A>
-<HR SIZE="6">
-<A NAME="SEC27"></A>
-<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
-<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC26"> &lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC28"> &gt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC24"> &lt;&lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC24"> Up </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC28"> &gt;&gt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
-</TR></TABLE>
-<H2> 14.3 Cron Scripts </H2>
-<!--docid::SEC27::-->
-<P>
-
-In order to be effective, link testing should be done every day.
-Furthermore, it is a good idea to do the testing at low usage times,
-which normally means at night.  For this reason normally a cron script
-will be used.  
-</P><P>
-
-<UL>
-<LI>
-copy the links from each user with <CODE>copy-links-from-users</CODE> 
-<LI>
-add them to the database with <CODE>extract-links --in-url-list</CODE> 
-<LI>
-build a schedule for testing the links with <CODE>build-schedule</CODE> 
-<LI>
-test the links with <CODE>test-link</CODE> 
-</UL>
-<P>
-
-The other thing which is done is to remove old links from the database.
-This only needs to be done weekly.  
-</P><P>
-
-The program <CODE>default-install</CODE> can create these scripts.
-</P><P>
-
-<A NAME="Robots"></A>
+<A NAME="Terms"></A>
 <HR SIZE="6">
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
-<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC24"> &lt;&lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC28"> &gt;&gt; </A>]</TD>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_15.html#SEC49"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_16.html#SEC52"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
@@ -189,7 +134,7 @@ The program <CODE>default-install</CODE> can create these scripts.
 <BR>  
 <FONT SIZE="-1">
 This document was generated
-by <I>Michael De La Rue</I> on <I>January, 6  2002</I>
+by <I>Michael De La Rue</I> on <I>February, 3  2002</I>
 using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
 "><I>texi2html</I></A>
 

@@ -256,7 +256,7 @@ EOF
 sub version() {
   print <<'EOF';
 test-link version
-$Id: test-link.pl,v 1.18 2002/01/06 10:50:14 mikedlr Exp $
+$Id: test-link.pl,v 1.19 2002/01/18 20:32:48 mikedlr Exp $
 EOF
 }
 
@@ -756,7 +756,7 @@ L<suggest(1)>; L<link-report.cgi(1)>; L<configure-link-control>
 The LinkController manual in the distribution in HTML, info, or
 postscript formats, included in the distribution.
 
-http://scotclimb.org.uk/software/linkcont - the
+http://scotclimb.org.uk/software/linkcont/ - the
 LinkController homepage.
 
 =cut

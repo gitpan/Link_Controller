@@ -47,7 +47,7 @@ L<suggest(1)>; L<link-report.cgi(1)>; L<configure-link-control>
 The LinkController manual in the distribution in HTML, info, or
 postscript formats, included in the distribution.
 
-http://scotclimb.org.uk/software/linkcont - the
+http://scotclimb.org.uk/software/linkcont/ - the
 LinkController homepage.
 
 =cut
@@ -96,13 +96,13 @@ EOF
 sub version() {
   print <<'EOF';
 verify-link-control version 
-$Id: verify-link-control.pl,v 1.8 2002/01/06 07:40:37 mikedlr Exp $
+$Id: verify-link-control.pl,v 1.9 2002/01/18 20:32:35 mikedlr Exp $
 EOF
 }
 
 $::now=time;
 
-my $revision='$Revision: 1.8 $';
+my $revision='$Revision: 1.9 $';
 use WWW::Link_Controller::Version;
 my $version = $WWW::Link_Controller::Version::VERSION;
 

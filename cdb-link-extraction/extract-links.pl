@@ -1,5 +1,4 @@
 #!/usr/bin/perl -w
-#!/usr/bin/perl -w
 
 =head1 NAME
 
@@ -8,8 +7,8 @@ extract-links - build links database
 =head1 SYNOPSIS
 
  extract-links [options]
- extract-links [options] url directory
- extract-links [options] url
+ extract-links [options] URI directory
+ extract-links [options] URL
 
 =head1 DESCRIPTION
 
@@ -19,14 +18,14 @@ link-controllers various other programs.
 The first database built is the links database containing information
 about the status of all of the links that are being checked.  The
 second two are in cdb format and can be used as indexes for
-identifying which files contain which urls and vica versa.
+identifying which files contain which URIs and vica versa.
 
 =head1 FILE MODE
 
 In file mode this goes through a directory tree.  The program requires
-a base-url which is the url which would be used to refernce the
-directory in which all of the filess are contained on the world wide
-web.  This is used to convert internal references into full urls which
+a base URI which is the URI which would be used to refernce the
+directory in which all of the files are contained on the world wide
+web.  This is used to convert internal references into full URIs which
 can be used to check that the files are visible from the outside.
 
 =head1 WWW MODE
@@ -34,19 +33,9 @@ can be used to check that the files are visible from the outside.
 In WWW mode the program goes through a set of World Wide Web pages
 generating the databases.
 
-The program requires a base-url which where it starts from.  It's
-default mode is to only work down from that url, that is it will only
-get urls from WWW pages who's url starts with the base-url
-
-Unlike other programs which tend to resort to closing and re-opening
-files with lists of links, or holding them all in memory, this program
-uses a file containing list of links to follow the recursion in the
-WWW without actually using recursive functions.  This relies on output
-to an unbuffered file being available for input immediately
-afterwards.
-
-We also use a temporary database to record which links have been seen
-before.  This could get LARGE.
+The program requires a base-URL which where it starts from.  It's
+default mode is to only work down from that URL, that is it will only
+get URIs from WWW pages who's URL starts with the base-url
 
 =head1 FILTERING
 
@@ -61,19 +50,37 @@ directory and all subdirectories are excluded.
 By default, extract-links extracts and refreshes all of the
 infostructures listed in the file $::infostrucs.  The file looks like
 
-
-   #mode	url	directory	includere	excludere
+   #mode	url	directory
    www	http://myserver.example.com /var/www/html223
+
+This is covered in detail in the LinkController reference manual.
 
 =head1 FILES
 
-TODO: make a general section about this.
+There are several configuration
 
   $HOME/.link-control.pl - base configuration file
+
+This contains configuration variables which point to further files.
 
   $::links - link database
 
   $::infostrucs - infostructure configuration file
+
+Full details of the format of these configuration files can be found
+in the LinkController reference manual.
+
+=head1 NOTES
+
+Unlike other programs which tend to resort to closing and re-opening
+files with lists of links, or holding them all in memory, this program
+uses a file containing list of links to follow the recursion in the
+WWW without actually using recursive functions.  This relies on output
+to an unbuffered file being available for input immediately
+afterwards.
+
+We also use a temporary database to record which links have been seen
+before.  This could get LARGE.
 
 =head1 BUGS
 
@@ -87,7 +94,6 @@ current Perl parser would be even better.
 
 I think the program can get trapped in directories it can change into,
 but can't read (mode o+x-w).  This should be fixed.
-
 
 This program could put a large load on a given server if accidentally
 let go where it shouldn't be.  This is your responsibility since it
@@ -163,8 +169,8 @@ $::link_database=undef;
 @::infostrucs=();
 $::default_infostrucs=undef;
 $::start_time=time;
-$::in_url_list=undef;
-$::out_url_list=undef;
+$::in_uri_list=undef;
+$::out_uri_list=undef;
 $::verbose=0;
 $::opthandler = new Getopt::Function
   [ "version V>version",
@@ -180,8 +186,8 @@ $::opthandler = new Getopt::Function
     "link-database=s l>link-database",
     "config-file=s c>config-file",
     "",
-    "out-url-list=s o>out-url-list",
-    "in-url-list=s i>in-url-list",
+    "out-uri-list=s o>out-uri-list",
+    "in-uri-list=s i>in-uri-list",
   ],{
      "default-infostrucs" => [ \&maketrue,
 			  "handle all default infostrucs (as well as ones "
@@ -196,11 +202,11 @@ $::opthandler = new Getopt::Function
      "link-database" => [ \&makevalue,
 			  "Database to create link records into.",
 			  "FILENAME" ],
-     "out-url-list" => [ \&makevalue,
-			  "File to output the URL of each link found to",
+     "out-uri-list" => [ \&makevalue,
+			  "File to output the URI of each link found to",
 			  "FILENAME" ],
-     "in-url-list" => [ \&makevalue,
-			  "File to input URLs from to create links",
+     "in-uri-list" => [ \&makevalue,
+			  "File to input URIs from to create links",
 			  "FILENAME" ],
      "config-file" => [ sub {
 			  print STDERR "loading extra config\n" if $::verbose;
@@ -236,7 +242,7 @@ EOF
 sub version() {
   print <<'EOF';
 extract-links version
-$Id: extract-links.pl,v 1.9 2002/01/06 21:17:43 mikedlr Exp $
+$Id: extract-links.pl,v 1.11 2002/02/03 21:17:36 mikedlr Exp $
 EOF
 }
 
@@ -258,7 +264,7 @@ if ( @ARGV ) {
 }
 
 $::default_infostrucs = 0
-  if ( not defined $::default_infostrucs ) and $::in_url_list;
+  if ( not defined $::default_infostrucs ) and $::in_uri_list;
 $::default_infostrucs=1 unless defined $::default_infostrucs;
 
 %::ignored=();
@@ -277,19 +283,19 @@ die 'you must define the $::links configuration variable'
 #file for the link testing system to pick up.
 
 -f $::links and not -w _ and do {
-  defined $::out_url_list or print STDERR <<EOF;
-Can't write to links database.  Creating url list in
+  defined $::out_uri_list or print STDERR <<EOF;
+Can't write to links database.  Creating uri list in
 ~/.link-control-links instead.
 EOF
   $::write_links = 0;
 };
 
-open (URLLIST, ">$::out_url_list") if defined $::out_url_list;
+open (URILIST, ">$::out_uri_list") if defined $::out_uri_list;
 
 $::checklist="/tmp/extract-links.seen.tmp.$$";
 
 #checklist protects the system overall from recording the same
-#link more than once e.g. in the urllists output and optimises
+#link more than once e.g. in the urilists output and optimises
 #against accessing the link database more than once for each
 #link
 
@@ -373,7 +379,7 @@ About to extract links from infostructure $base_url
 using $file_base as the base directory.
 EOF
       my $act_on_file=make_act_on_file ($base_url,$file_base,%$defs);
-      finddepth ( $act_on_file, $file_base);
+      find ( $act_on_file, $file_base);
       last;
     };
 
@@ -758,7 +764,7 @@ sub link_handler ($%) {
     $::link_db{$url}=$link;
   };
 
-  print URLLIST $url . "\n" if defined $::out_url_list;
+  print URILIST $url . "\n" if defined $::out_uri_list;
 }
 
 

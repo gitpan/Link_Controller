@@ -1,6 +1,6 @@
 <HTML>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Created on January, 6  2002 by texi2html 1.64 -->
+<!-- Created on February, 3  2002 by texi2html 1.64 -->
 <!-- 
 Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
             Karl Berry  <karl@freefriends.org>
@@ -11,10 +11,10 @@ Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
  
 -->
 <HEAD>
-<TITLE>Using LinkController: Reporting</TITLE>
+<TITLE>Using LinkController: Administration</TITLE>
 
-<META NAME="description" CONTENT="Using LinkController: Reporting">
-<META NAME="keywords" CONTENT="Using LinkController: Reporting">
+<META NAME="description" CONTENT="Using LinkController: Administration">
+<META NAME="keywords" CONTENT="Using LinkController: Administration">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
 <META NAME="Generator" CONTENT="texi2html 1.64">
@@ -23,140 +23,283 @@ Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
 
 <BODY LANG="" BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
 
-<A NAME="SEC14"></A>
+<A NAME="SEC25"></A>
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
-<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_7.html#SEC13"> &lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC15"> &gt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_7.html#SEC13"> &lt;&lt; </A>]</TD>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_7.html#SEC24"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC26"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_7.html#SEC22"> &lt;&lt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top"> Up </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC16"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC32"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
 </TR></TABLE>
-<H1> 7. Reporting Problems </H1>
-<!--docid::SEC14::-->
+<H1> 7. Administration </H1>
+<!--docid::SEC25::-->
 <P>
 
-The easiest way to find out which links are broken is to use the command
-line interface.  The simplest report you can generate is just a list of
-all the known broken links.  Do this like so:
-</P><P>
-
-<TABLE><tr><td>&nbsp;</td><td class=example><pre>link-report
-</pre></td></tr></table></P><P>
-
-On the system I'm testing on right now, this gives:
-</P><P>
-
-<TABLE><tr><td>&nbsp;</td><td class=example><pre>broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/cgi
-        http://www.ippt.gov.pl/docs-1.4/cgi/examples.html
-broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
-ent/httpd_1.4_irix5.2.Z
-        http://www.ippt.gov.pl/docs-1.4/setup/PreExec.html
-broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
-ent/httpd_1.4_linux.Z
-        http://www.ippt.gov.pl/docs-1.4/setup/PreExec.html
-broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
-ent/httpd_1.4_osf3.0.Z
-        http://www.ippt.gov.pl/docs-1.4/setup/PreExec.html
-broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
-ent/httpd_1.4_solaris2.4.Z
-        http://www.ippt.gov.pl/docs-1.4/setup/PreExec.html
-broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/curr
-ent/httpd_1.4_solaris2.4.tar.Z
-        http://www.ippt.gov.pl/docs-1.4/setup/PreCompiled.html
-Sorry, couldn't find info for url file://ftp.ncsa.uiuc.edu/Web/httpd/U
-nix/ncsa_httpd/current/httpd_1.4_source.tar.Z
-please remember to check you have put it in full format
-broken:-       file://ftp.ncsa.uiuc.edu/Web/httpd/Unix/ncsa_httpd/docu
-ments/usage.ps
-        http://www.ippt.gov.pl/docs-1.4/postscript-docs/Overview.html
-..etc...
-</pre></td></tr></table></P><P>
-
-Which just tells you which links are broken.  (In this chapter examples
-are folded at the 70th row, so that they fit well on narrow screens and
-in TeX.  I wanted to use real text rather than making something up.)
-</P><P>
-
-We also know which page they are broken on and can go and look at that
-on the World Wide Web or directly as a file on the server.
-</P><P>
-
-You can get a complete list of options for <CODE>link-report</CODE> (or
-any other program which is part of LinkController) using
-</P><P>
-
-<TABLE><tr><td>&nbsp;</td><td class=example><pre>link-report -h
-</pre></td></tr></table></P><P>
-
-For more advanced reporting and editing of documents with broken links
-you may want to use the Emacs interface (see section <A HREF="link-controller_13.html#SEC20">The Emacs Interface</A>).
+There are various aspects of administration.  This is mostly related to
+testing links.  
 </P><P>
 
 <BLOCKQUOTE><TABLE BORDER=0 CELLSPACING=0> 
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_8.html#SEC15">7.1 Email Reporting of Newly Broken Links</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_8.html#SEC26">7.1 Setting up LinkController</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">How to get the system installed</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_8.html#SEC27">7.2 Default Installation</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">A simple multi-user installation</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_8.html#SEC28">7.3 User Administration</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Adding and removing users</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_8.html#SEC29">7.4 Cron Scripts</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Running programs automatically</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_8.html#SEC30">7.5 Link Database Maintenance</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Dealing with database problems</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_8.html#SEC31">7.6 Link Ageing</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Clearing outdated data from the databases.</TD></TR>
 </TABLE></BLOCKQUOTE>
 <P>
 
-<A NAME="Email Reporting"></A>
+<A NAME="Setting up LinkController"></A>
 <HR SIZE="6">
-<A NAME="SEC15"></A>
+<A NAME="SEC26"></A>
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
-<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC14"> &lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC16"> &gt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC14"> &lt;&lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC14"> Up </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC16"> &gt;&gt; </A>]</TD>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC27"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC32"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
 </TR></TABLE>
-<H2> 7.1 Email Reporting of Newly Broken Links </H2>
-<!--docid::SEC15::-->
+<H2> 7.1 Setting up LinkController </H2>
+<!--docid::SEC26::-->
 <P>
 
-It's possible to arrange automatic reporting by email of links which
-have become newly broken.  This is done by getting <CODE>test-link</CODE>
-to make a list of links that become broken using the $::link_stat_log
-variable (see section <A HREF="link-controller_3.html#SEC6">2.3 Link Control Configuration Variables</A>) and calling <CODE>link-report</CODE> to
-report on those links.
+This chapter is aimed at administrators setting up LinkController or who
+want to have a better understanding of the way that their installation
+is set up.  
 </P><P>
 
-Typically, you may don't want to have a report every time that
-<CODE>test-link</CODE> runs, but probably once a day instead.  In this
-case, run a script like the following from your crontab.
+The first stage is to actually build and install the programs.  This is
+covered in the document <TT>`INSTALL'</TT> which is included with the
+distribution.
 </P><P>
 
-<TABLE><tr><td>&nbsp;</td><td class=example><pre>#!/bin/sh
-STAT_LOG=$HOME/link-data/stat-log
-WORK=$STAT_LOG.work
-EMAIL=me@example.com
-mv $STAT_LOG  $WORK
-if [ -s $WORK ]
-then
-   link-report --broken --url-file=$STAT_LOG --infostructure | 
-      mail -s "link-report for `date`" $EMAIL
-fi
-</pre></td></tr></table></P><P>
-
-Every time that this script is run, it will rename the status change
-log file and then mail a report with all of the new broken links
-to the specified email address.  
+Once you have installed the software, the next step is to configure
+LinkController so that it knows where you have all of your data.  The
+program <CODE>default-install</CODE> provides one model of this.  
 </P><P>
 
-In future this feature may be folded into <CODE>link-report</CODE>
-directly.
+<A NAME="Default Installation"></A>
+<HR SIZE="6">
+<A NAME="SEC27"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC26"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC28"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC32"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 7.2 Default Installation </H2>
+<!--docid::SEC27::-->
+<P>
+
+Running <CODE>default-install -all</CODE> should set everything up
+correctly.  There are various variations on this command which do
+different things, but the summary is 
 </P><P>
 
-<A NAME="Files"></A>
+<UL>
+<LI>
+Create a linkcont user-id and group which will be used for running programs
+<LI>
+Create a working directory where LinkController will keep it's data
+<LI>
+Create configuration files, especially /etc/link-control.pl
+<LI>
+Create cron scripts which will run LinkController automatically.
+</UL>
+<P>
+
+Using this command it is also possible to activate users and groups
+e.g. <CODE>default-install -user <VAR>username</VAR></CODE> or  
+<CODE>default-install -group <VAR>groupname</VAR></CODE> in which case the specified
+users will become a member of the <CODE>linkcont</CODE> group.  
+</P><P>
+
+<A NAME="User Administration"></A>
+<HR SIZE="6">
+<A NAME="SEC28"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC27"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC29"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC32"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 7.3 User Administration </H2>
+<!--docid::SEC28::-->
+<P>
+
+User administration is really only needed if you are running link
+testing centrally for your users.  This makes sense since it means that
+if several users have a link to the same place (likely in any given
+site) then you will only have to check that link once.  
+</P><P>
+
+In this case, the important question is which links are copied into the
+checking database.  This is controlled by the program
+<CODE>copy-links-from-users</CODE> and decides copies data from users which
+are in the <CODE>lnctusr</CODE> group.  
+</P><P>
+
+The command <CODE>default-install</CODE> can be used to manipulate which
+users are in the group e.g. <CODE>default-install --user <VAR>username</VAR></CODE> or  
+<CODE>default-install -group <VAR>groupname</VAR></CODE> in which case the specified
+users will become a member of the lcntusr group.
+</P><P>
+
+Another form of user administration is limitation on which users have
+access to the database.  This can be done with normal file permissions.
+There isn't any specific control to stop users from seeing which links
+other users have put into the database.  
+</P><P>
+
+<A NAME="Cron Scripts"></A>
+<HR SIZE="6">
+<A NAME="SEC29"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC28"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC30"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC32"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 7.4 Cron Scripts </H2>
+<!--docid::SEC29::-->
+<P>
+
+In order to be effective, link testing should be done every day.
+Furthermore, it is a good idea to do the testing at low usage times,
+which normally means at night.  For this reason normally a cron script
+will be used.  
+</P><P>
+
+<UL>
+<LI>
+copy the links from each user with <CODE>copy-links-from-users</CODE> 
+<LI>
+add them to the database with <CODE>extract-links --in-url-list</CODE> 
+<LI>
+build a schedule for testing the links with <CODE>build-schedule</CODE> 
+<LI>
+test the links with <CODE>test-link</CODE> 
+</UL>
+<P>
+
+The program <CODE>default-install</CODE> can create these scripts
+<A HREF="link-controller_8.html#SEC27">7.2 Default Installation</A>.
+</P><P>
+
+<A NAME="Link Database Maintenance"></A>
+<HR SIZE="6">
+<A NAME="SEC30"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC29"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC31"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC32"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 7.5 Link Database Maintenance </H2>
+<!--docid::SEC30::-->
+<P>
+
+For the most part the link database shouldn't need much maintenance.
+There are a number of cases where it might, however.  If it becomes
+corrupt, you may try the db_recover command.  Probably, however, it's
+just better to recover the database and link checking schedule from a
+recent backup.  Time is not really critical since the work is normally
+easy to regenerate.  You should make sure that link checking doesn't run
+in at the time you do backups, however.
+</P><P>
+
+The other thing is that occasionally you may want to recover space in
+the link database by dumping and un-dumping it.  See the Berkeley database
+documentation for more details.
+</P><P>
+
+<A NAME="Link Ageing"></A>
+<HR SIZE="6">
+<A NAME="SEC31"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC30"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC32"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC32"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 7.6 Link Ageing </H2>
+<!--docid::SEC31::-->
+<P>
+
+Sometimes we have a link which is no longer in use within our
+infostructure.  However, it's not a good idea to throw away
+information about it immediately.  It could be that certain files have
+been temporarily deleted and will come back.  Alternatively, a link
+could have been found broken and been corrected, but someone has a
+copy of the old page.  When they re-install the copy, we will have to
+deal with that link again.  
+</P><P>
+
+If we had not kept that link around and they immediately do a link check
+on their document they may see nothing wrong, and, because of the nature
+of LinkController, we won't start reporting the link as a problem until
+some days later, when we have confirmed that it really is broken.
+</P><P>
+
+If, on the other hand, we keep checking all of the links which have ever
+been in our web pages, we will cause ourselves considerable extra work.  
+</P><P>
+
+To handle this, links are aged.  Once a link has reached greater than a
+certain age, <CODE>test-link</CODE> will not be checked it any more.  Once
+the link has reached a much larger age, it will be completely deleted
+from the link database.  The age is reset to nothing each time the link
+is extracted from the infostructure, so links which are still in use
+will continue to be checked.
+</P><P>
+
+In the meantime, the link will still be repeatedly scheduled based to
+it's normal checking time.  This causes us to examine it quite
+regularly, but that is okay, since we won't actually check it.
+</P><P>
+
+By default links which have not been refreshed will be ignored after
+one week and will be deleted from the database after two months.  
+</P><P>
+
+<A NAME="Robot Behaviour"></A>
 <HR SIZE="6">
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
-<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC14"> &lt;&lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC16"> &gt;&gt; </A>]</TD>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_8.html#SEC25"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_9.html#SEC32"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
@@ -165,7 +308,7 @@ directly.
 <BR>  
 <FONT SIZE="-1">
 This document was generated
-by <I>Michael De La Rue</I> on <I>January, 6  2002</I>
+by <I>Michael De La Rue</I> on <I>February, 3  2002</I>
 using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
 "><I>texi2html</I></A>
 

@@ -1,6 +1,6 @@
 <HTML>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Created on January, 6  2002 by texi2html 1.64 -->
+<!-- Created on February, 3  2002 by texi2html 1.64 -->
 <!-- 
 Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
             Karl Berry  <karl@freefriends.org>
@@ -29,7 +29,7 @@ Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC9"> &gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_3.html#SEC3"> &lt;&lt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top"> Up </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC11"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC12"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
@@ -46,8 +46,9 @@ make life much easier.
 </P><P>
 
 <BLOCKQUOTE><TABLE BORDER=0 CELLSPACING=0> 
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_4.html#SEC9">3.1 Advanced Infostructure Configuration</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
-<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_4.html#SEC10">3.2 Authorisation Configuration</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP"></TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_4.html#SEC9">3.1 Advanced Infostructure Configuration</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Advanced control of checking</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_4.html#SEC10">3.2 Authorisation Configuration</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Checking pages which require basic authentication.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="link-controller_4.html#SEC11">3.3 Configuring CGI Programs</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Setting up LinkController's web interface</TD></TR>
 </TABLE></BLOCKQUOTE>
 <P>
 
@@ -59,7 +60,7 @@ make life much easier.
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC10"> &gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> &lt;&lt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> Up </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC11"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC12"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
@@ -98,45 +99,53 @@ hash.  These look like the following
    file_base =&#62; "/home/myself/www",
    prune_re =&#62; "^(/home/myself/www/statistics)" #ignore referrals
               . "|(cgi-bin)", #do CGIs separately
-   exclude_re =&#62; "\.secret$", #secrets shouldn't get into link database
+   resource_exclude_re =&#62; "\.secret$", #secrets shouldn't stay secret
+   link_exclude_re =&#62; "^http://([a-z]+\.)+example\.com", 
 };
 
 $::infostrucs{http://www.mypages.org/cgi-bin/} = {
    mode =&#62; "www";
-   exclude_re =&#62; "query", #query space is infinite!!
+   resource_exclude_re =&#62; "query", #query space is infinite!!
 };
 </pre></td></tr></table></P><P>
 
-There are a number of keywords that can be used.  
+There are a number of keywordss that can be used.  
 </P><P>
 
 <DL COMPACT>
 <DT><SAMP>`mode'</SAMP>
-<DD>This decides how to download the links.  Either <SAMP>`www'</SAMP> or
+<DD><A NAME="IDX25"></A>
+This decides how to download the links.  Either <SAMP>`www'</SAMP> or
 <SAMP>`directory'</SAMP>.
 <DT><SAMP>`file_base'</SAMP>
-<DD>If defined, this defines the directory which matches the URL where the
+<DD><A NAME="IDX26"></A>
+If defined, this defines the directory which matches the URL where the
 infostructure is based.  This must be defined if the mode is set to
 directory.
 <DT><SAMP>`resource_include_re'</SAMP>
-<DD>If defined, this regular expression must be matched by the <EM>URL</EM>
+<DD><A NAME="IDX27"></A>
+If defined, this regular expression must be matched by the <EM>URL</EM>
 for every resource before links will be extracted from it.
 <DT><SAMP>`resource_exclude_re'</SAMP>
-<DD>If defined, this regular expression must <EM>not</EM> be matched by the
+<DD><A NAME="IDX28"></A>
+If defined, this regular expression must <EM>not</EM> be matched by the
 <EM>URL</EM> for every resource before links will be extracted from it.
 <DT><SAMP>`link_include_re'</SAMP>
-<DD>If defined, this regular expression must be matched by every <EM>URL</EM>
+<DD><A NAME="IDX29"></A>
+If defined, this regular expression must be matched by every <EM>URL</EM>
 found before it will be extracted and saved.
 <DT><SAMP>`link_exclude_re'</SAMP>
-<DD>If defined, this regular expression must <EM>not</EM> be matched by every
+<DD><A NAME="IDX30"></A>
+If defined, this regular expression must <EM>not</EM> be matched by every
 <EM>URL</EM> found before it will be extracted and saved.
 <DT><SAMP>`prune_re'</SAMP>
-<DD>Used only in directory mode, this will completely exclude all files and
+<DD><A NAME="IDX31"></A>
+Used only in directory mode, this will completely exclude all files and
 sub-directories of directories matched by the regular expression.
 </DL>
 <P>
 
-N.B. the exclude and include regular expression can be used together.
+N.B. the exclude and include regular expressions can be used together.
 For a match, the include regular expression must match and the exclude
 must not match.  In other words excludes override includes.
 </P><P>
@@ -162,10 +171,10 @@ given.
 <A NAME="SEC10"></A>
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
 <TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC9"> &lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC11"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC11"> &gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> &lt;&lt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> Up </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC11"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC12"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
@@ -206,11 +215,13 @@ shouldn't match any others.
 } );
 </pre></td></tr></table></P><P>
 
-As a minor sanity check, every <SAMP>`uri_re'</SAMP> will be tested against the
-strings <SAMP>`http://3133t3hax0rs.rhere.com'</SAMP> and
+As a sanity check, every <SAMP>`uri_re'</SAMP> will be tried on
+<SAMP>`http://3133t3hax0rs.rhere.com'</SAMP> and
 <SAMP>`http://3133t3hax0rs.rhere.com/secretstuff/www.goodplace.com/'</SAMP>.  If
-they match then those credentials will be disallowed.  The owners of
-<SAMP>`3133t3hax0rs.rhere.com'</SAMP> will just have to hack the code.. 
+the expression matches then the credentials will be ignored.  If you
+know enough to do this safely then you should definitely know how to get
+past this check.  The owners of the domain <SAMP>`3133t3hax0rs.rhere.com'</SAMP>
+will just have to hack the code..
 </P><P>
 
 For more discussion about the security risks and how to mitigate them
@@ -222,9 +233,38 @@ mechanism.
 
 <A NAME="Configuring CGI Programs"></A>
 <HR SIZE="6">
+<A NAME="SEC11"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC10"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC12"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> &lt;&lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC12"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_abt.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 3.3 Configuring CGI Programs </H2>
+<!--docid::SEC11::-->
+<P>
+
+The CGI programs use the same configuration variables as the other
+programs, however, to avoid any confusion and related security problems,
+a perl script should be written which has the configuration variables
+hard wired in then runs the appropriate CGI program.
+<CODE>configure-link-cgi</CODE> is a program designed to set up such a
+script.  
+</P><P>
+
+<STRONG>FIXME:</STRONG> this section needs to be rewritten.
+</P><P>
+
+<A NAME="Using LinkController"></A>
+<HR SIZE="6">
 <TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
 <TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_4.html#SEC8"> &lt;&lt; </A>]</TD>
-<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC11"> &gt;&gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_5.html#SEC12"> &gt;&gt; </A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller.html#SEC_Top">Top</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="link-controller_toc.html#SEC_Contents">Contents</A>]</TD>
 <TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
@@ -233,7 +273,7 @@ mechanism.
 <BR>  
 <FONT SIZE="-1">
 This document was generated
-by <I>Michael De La Rue</I> on <I>January, 6  2002</I>
+by <I>Michael De La Rue</I> on <I>February, 3  2002</I>
 using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
 "><I>texi2html</I></A>
 

@@ -1,3 +1,5 @@
+build-schedule should be merged into extract-links.
+
 check that all systems handle file overloads.
 	close should always be checked for return
 	

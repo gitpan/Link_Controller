@@ -7,7 +7,7 @@ down for the day due to maintenance problems than to real broken
 links, this should be for you.  
 
 It was written for and helps in the maintenance of the Scottish
-Climbing Archive (http://scotclimb.org.uk) but has deliberately gone a
+Climbing Archive (L<http://scotclimb.org.uk> ) but has deliberately gone a
 bit beyond the needs of a normal web page maintenance script.
 
 =head1 WHERE TO START
@@ -113,7 +113,7 @@ version of this software in use somewhere, and have to do maintenance
 on it, you will at least have access to the source code.  That means
 that even if you can't fix it yourself, you can hire someone who can.
 The Perl consultants list will be a good place to start (go to
-http://www.perl.org).
+<http://www.perl.org/> ).
 
 Link controller is user supported software, and no warantee is
 provided, no support is guaranteed.  Bugs and patches are gratefully

@@ -1,5 +1,8 @@
 use ExtUtils::MakeMaker;
 
+# It is clear that the version numbers given here are not the whole
+# story.  Corrections are definitely appreciated.
+
 WriteMakefile( NAME => "Link_Controller",
                VERSION_FROM => "lib/WWW/Link_Controller/Version.pm",
                dist => { COMPRESS => "gzip",
@@ -8,10 +11,10 @@ WriteMakefile( NAME => "Link_Controller",
 	       PREREQ_PM =>
 	       {
 		Carp => 0,
-		CDB_File::BiIndex => 0.026,
-		CDB_File::BiIndex::Generator => 0,
-		CGI::Carp => 0,
-		CGI::Request => 0,
+		CDB_File::BiIndex => 0.030,
+		CDB_File::BiIndex::Generator => 0.30,
+		CGI::Carp => 1.09,
+		CGI::Request => 2.0,
 		CGI::Response => 0,
 		Cwd => 0,
 		Data::Dumper => 0,
@@ -33,11 +36,11 @@ WriteMakefile( NAME => "Link_Controller",
 		LWP::RobotUA => 0,
 		LWP::UserAgent => 0,
 		MLDBM => 0,
-		Schedule::SoftTime => 0.024,
+		Schedule::SoftTime => 0.030,
 		Search::Binary => 0,
 		Sys::Hostname => 0,
 		URI => 0,
-		WWW::Link => 0.028,
+		WWW::Link => 0.034,
 		WWW::Link::Repair => 0,
 		WWW::Link::Repair::Substitutor => 0,
 		WWW::Link::Reporter::Compile => 0,

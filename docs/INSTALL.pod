@@ -1,5 +1,7 @@
 =head1 INSTALLATION
 
+<em>Last updated for LinkController 0.33.</em>
+
 LinkController's installation system is based on that of a normal Perl
 module.  
 
@@ -13,18 +15,61 @@ to more Linux Like systems (e.g. FreeBSD / Hurd etc). I'd like to
 improve this situation, but not at the cost of efficiency and
 maintainability on Linux.
 
+=head1 installation from Perl module
+
+Currently the best way to install LinkController is to directly
+install it as a perl module.  
+
+=over 4
+
+=item *
+
+install the CDB system
+
+If you have RedHat Linux 7.0 or greater, this should be included
+within your distribution.  Probably called "freecdb".  If not then
+download it from L<http://packages.debian.org/freecdb> or from RedHat
+if you have another rpm based system.
+
+=item *
+
+upgrade the perl CPAN module if needed
+
+The CPAN module distributed with C<perl> 5.6.0 and included in RedHat
+7.1 and 7.2 has bugs which make it try to re-install C<perl>
+repeatedly.  Download and manually install version 1.59 or newer.
+N.B. don't use CPAN to upgrade itsself.  That would trigger the
+C<perl> reinstallation.
+
+=item *
+
+install LinkController using CPAN
+
+Run the command C<perl -MCPAN -e shell> then within the CPAN shell run
+the command <install WWW::Link_Controller>.
+
+=back
+
 =head1 installation from rpm
 
 The easiest way to install link controller is to have the distribution
-in RPM format.  In this case, simply install each of the RPMs with
+in RPM format.  Unfortunately, right now my version of RPM is patched
+and experimental, so I'm not producing RPMs yet.  Hopefully, this will
+soon be fixed.  In this case, simply install each of the RPMs with
 @command{rpm -i}.  Trying to install just C<LinkController> will give
-a list of the required rpm packages.  
-
-=head1 installation from Perl module
+a list of the required rpm packages.
 
 If your system doesn't run rpm then there isn't yet a pre-packaged
 version (hopefully someone will do a port to Debian's packaging
 system).  
+
+=head1 manual installation 
+
+Manual installation is a possibility, however since LinkController has
+been designed with the free use of perl modules, it takes patience.
+The basic technique to solve problems is to try installing each module
+in turn and to solve any requirements that it throws up when you try
+to do so.
 
 =head2 installation pre-requisites
 
@@ -38,7 +83,7 @@ does work then you are sorted.
 The prerequisites can be downloaded from CPAN.
 L<http://www.cpan.org/>
 
-=head2 detailed steps for install
+=head2 installing the LinkController module
 
 First you must install Perl and the modules as explained above.  Then
 run the following commands.
@@ -58,21 +103,21 @@ you know that everything is working properly.
 Please note that you must run C<make> before you run C<make test>
 because of the configuration of the installation system.
 
-=head2 Choosing a Platform
+=head1 Choosing a Platform
 
 Installing this software can be easy or difficult depending on what
 operating system platform you are running on..  In approximate order
-from easiest to most difficult (this is my guess)
+from easiest to most difficult (this is my guess).
 
 =over 4
 
 =item * 
 
-RedHat Linux equal or better than 6.0 (see http://www.redhat.com/)
+RedHat Linux equal or better than 6.0 (see L<http://www.redhat.com/> )
 
 =item * 
 
-other Linux (see http://www.linux.org/ for example)
+other Linux (see L<http://www.linux.org/> for example)
 
 =item * 
 
@@ -88,7 +133,7 @@ UNIX without Perl
 
 =item * 
 
-WinNT (use cygwin for the best chance)
+WinNT / Windows2000 (use cygwin for the best chance)
 
 =item * 
 
@@ -100,11 +145,11 @@ Other Windows
 
 =back
 
-With a previous version I had tried the top four.  Probably to get
-the system running on Sun-OS will require manually setting up the
-system since the programs for doing the default installation (in the
-@file{default-install}) because that uses various GNU administration
-programs which SunOS probably doesn't emulate accurately.
+With a previous version I had tried the top four.  Probably to get the
+system running on other UNIX systems will require manually setting up
+the system since the programs for doing the default installation (in
+the @file{default-install}) because UNIX doesn't accurately emulate
+the GNU administration programs.
 
 You will probably find it easier to just install Linux that to get
 this running on Windows.  If you do want to get it running on other
@@ -115,8 +160,13 @@ related stuff.
 
 =head1 References
 
-   http://www.redhat.com/
-   http://www.linux.org/
+L<http://scotclimb.org.uk/software/linkcont/> - download LinkController
+
+L<http://www.linux.org/> - Get Linux
+
+L<http://www.redhat.com/> - RedHat Linux - tested version
+
+L<http://www.debian.org/> - Debian Linux.
 
 =cut
 

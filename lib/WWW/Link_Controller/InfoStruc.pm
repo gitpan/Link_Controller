@@ -1,5 +1,5 @@
 package WWW::Link_Controller::InfoStruc;
-$REVISION=q$Revision: 1.8 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
+$REVISION=q$Revision: 1.10 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
 
 use Carp qw(carp croak cluck);
 use strict;
@@ -246,7 +246,6 @@ sub _clean_filepath ($) {
 }
 
 
-
 sub url_to_file ($) {
   my $url=shift;
   defined $url or
@@ -291,7 +290,9 @@ sub url_to_file ($) {
   my $relative=_clean_filepath($url);
 
   return undef unless defined $relative;
+#  print STDERR "base $file_base relative $relative\n";
 
+  $file_base =~ s,/$,,;
   #FIXME: filebase can contain a / so this can end up with //. do we care?
   return $file_base . '/' . $relative; #filebase should be an internal variable
 }

@@ -40,7 +40,7 @@ $fail=0;
 sub nogo {print "not "; $fail=1;}
 sub ok {my $t=shift; print "ok $t\n"; $fail=0}
 
-$::infos="fixlink-infostruc.test-tmp";
+$::infos="fixlink-infostruc.test-tmp~";
 
 $fixed='test-data/fixlink-cgi-infostruc';
 

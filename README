@@ -7,8 +7,9 @@ README for LinkController 0.033
     should be for you.
 
     It was written for and helps in the maintenance of the Scottish Climbing
-    Archive (http://scotclimb.org.uk) but has deliberately gone a bit beyond
-    the needs of a normal web page maintenance script.
+    Archive (the section on "/scotclimb.org.uk" in the http: manpage ) but
+    has deliberately gone a bit beyond the needs of a normal web page
+    maintenance script.
 
 WHERE TO START
 
@@ -95,7 +96,7 @@ GPL Protection
     will at least have access to the source code. That means that even if
     you can't fix it yourself, you can hire someone who can. The Perl
     consultants list will be a good place to start (go to
-    http://www.perl.org).
+    <http://www.perl.org/> ).
 
     Link controller is user supported software, and no warantee is provided,
     no support is guaranteed. Bugs and patches are gratefully accepted

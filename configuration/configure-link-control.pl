@@ -24,7 +24,7 @@ L<suggest(1)>; L<link-report.cgi(1)>; L<configure-link-control>
 The LinkController manual in the distribution in HTML, info, or
 postscript formats, included in the distribution.
 
-http://scotclimb.org.uk/software/linkcont - the
+http://scotclimb.org.uk/software/linkcont/ - the
 LinkController homepage.
 
 =cut
@@ -59,7 +59,7 @@ EOF
 sub version() {
   print <<'EOF';
 configure-link-control version 
-$Id: configure-link-control.pl,v 1.13 2001/12/30 12:18:28 mikedlr Exp $
+$Id: configure-link-control.pl,v 1.14 2002/01/18 20:32:35 mikedlr Exp $
 EOF
 }
 

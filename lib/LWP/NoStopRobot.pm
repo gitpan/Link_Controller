@@ -42,7 +42,7 @@ LWP::Auth_UA) rather than as a subclass of LWP::RobotUA.
 =cut
 
 package LWP::NoStopRobot;
-$REVISION=q$Revision: 1.9 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
+$REVISION=q$Revision: 1.10 $ ; $VERSION = sprintf ( "%d.%02d", $REVISION =~ /(\d+).(\d+)/ );
 
 use strict;
 use warnings;
@@ -52,7 +52,7 @@ use LWP::Auth_UA;
 use vars qw(@ISA $VERSION);
 
 @ISA=qw(LWP::Auth_UA);
-$VERSION = sprintf("%d.%02d", q$Revision: 1.9 $ =~ /(\d+)\.(\d+)/);
+$VERSION = sprintf("%d.%02d", q$Revision: 1.10 $ =~ /(\d+)\.(\d+)/);
 
 require WWW::RobotRules;
 require HTTP::Request;
@@ -194,10 +194,10 @@ sub simple_request
 	#this is not strictly correct english, but iproute2 uses it
 	#and so I will :-)
 	#fix this till it really checks for a hostname + port
-	$netloc =~ m/[a-zA-Z0-9].*[a-zA-Z0-9]:[a-zA-Z0-9]+/ or do  {
-	    die "host_port is a garbage: " . $url;
-	    last;
-	};
+#  	$netloc =~ m/[a-zA-Z0-9].*[a-zA-Z0-9]:[a-zA-Z0-9]+/ or do  {
+#  	    die "host_port $netloc is a garbage: " . $url;
+#  	    last;
+#  	};
 	# we would wait here, but we don't
 	$self->{'rules'}->visit($netloc);
     }
@@ -330,13 +330,13 @@ sub no_wait {
 
 
 
-#  # $Id: NoStopRobot.pm,v 1.9 2002/01/06 10:41:42 mikedlr Exp $
+#  # $Id: NoStopRobot.pm,v 1.10 2002/02/09 16:30:40 mikedlr Exp $
 
 #  package LWP::RobotUA;
 
 #  require LWP::UserAgent;
 #  @ISA = qw(LWP::UserAgent);
-#  $VERSION = sprintf("%d.%02d", q$Revision: 1.9 $ =~ /(\d+)\.(\d+)/);
+#  $VERSION = sprintf("%d.%02d", q$Revision: 1.10 $ =~ /(\d+)\.(\d+)/);
 
 #  require WWW::RobotRules;
 #  require HTTP::Request;

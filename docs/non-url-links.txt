@@ -87,3 +87,25 @@ another way -
 
 as far as fragments in http urls go, I think that these are better to
 see as part of content verification.  
+
+
+
+Definition of a Fragment
+
+	   a fragment is a link which will ALWAYS be broken when the
+	   retrieval of another "simpler" link will be broken
+
+	   restated: a fragment is a link for which the process of
+	   retrieval automatically includes the successful retrieval
+	   of another "simpler" link
+
+	   a simpler link is a link which can be automatically
+	   calculated from the fragment link.  
+
+	   a simpler link is a link which is not automatically broken
+	   if the fragment is automatically broken
+
+	   normally a fragment cannot be automatically calculated from
+	   the full link.
+
+	   

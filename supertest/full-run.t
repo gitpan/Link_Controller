@@ -38,16 +38,24 @@ sub ok {my $t=shift; print "ok $t\n"; $fail=0}
 #FIXME check that this is really the base directory of the distribution.
 
 $files="t/config/files.pl";
+
+$::infos=".fixlink-infostruc-defs";
 do "$files" or die "$files script not read: $!";
 die "$files script failed $@" if $@;
+
+unlink $::infos;
+-e $::infos and die "can't unlink infostruc file $::infos";
+open DEFS, ">$infos" or die "couldn't open $infos $!";
+print DEFS "directory http://www.test.nowhere/ test-data/local-linked-infostruc\n";
+close DEFS or die "couldn't close $infos $!";
+
 
 -e $_ and die "file $_ exists" foreach ($lonp, $phasl, $urls, $links);
 
 #try to genereate the lists.
 
 # create a "urllist" file from the directories
-@run=( @start, $script . "/extract-links", "--config-file=$conf",
-	qw(http://www.test.nowhere/ test-data/local-linked-infostruc) );
+@run=( @start, $script . "/extract-links", "--config-file=$conf");
 print STDERR "running " . join (" ", @run) . "\n";
 nogo if system @run;
 

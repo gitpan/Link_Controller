@@ -51,7 +51,8 @@ inst: ../INSTALL
 	pod2text --loose INSTALL.pod > ../INSTALL
 
 INSTALL.html: INSTALL.pod
-	pod2html INSTALL.pod > INSTALL.html
+	pod2html --title "LinkController Installation Instructions" \
+		INSTALL.pod > INSTALL.html
 
 # keep the HTML file, delete the rest.. most people who can use them
 # will be able to generate them..  Distribute ps file separately since
