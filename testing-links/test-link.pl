@@ -22,7 +22,7 @@ test-link - test links and update the link database
 
      --never-stop         keep running without stopping
      --no-robot           Don't follow robot rules.  Dangerous!!!
-  -w --waitre=NETLOC-REGEX Home HOST regex: no robot rules.. (danger?)!!!
+  -w --no-waitre=NETLOC-REGEX Home HOST regex: no robot rules.. (danger?)!!!
      --test-now           Test links now not when scheduled (testing only)
      --untested           Test all links which have not been tested.
      --sequential         Put links into schedule in order tested (for testing)
@@ -153,7 +153,7 @@ $::lookforward=100; #how many links we check forward if the first in the
 $::min_delay=60 * 60 * 1; #minimum scheduling delay is 1 hour
 #FIXME: configurable parameter??
 
-$::waitre="";
+$::no_waitre="";
 $::verbose=0;
 $::never_stop=0;
 $::start_time = time();
@@ -303,9 +303,9 @@ if ($::robot) {
   $ua = new LWP::NoStopRobot 'LinkController/'
     . $WWW::Link_Controller::Version::VERSION, $::user_address;
   $ua->delay(1);
-  unless ($::waitre eq "") {
-    print STDERR "Waitre is $::waitre\n";
-    $ua->no_wait($::waitre);
+  unless ($::no_waitre eq "") {
+    print STDERR "NoWaitre is $::no_waitre\n" unless $::silent;
+    $ua->no_wait($::no_waitre);
   }
 } else {
   print STDERR "a normal ua\n" unless $::silent;

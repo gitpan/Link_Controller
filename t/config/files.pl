@@ -18,11 +18,11 @@ print STDERR "fixing up files; the current directory is ", cwd, "\n"
 
 #setup files for start of tests
 
-$conf='link-cont-conf.test-tmp';
+$conf='link-cont-conf.test-tmp~';
 $blib=cwd . '/blib'; $script=$blib . '/script';
-$lonp='link_on_page.test-tmp.cdb'; $phasl='page_has_link.test-tmp.cdb';
-$urls='urllist.test-tmp'; $linkdb='links.test-tmp.bdbm';
-$sched='schedule.test-tmp.bdbm';
+$lonp='link_on_page.cdb.test-tmp~'; $phasl='page_has_link.cdb.test-tmp~';
+$urls='urllist.test-tmp~'; $linkdb='links.test-tmp.bdbm~';
+$sched='schedule.bdbm.test-tmp~';
 
 $lock="#$linkdb.lock";
 

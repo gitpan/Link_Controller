@@ -306,7 +306,7 @@ sub no_wait {
   my $self=shift;
   $self->{'no_wait'}=shift;
   croak "gimme a regexp" unless $self->{'no_wait'};
-  print STDERR "No wait RE: " . $self->{'no_wait'} . "\n";
+  LWP::Debug::trace("No wait RE: " . $self->{'no_wait'} );
 }
 
 #  =item $ua->short_wait($regex)
